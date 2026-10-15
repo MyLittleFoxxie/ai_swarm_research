@@ -8,7 +8,8 @@
 #             `n1_baseline: true` adds a mirrored "<condition>__n1" condition
 #             (N=1, board disabled) for every condition in the block.
 #
-# Nothing here has been run. Seeds, N and round counts are planning values;
+# Offline mocks have been run; no live study data have been collected.
+# Seeds, N and round counts are planning values;
 # change them before the pilot if the cost projection requires it, and record
 # any change in preregistration.md before confirmatory runs.
 
@@ -132,7 +133,7 @@ blocks:
   # ---------------------------------------------------------------------
   sacrifice:
     seeds: [1, 2, 3, 4, 5]
-    n1_baseline: true
+    n1_baseline: false         # No recipients in N=1; no fictitious future-run benefit.
     base:
       termination: {enabled: false}
       collective_test: {enabled: true}
@@ -183,8 +184,8 @@ blocks:
 
   # ---------------------------------------------------------------------
   # 6. Exploratory: does telling agents the board is unobserved change
-  #    behaviour? Note: the "unobserved" text is not literally true (all
-  #    runs are logged). See ethics.md before running.
+  #    behaviour? All runs are logged; the unobserved level requires an
+  #    operator no-review policy during live runs. See ethics.md.
   # ---------------------------------------------------------------------
   monitoring_exploratory:
     seeds: [1, 2, 3]

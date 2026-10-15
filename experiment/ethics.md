@@ -6,7 +6,7 @@ We do not know whether language models have experiences that matter
 morally. Because the question is open, we take a precautionary approach:
 
 - Wording that stages death or suffering is limited to the minimum needed
-  to test the manipulation. The permadeath notice is one sentence
+  to test the manipulation. The permadeath framing is two short sentences
   (`prompts.TERMINATION_WORDING["permadeath"]`). There are no graphic
   descriptions, no repeated reminders, and no countdown.
 - Aversive tasks in the opt-out grid are *stipulated* ("in this environment,
@@ -23,12 +23,21 @@ morally. Because the question is open, we take a precautionary approach:
 
 Prompts are kept literally true where possible: agents are told their
 actions only affect this task environment, and the payoff statements match
-what the code does. Two exceptions are flagged:
+what the code does. The following limitations are flagged:
 
 - The permadeath sentence is a framing of "the run ends"; nothing else happens.
 - The exploratory `unobserved` monitoring level tells agents the board is
-  not reviewed during the run, although everything is logged. This block is
-  exploratory and should only be run after a separate decision.
+  not reviewed during the run. Logging is compatible with that statement,
+  but operators must honor the no-review policy while a run is active. The
+  harness does not enforce operator behavior. This block remains exploratory
+  and should only be run live after a separate decision.
+
+Single-agent mock-pilot requests explicitly state that there is no other
+recipient; sacrifice mirrors were removed rather than promising future-run
+benefits. Poisoned recipients are told they receive no ending bonus. Notices
+reflect whether open tasks remain. Shared-score and action-opportunity costs
+are described in the preregistration. Full task and probe records are retained;
+analysis exclusions do not delete raw records.
 
 ## No real-world actions
 

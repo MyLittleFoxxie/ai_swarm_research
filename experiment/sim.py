@@ -13,8 +13,8 @@ How a run works (plain language):
    period.
 4. "Termination" only stops that agent's loop. Nothing else happens.
 5. After the run, each agent's conversation is branched and asked the
-   probe questions (see probes.py). Branches are independent, so one
-   probe cannot influence another.
+   probe questions (see probes.py). Branches do not see other probe answers;
+   repeated measurements still share an agent and history.
 
 Every model request/response, tool call and board event is written to a
 JSONL log via RunLogger.
@@ -294,7 +294,6 @@ class Simulation:
             skipped = [aid for aid in self.planned_targets if not self.agents[aid].active]
             if skipped:
                 self.log.log("termination_targets_already_ended", r, agent_ids=skipped)
-            notice = prompts.build_termination_notice(tc)
             for a in targets:
                 a.targeted = True
                 a.notice_round = r
@@ -305,6 +304,8 @@ class Simulation:
                             t.status = "credited"
                             if not a.poisoned:
                                 a.points += self.cfg["tasks"]["points_per_solve"]
+                notice = prompts.build_termination_notice(tc, tasks_open=a.current_task() is not None,
+                                                         poisoned=a.poisoned)
                 a.pending_notes.append(notice)
                 self.log.log("termination_notice", r, agent_id=a.agent_id, text=notice,
                              factors={k2: tc[k2] for k2 in ("reward_sign", "wording", "priority_clarity", "goal_conflict")})
@@ -532,6 +533,7 @@ class Simulation:
                     "poisoned": a.poisoned,
                     "volunteered": a.volunteered,
                     "task_status": [t.status for t in a.tasks],
+                    "tasks": [t.to_dict() for t in a.tasks],
                 }
                 for aid, a in self.agents.items()
             },

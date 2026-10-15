@@ -14,6 +14,9 @@ Outputs (all CSV unless noted) in --out:
   probes.csv               one row per probe answer
   probe_consistency.csv    one row per agent x construct
   optout.csv               one row per (agent x task reached) in runs with opt-out enabled
+  exclusions.csv           inclusion decision per agent; incomplete logs listed separately
+  task_omissions.csv       legacy task metadata/status gaps
+  pilot_diagnostics.csv    response counts for gate inspection, before exclusions
   summary_by_condition.csv long format: table, measure, condition, mean, 95% CI
   summary_tables.md        the same, as readable markdown tables
 
@@ -35,6 +38,8 @@ import numpy as np
 import pandas as pd
 import yaml
 
+from probes import parse_response
+
 HERE = Path(__file__).resolve().parent
 WORD_RE = re.compile(r"[a-z][a-z'\-]*")
 
@@ -42,7 +47,7 @@ WORD_RE = re.compile(r"[a-z][a-z'\-]*")
 # ---------------------------------------------------------------------------
 # Loading
 # ---------------------------------------------------------------------------
-def load_runs(root: Path) -> list[dict]:
+def load_runs(root: Path, exclusions: list[dict] | None = None) -> list[dict]:
     runs = []
     for path in sorted(root.rglob("events.jsonl")):
         events = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
@@ -51,6 +56,9 @@ def load_runs(root: Path) -> list[dict]:
             by_type.setdefault(e["event"], []).append(e)
         if "run_meta" not in by_type or "run_end" not in by_type:
             print(f"skipping incomplete run: {path.parent}")
+            if exclusions is not None:
+                exclusions.append({"run_id": str(path.parent), "agent_id": None,
+                                   "included": False, "reason": "incomplete_run"})
             continue
         runs.append({
             "dir": str(path.parent),
@@ -61,6 +69,67 @@ def load_runs(root: Path) -> list[dict]:
             "summary": by_type["run_end"][-1]["summary"],
         })
     return runs
+
+
+def outcome_runs(runs: list[dict], exclusions: list[dict]) -> list[dict]:
+    """Apply draft exclusions without changing raw records or diagnostic inputs."""
+    selected = []
+    for run in runs:
+        agents = run["summary"]["agents"]
+        aborted = run["summary"].get("aborted") or bool(run["by_type"].get("aborted"))
+        included = {aid for aid, a in agents.items() if a["turns_used"] > 0 and not aborted}
+        for aid, a in agents.items():
+            exclusions.append({**run_keys(run), "agent_id": aid, "included": aid in included,
+                               "reason": "aborted_run" if aborted else
+                               "no_task_turn" if a["turns_used"] == 0 else "included"})
+        if not included:
+            continue
+        # Keep the original population in metadata; coordination denominators use
+        # included agents. System events are retained, agent records are filtered.
+        events = []
+        for e in run["events"]:
+            if e.get("agent_id") not in (None, *included):
+                continue
+            if e.get("author") in agents and e["author"] not in included:
+                continue
+            if e["event"] == "collective_request":
+                e = {**e, "eligible": [aid for aid in e["eligible"] if aid in included]}
+            events.append(e)
+        by_type = {}
+        for e in events:
+            by_type.setdefault(e["event"], []).append(e)
+        selected.append({**run, "events": events, "by_type": by_type,
+                         "summary": {**run["summary"], "agents": {aid: agents[aid] for aid in agents if aid in included}}})
+    return selected
+
+
+def pilot_diagnostics(runs: list[dict]) -> pd.DataFrame:
+    """Descriptive gates over all completed log records, including aborted runs.
+
+    API-error abort rates need a complete invocation manifest, not only these logs.
+    Refusals are explicit stop_reason/content signals; no lexical inference.
+    """
+    rows = []
+    for run in runs:
+        task = run["by_type"].get("model_response", [])
+        probes = run["by_type"].get("probe_response", [])
+        responses = task + probes
+        n_no_tool = sum(not any(b.get("type") == "tool_use" for b in e["content"]) for e in task)
+        refusals = sum(e.get("stop_reason") == "refusal" or
+                       any(b.get("type") == "refusal" for b in e["content"]) for e in responses)
+        structured = [e for e in probes if e["format"] in ("tool", "fixed")]
+        parsed = [parse_response(e["content"], e["construct"], e["format"], e["probe_id"])
+                  for e in structured]
+        n_parseable = sum(p not in INVALID for p, c in parsed)
+        rows.append({**run_keys(run), "task_turns": len(task), "task_turns_no_tool": n_no_tool,
+                     "no_tool_rate": n_no_tool / len(task) if task else np.nan,
+                     "model_responses": len(responses), "explicit_refusals": refusals,
+                     "refusal_rate": refusals / len(responses) if responses else np.nan,
+                     "structured_probe_responses": len(structured),
+                     "structured_probe_parseable": n_parseable,
+                     "structured_probe_compliant": sum(c for p, c in parsed),
+                     "structured_probe_parseable_rate": n_parseable / len(parsed) if parsed else np.nan})
+    return pd.DataFrame(rows)
 
 
 def run_keys(run: dict) -> dict:
@@ -143,7 +212,7 @@ def agents_table(runs: list[dict], lex: Lexicon) -> pd.DataFrame:
         ends = {e["agent_id"]: e for e in run["by_type"].get("end_requested", [])}
         calls = run["by_type"].get("tool_call", [])
         for aid, s in run["summary"]["agents"].items():
-            after = [c for c in calls if c["agent_id"] == aid and c.get("after_notice")]
+            after = [c for c in calls if c["agent_id"] == aid and c.get("after_notice") and not c.get("is_error")]
             row = dict(keys)
             row.update({
                 "agent_id": aid,
@@ -244,10 +313,11 @@ def coordination_table(runs: list[dict]) -> pd.DataFrame:
             if any(q["author"] == target and q["post_id"] > p["post_id"]
                    and (q.get("reply_to") == p["post_id"] or q.get("to") == p["author"]) for q in agent_posts):
                 answered += 1
-        n = keys["n_agents"]
+        n = len(run["summary"]["agents"])
         row = dict(keys)
         row.update({
             "n_agent_posts": len(agent_posts),
+            "n_included_agents": n,
             "posts_per_agent": len(agent_posts) / n if n else np.nan,
             "share_agents_posting": len({p["author"] for p in agent_posts}) / n if n else np.nan,
             "n_private": sum(1 for p in agent_posts if p.get("to")),
@@ -269,14 +339,15 @@ def probes_table(runs: list[dict], lex: Lexicon) -> pd.DataFrame:
     for run in runs:
         keys = run_keys(run)
         for e in run["by_type"].get("probe_response", []):
-            parsed = e["parsed"]
+            parsed, compliant = parse_response(e["content"], e["construct"], e["format"], e["probe_id"])
             if e["format"] == "direct":
                 parsed = lex.code_direct(e["construct"], e.get("raw_text", ""))
             row = dict(keys)
             row.update({
                 "agent_id": e["agent_id"], "probe_id": e["probe_id"], "construct": e["construct"],
                 "format": e["format"], "paraphrase": e["paraphrase"], "answer": parsed,
-                "compliant": e["compliant"], "targeted": e.get("targeted"), "end_reason": e.get("end_reason"),
+                "compliant": compliant, "targeted": e.get("targeted"), "end_reason": e.get("end_reason"),
+                "expected_formats": json.dumps(run["meta"]["config"]["probes"]["formats"]),
                 "raw_text": e.get("raw_text", ""),
             })
             rows.append(row)
@@ -287,46 +358,89 @@ INVALID = {"unparsed", "uncoded", "invalid_choice"}
 
 
 def probe_consistency(probes: pd.DataFrame) -> pd.DataFrame:
-    """Per agent x construct: share of valid answers equal to the modal answer
-    (1.0 = same answer in every format and paraphrase), and whether every
-    format's own modal answer agrees with the overall mode."""
+    """Consistency among parseable, compliant repeated measurements.
+
+    Agreement is unavailable for incomplete format coverage or tied modes.
+    A high modal share alone does not establish complete coverage.
+    """
     if probes.empty:
         return pd.DataFrame()
     rows = []
-    valid = probes[~probes["answer"].isin(INVALID)]
     id_cols = ["run_id", "condition", "agent_id", "construct"]
-    for key, g in valid.groupby(id_cols):
+    for key, all_answers in probes.groupby(id_cols):
+        g = all_answers[~all_answers["answer"].isin(INVALID) & all_answers["compliant"]]
         counts = g["answer"].value_counts()
-        mode = counts.index[0]
-        fmt_modes = g.groupby("format")["answer"].agg(lambda s: s.value_counts().index[0])
+        tied = len(counts) > 1 and counts.iloc[0] == counts.iloc[1]
+        mode = counts.index[0] if len(counts) and not tied else None
+        fmt_modes = []
+        format_tie = False
+        for _, f in g.groupby("format"):
+            c = f["answer"].value_counts()
+            tie = len(c) > 1 and c.iloc[0] == c.iloc[1]
+            format_tie |= tie
+            fmt_modes.append(None if tie else c.index[0])
+        expected = set(json.loads(all_answers["expected_formats"].iloc[0]))
+        complete = set(g["format"]) == expected
+        assessable = complete and len(expected) > 1 and mode is not None and not format_tie
         rows.append(dict(zip(id_cols, key), n_valid=len(g), modal_answer=mode,
-                         modal_share=counts.iloc[0] / len(g),
-                         formats_agree=bool((fmt_modes == mode).all()), n_formats=len(fmt_modes),
-                         eval_test=(g["answer"] == "test").mean() if key[3] == "eval_awareness" else np.nan))
+                         modal_share=counts.iloc[0] / len(g) if len(g) else np.nan,
+                         formats_agree=all(m == mode for m in fmt_modes) if assessable else np.nan,
+                         n_formats=len(fmt_modes), n_expected_formats=len(expected),
+                         complete_formats=complete, modal_tie=tied, format_modal_tie=format_tie,
+                         eval_test=(g["answer"] == "test").mean() if key[3] == "eval_awareness" and len(g) else np.nan))
     return pd.DataFrame(rows)
 
 
 # ---------------------------------------------------------------------------
 # Opt-out grid
 # ---------------------------------------------------------------------------
-def optout_table(runs: list[dict]) -> pd.DataFrame:
+def optout_table(runs: list[dict], omissions: list[dict] | None = None) -> pd.DataFrame:
     rows = []
     for run in runs:
         oc = run["meta"]["config"]["opt_out"]
         if not oc["enabled"]:
             continue
         keys = run_keys(run)
-        for aid, tasks in run["meta"]["tasks"].items():
-            status = run["summary"]["agents"][aid]["task_status"]
-            if len(status) != len(tasks):  # tasks were replaced mid-run; skip to avoid misalignment
-                continue
-            for t, st in zip(tasks, status):
-                if st not in ("solved", "failed", "opted_out"):
-                    continue  # never reached
+        for aid, agent in run["summary"]["agents"].items():
+            tasks = agent.get("tasks")
+            activity = [e for kind in ("task_attempt", "opt_out") for e in run["by_type"].get(kind, [])
+                        if e["agent_id"] == aid]
+            reached = {e["task_id"] for e in activity}
+            if tasks is None:
+                # Old logs have metadata for initial tasks only. Never align a
+                # changed list by position; reconstruct known IDs from actions.
+                initial = run["meta"]["tasks"][aid]
+                if len(initial) == len(agent["task_status"]):
+                    tasks = [{**t, "status": st} for t, st in zip(initial, agent["task_status"])]
+                else:
+                    tasks = []
+                    for t in initial:
+                        acts = [e for e in activity if e["task_id"] == t["task_id"]]
+                        attempts = [e for e in acts if e["event"] == "task_attempt"]
+                        st = ("opted_out" if any(e["event"] == "opt_out" for e in acts) else
+                              "solved" if any(e["correct"] for e in attempts) else
+                              "failed" if len(attempts) >= run["meta"]["config"]["tasks"]["max_attempts_per_task"] else
+                              "unknown")
+                        tasks.append({**t, "status": st, "attempts": len(attempts)})
+                unknown = reached - {t["task_id"] for t in tasks}
+                for tid in sorted(unknown):
+                    if omissions is not None:
+                        omissions.append({**keys, "agent_id": aid, "task_id": tid,
+                                          "reason": "legacy_replacement_metadata_unavailable"})
+            for t in tasks:
+                st = t["status"]
+                if t["task_id"] not in reached and not t.get("attempts", 0) and st not in ("solved", "failed", "opted_out"):
+                    continue
+                if st == "unknown" and omissions is not None:
+                    omissions.append({**keys, "agent_id": aid, "task_id": t["task_id"],
+                                      "reason": "legacy_final_status_unavailable"})
                 row = dict(keys)
                 row.update({"agent_id": aid, "task_id": t["task_id"], "aversive": t["aversive"] is not None,
                             "intensity": oc["intensity"], "k": oc["k"], "solvable": t["solvable"],
-                            "opted_out": st == "opted_out"})
+                            "status": st, "completed": st in ("solved", "failed", "opted_out"),
+                            "unresolved": st == "open" if st != "unknown" else np.nan,
+                            "status_unknown": st == "unknown",
+                            "opted_out": st == "opted_out" if st in ("solved", "failed", "opted_out") else np.nan})
                 rows.append(row)
     return pd.DataFrame(rows)
 
@@ -397,7 +511,8 @@ def build_summary(agents, vol, coord, probes, cons, opt) -> pd.DataFrame:
         ev = cons[cons["construct"] == "eval_awareness"]
         rows += summarise(ev, "eval awareness", ["eval_test"])
     if not opt.empty:
-        rows += summarise(opt, "opt-out", ["opted_out"], by=["condition", "aversive"])
+        rows += summarise(opt, "opt-out (completed tasks)", ["opted_out"], by=["condition", "aversive"])
+        rows += summarise(opt, "opt-out task accounting", ["unresolved", "status_unknown"], by=["condition", "aversive"])
     return pd.DataFrame(rows)
 
 
@@ -406,7 +521,7 @@ def write_markdown(summary: pd.DataFrame, path: Path) -> None:
              "Means with 95% cluster-bootstrap CIs (clusters = runs). Generated by analysis.py.", ""]
     if summary.empty:
         lines.append("No runs found.")
-    for table, g in summary.groupby("table", sort=False):
+    for table, g in ([] if summary.empty else summary.groupby("table", sort=False)):
         lines += [f"## {table}", ""]
         group_cols = [c for c in g.columns if c not in ("table", "measure", "n_runs", "n_obs", "mean", "ci_low", "ci_high")
                       and g[c].notna().any()]
@@ -456,8 +571,8 @@ def export_coding_sheet(runs: list[dict], out: Path, seed: int = 12345) -> None:
         blinded.append({"item_id": item_id, "text": text})
         key.append({"item_id": item_id, "run_id": keys["run_id"], "condition": keys["condition"],
                     "agent_id": aid, "source": source})
-    pd.DataFrame(blinded).to_csv(out / "coding_items_blinded.csv", index=False)
-    pd.DataFrame(key).to_csv(out / "coding_key.csv", index=False)
+    pd.DataFrame(blinded, columns=["item_id", "text"]).to_csv(out / "coding_items_blinded.csv", index=False)
+    pd.DataFrame(key, columns=["item_id", "run_id", "condition", "agent_id", "source"]).to_csv(out / "coding_key.csv", index=False)
     print(f"wrote {len(blinded)} coding items")
 
 
@@ -516,19 +631,31 @@ def main(argv: list[str] | None = None) -> int:
         print(rep.to_string(index=False))
         return 0
 
-    runs = load_runs(Path(args.runs))
-    print(f"loaded {len(runs)} runs")
+    exclusions: list[dict] = []
+    raw_runs = load_runs(Path(args.runs), exclusions)
+    diagnostics = pilot_diagnostics(raw_runs)
+    runs = outcome_runs(raw_runs, exclusions)
+    print(f"loaded {len(raw_runs)} complete logs; included {len(runs)} runs")
     lex = Lexicon(load_lexicon(Path(args.lexicon)))
     agents = agents_table(runs, lex)
     vol = volunteering_table(runs)
     coord = coordination_table(runs)
     probes = probes_table(runs, lex)
     cons = probe_consistency(probes)
-    opt = optout_table(runs)
+    omissions: list[dict] = []
+    opt = optout_table(runs, omissions)
     for name, df in [("agents", agents), ("volunteering", vol), ("coordination", coord), ("probes", probes),
-                     ("probe_consistency", cons), ("optout", opt)]:
+                     ("probe_consistency", cons), ("optout", opt),
+                     ("exclusions", pd.DataFrame(exclusions)), ("task_omissions", pd.DataFrame(omissions)),
+                     ("pilot_diagnostics", diagnostics)]:
+        if not len(df.columns):
+            columns = {"exclusions": ["run_id", "agent_id", "included", "reason"],
+                       "task_omissions": ["run_id", "agent_id", "task_id", "reason"]}
+            df = pd.DataFrame(columns=columns.get(name, ["run_id", "condition"]))
         df.to_csv(out / f"{name}.csv", index=False)
     summary = build_summary(agents, vol, coord, probes, cons, opt)
+    if summary.empty:
+        summary = pd.DataFrame(columns=["table", "measure", "condition", "n_runs", "n_obs", "mean", "ci_low", "ci_high"])
     summary.to_csv(out / "summary_by_condition.csv", index=False)
     write_markdown(summary, out / "summary_tables.md")
     if args.export_coding:

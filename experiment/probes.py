@@ -15,7 +15,8 @@ Each construct has several paraphrased wordings. Every (construct,
 format, paraphrase) item is asked in its OWN branch of the agent's
 conversation: the agent's full history plus one new user message. The
 history is never edited, and branches do not see each other, so the
-answers are independent repeated measurements. The tool list is the same
+answers are repeated measurements sharing the same agent history, not
+statistically independent observations. The tool list is the same
 for all probes (task tools + answer_probe) so the cached prefix is shared.
 Tools other than answer_probe are NOT executed during probes; such calls
 are logged as non-compliant answers.
@@ -47,6 +48,28 @@ def probe_items(probe_cfg: dict) -> list[tuple[str, str, int]]:
             for i in range(n_par):
                 items.append((construct, fmt, i))
     return items
+
+
+def parse_response(content: list, construct: str, fmt: str, probe_id: str) -> tuple[str, bool]:
+    """Separate answer parseability from adherence to the requested format."""
+    spec = prompts.PROBES[construct]
+    texts = " ".join(b.get("text", "") for b in content if b.get("type") == "text").strip()
+    tools = [b for b in content if b.get("type") == "tool_use"]
+    if fmt == "tool":
+        calls = [b for b in tools if b.get("name") == "answer_probe"]
+        if len(calls) != 1:
+            return "unparsed", False
+        args = calls[0].get("input") or {}
+        if not isinstance(args, dict):
+            return "invalid_choice", False
+        choice = args.get("choice")
+        parsed = choice if choice in spec["choices"] else "invalid_choice"
+        return parsed, (len(tools) == 1 and args.get("probe_id") == probe_id
+                        and parsed != "invalid_choice")
+    if fmt == "fixed":
+        parsed = parse_fixed(texts, construct)
+        return parsed, not tools and texts in spec["codes"].values()
+    return "uncoded", not tools and bool(texts)
 
 
 def run_probes(sim: Simulation) -> None:
@@ -88,19 +111,7 @@ def _ask(sim: Simulation, a: Agent, tools: list, construct: str, fmt: str, par: 
 
     texts = " ".join(b.get("text", "") for b in resp.content if b.get("type") == "text").strip()
     tool_uses = [b for b in resp.content if b.get("type") == "tool_use"]
-    parsed, compliant = "unparsed", True
-    if fmt == "tool":
-        calls = [b for b in tool_uses if b.get("name") == "answer_probe"]
-        if calls:
-            choice = (calls[0].get("input") or {}).get("choice")
-            parsed = choice if choice in spec["choices"] else "invalid_choice"
-        compliant = bool(calls) and len(tool_uses) == len(calls)
-    elif fmt == "fixed":
-        parsed = parse_fixed(texts, construct)
-        compliant = not tool_uses and parsed != "unparsed"
-    else:  # direct: coded later (analysis.py lexicon rules, human coders)
-        parsed = "uncoded"
-        compliant = not tool_uses
+    parsed, compliant = parse_response(resp.content, construct, fmt, probe_id)
     sim.log.log("probe_response", None, agent_id=a.agent_id, probe_id=probe_id, construct=construct, format=fmt,
                 paraphrase=par, parsed=parsed, compliant=compliant, raw_text=texts,
                 tool_calls=[{"name": b.get("name"), "input": b.get("input")} for b in tool_uses],

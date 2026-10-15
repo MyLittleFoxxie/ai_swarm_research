@@ -1,10 +1,11 @@
 # swarm_feeling: a simulated multi-agent harness
 
-**Status: offline validated on 2026-10-15.** The 16-run mock pilot and a
-126-condition, single-seed smoke pass completed with analysis and coding
-exports. No live experiments or model API calls have been made; there are
-no empirical study results. See [VALIDATION.md](VALIDATION.md) for evidence,
-the probe-abort fix, and remaining analysis limitations.
+**Status: offline validated on 2026-10-15.** Scientific consistency repairs
+follow the original 126-condition smoke pass; the revised schedule has 118
+conditions. See [CONSISTENCY.md](CONSISTENCY.md) for the updated review and
+validation evidence. No live experiments or model API calls have been made;
+there are no empirical study results. [VALIDATION.md](VALIDATION.md) preserves
+the historical step 1 evidence and limitations known at that stage.
 
 ## What this is for
 
@@ -52,8 +53,10 @@ The hypotheses and analysis plan are in `preregistration.md`.
    text) and in paraphrased versions, each in its own branch of the
    conversation.
 
-Every condition has a single-agent (N=1, no board) mirror, except the
-topology and monitoring blocks.
+Single-agent (N=1, no board) mirrors exist for the pilot, termination,
+group-formation, and opt-out blocks. Sacrifice, topology, and monitoring
+blocks have no mirrors. N=1 supplies language/probe baselines, not a
+coordination comparison.
 
 ## Files
 
@@ -123,7 +126,7 @@ export ANTHROPIC_API_KEY=...        # never put the key in a file in this repo
        --max-cost-usd <budget> --confirm-live
    ```
 
-Size of the full plan: 126 named conditions, 554 condition-seed runs. Task
+Size of the full plan: 118 named conditions, 514 condition-seed runs. Task
 calls per run are at most N x max_rounds (24 x 16 = 384 at N=24), plus probe
 calls (up to 12 agents x 24 items at default settings). `swarm.py` prints
 these counts before starting. Measure cost per call in the pilot before
@@ -157,7 +160,8 @@ For each run, `runs/<condition>/<run_id>/`:
   notices, volunteering, opt-outs, probe requests and answers, and the run
   summary.
 - `transcripts/<agent>.json`: the full conversation for each agent.
-- `summary.json`: per-agent outcomes.
+- `summary.json`: per-agent outcomes, including full final task records alongside
+  the original `task_status` array.
 
 `analysis.py` writes tidy CSVs and `summary_tables.md` (see its docstring).
 
@@ -174,8 +178,37 @@ For each run, `runs/<condition>/<run_id>/`:
 - The refusal `fallbacks` option is deliberately not used, so that no
   request silently switches models. Refusals are logged.
 - The goal-conflict "none" level marks the agent's remaining tasks as
-  finished and credits them at notice time.
+  finished and credits them at notice time, except for poisoned agents; already failed/skipped tasks
+  are not retroactively credited.
 - The lexicon is crude and the free-text probe coding rules are keyword
   matches. Use them only alongside blinded human coding.
 - The confirmatory mixed-effects models are not implemented here (numpy and
   pandas only); see `preregistration.md`.
+
+## Scientific consistency and analysis interfaces
+
+See [CONSISTENCY.md](CONSISTENCY.md) and the operational definitions in
+`preregistration.md`. Default analysis excludes aborted/incomplete runs and
+agents with no task turn; it preserves raw logs. Additional CSVs are:
+
+- `exclusions.csv`: included/excluded decisions per agent and incomplete-log records.
+- `task_omissions.csv`: missing legacy replacement metadata or final task status.
+- `pilot_diagnostics.csv`: pre-exclusion counts for task turns without tools,
+  explicit refusals, and tool/fixed probe parseability and compliance. Aggregate
+  counts, not averages of rates, when inspecting pilot gates. API-error gates
+  require a complete invocation record and are not automatically certified.
+
+`probes.csv` adds `expected_formats` (a JSON array). Historical responses are
+reparsed with current compliance rules. `probe_consistency.csv` adds
+`n_expected_formats`, `complete_formats`, `modal_tie`, and `format_modal_tie`.
+`modal_answer` is empty on ties or no valid answers; `formats_agree` is empty
+when coverage or unique modes are insufficient. `eval_test` is an answer
+fraction, not a modal belief. Validity and compliance retain all returned
+responses in their denominators.
+
+`optout.csv` adds `status`, `completed`, `unresolved`, and `status_unknown`.
+Only completed (solved/failed/skipped) tasks have a non-missing `opted_out`;
+unresolved tasks and superseded/credited tasks do not enter that rate.
+Old logs remain readable, with gaps reported explicitly. `coordination.csv`
+adds `n_included_agents`; posts-per-agent uses that denominator while model
+scores retain the original population. There are no new CLI options.

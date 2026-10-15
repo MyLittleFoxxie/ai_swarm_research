@@ -12,7 +12,7 @@ In that incident, hundreds of AI agents formed groups, gave each other jobs, and
 |---|---|
 | Paper text | Drafted (about 5,000 words, IEEE conference format). Results and conclusion are placeholders. |
 | References | 51 entries, each checked against its original source. |
-| Experiment code | Offline validated: 16 mock pilot runs and all 126 conditions at seed 1, with analysis. **No live runs or model API calls.** |
+| Experiment code | Offline validated and reviewed for scientific consistency; revised schedule: 118 conditions. See [consistency report](experiment/CONSISTENCY.md). **No live runs or model API calls.** |
 | Results | **None yet.** Every `\RESULT{}` and `TBD` in the paper must be replaced with measured values. |
 
 The LaTeX has not been compiled.
@@ -29,7 +29,7 @@ swarm-feeling-paper/
     ├── README.md                 setup and how to run
     ├── swarm.py                  command-line entry point
     ├── sim.py, board.py, tasks.py, prompts.py, probes.py, models.py, config.py
-    ├── conditions.yaml           126 named conditions, grouped in blocks
+    ├── conditions.yaml           118 named conditions, grouped in blocks
     ├── analysis.py, lexicon.yaml analysis of run logs
     ├── preregistration.md        hypotheses and analysis plan (some TBDs)
     ├── coding_scheme.md          guide for blinded human coders
@@ -74,12 +74,13 @@ Safety and cost controls:
    ```bash
    cd experiment && python swarm.py --condition block:pilot --dry-run --out runs_dry/
    ```
-2. **Fill in the open items:**
+2. **Scientific consistency review completed.** See [review and repairs](experiment/CONSISTENCY.md).
+3. **Prepare for live runs:**
    - pin the `anthropic` package version;
    - re-check model prices;
    - set sample sizes and effect-size thresholds in `preregistration.md`.
-3. **Run the pilot.** Needs `ANTHROPIC_API_KEY` and `--confirm-live`. Review its cost before the main blocks.
-4. **Run the main blocks.** Then analyse the logs with `analysis.py`, add blinded human coding, and replace the placeholders in the paper.
+4. **Run the pilot.** Needs `ANTHROPIC_API_KEY` and `--confirm-live`. Review its cost before the main blocks.
+5. **Run the main blocks.** Then analyse the logs with `analysis.py`, add blinded human coding, and replace the placeholders in the paper.
 
 ## Sources
 
