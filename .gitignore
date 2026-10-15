@@ -1,0 +1,28 @@
+# Local environments and Python caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.env.*
+.DS_Store
+
+# Generated experiment data and analysis
+runs/
+runs_*/
+analysis_out/
+analysis_dry/
+analysis_*/
+
+# LaTeX build products
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+paper/*.pdf

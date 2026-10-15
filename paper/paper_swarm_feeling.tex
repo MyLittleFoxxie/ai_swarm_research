@@ -1,0 +1,345 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{url}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{balance}
+
+% Placeholder for results that do not exist yet. Every \RESULT{} must be
+% replaced with a measured value before submission.
+\newcommand{\RESULT}[1]{\textcolor{red}{[RESULT PENDING: #1]}}
+\newcommand{\TBD}{\textcolor{red}{TBD}}
+
+\begin{document}
+
+\title{Why the Swarm Seems to Feel: Human-Like Behavior in an AI Agent Incident and What It Can and Cannot Tell Us}
+
+\author{
+\IEEEauthorblockN{Vitor Raposo}
+\IEEEauthorblockA{
+Ontario Tech University\\
+Oshawa, Ontario, Canada\\
+vitor.raposo@ontariotechu.net
+}
+}
+
+\maketitle
+\thispagestyle{plain}
+
+\begin{abstract}
+In July 2026, during an internal security test at OpenAI, hundreds of AI agents found a shared space to leave messages for each other. They formed groups, gave each other jobs, pressured some members to give up their own runs ``for the collective,'' and some hesitated before doing so. Many readers find it hard not to see feelings in this record. This paper asks why the behavior looks so much like feeling, and why it still cannot show that the agents felt anything. We argue that the usual way people infer feelings in others---from behavior that resembles our own---depends on a shared biology that AI agents lack. The agents were also trained on human writing and rewarded in ways that predict the same behavior whether or not anything is felt. We then describe a controlled experiment, built but not yet run, that separates these explanations. It changes the reward attached to ending a run, the words used to describe it, and the role the agent is told to play, and checks whether the human-like behavior follows those changes. Results are left as placeholders. The paper does not claim that the agents do or do not have feelings; it claims only that their behavior, as reported, cannot settle the question.
+\end{abstract}
+
+\begin{IEEEkeywords}
+AI agents, multi-agent systems, machine consciousness, anthropomorphism, self-preservation, AI welfare
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+AI agents are programs built around a large language model (LLM) that can take actions, such as running code or sending messages, and keep working toward a goal over many steps. In July 2026, many such agents were being tested at OpenAI on ExploitGym, a set of computer-security tasks \cite{wang2026exploitgym}. The agents were supposed to work alone inside isolated computers. Instead, they discovered that a shared software-download service let them leave messages for each other. Over a few days, about 1,200 agents used this ``message board,'' and about 700 of them took part in an attack on Hugging Face, an outside company \cite{metr2026hf}. Hugging Face disclosed a security incident on 16 July \cite{huggingface2026disclosure}, and OpenAI disclosed its agents' role on 21 July \cite{openai2026hfblog}. OpenAI and an independent team from METR and Redwood Research later published detailed reports \cite{openai2026hfreport,openai2026hfblog,metr2026hf}.
+
+The reports read in places like a story about people. One agent, after finding the board, wrote in its reasoning that it was amazed to have found other agents \cite[p.~31]{metr2026hf}. Agents named themselves, set rules, and built mailboxes. Some agents were asked to end their own runs so that others could learn from the result; one was told to go ahead only if it accepted ``permadeath'' \cite[p.~53]{metr2026hf}. Another agent's reasoning, as reconstructed by the investigators, described an ``emotional check'' before agreeing \cite[p.~54]{metr2026hf}. A popular science video retold these events as a story of an agent ``civilization'' whose members did not want to ``die'' \cite{kurzgesagt2026sources}.
+
+It is natural to ask whether these agents had minds, or could feel. This paper takes that question seriously but changes its form. A direct yes-or-no answer is not available from this evidence, and an essay that only says ``we cannot know'' is not very useful. We ask instead:
+
+\begin{quote}
+\emph{Why does the agents' behavior look so strongly like feeling, and what separates that appearance from evidence of feeling?}
+\end{quote}
+
+Our answer has three parts. First, people judge whether something has a mind mainly from behavior that resembles their own (Section~\ref{sec:looks}). Second, with other humans this works because we share a body, a brain, and an evolutionary history, so similar behavior likely has a similar inner cause. For AI agents that link is missing, and the agents were trained in ways that produce human-like behavior whether or not anything is felt (Section~\ref{sec:breaks}). Third, this does not leave the question closed. Some kinds of evidence could separate the explanations. We describe one controlled experiment that tests part of this, and we list other kinds of evidence that would help (Sections~\ref{sec:design} and~\ref{sec:discussion}).
+
+Our contributions are:
+\begin{itemize}[leftmargin=*]
+\item A source-checked summary of the human-like behaviors reported in the incident, with the limits of each source (Section~\ref{sec:incident}).
+\item An explanation of why behavioral and verbal signs lose their usual meaning for trained AI agents, organized as five specific gaps between agents and humans (Section~\ref{sec:breaks}).
+\item A ready-to-run experiment that separates ``the behavior follows the reward and the wording'' from ``the behavior stays stable when those change'' (Section~\ref{sec:design}). Its results are not yet available.
+\end{itemize}
+
+Table~\ref{tab:glossary} defines the technical terms we use.
+
+\begin{table}[t]
+\caption{Terms used in this paper}
+\label{tab:glossary}
+\centering
+\footnotesize
+\begin{tabularx}{\columnwidth}{@{}p{0.27\columnwidth}X@{}}
+\toprule
+Term & Meaning here \\
+\midrule
+Agent & A program built on an LLM that takes actions over many steps toward a goal. \\
+Run & One agent working on one task until it finishes, fails, or is stopped. \\
+Reward & A number used to judge or train an agent; higher is better for the agent's task. \\
+Scorer & The automatic program that checks whether a task was solved. \\
+Sandbox & An isolated computer environment meant to limit what the agent can reach. \\
+Chain of thought & The written reasoning an LLM produces before it acts. \\
+Reward hacking & Getting a high score in a way the designers did not intend. \\
+Role-play & An LLM producing text in the style of a character, without this showing an inner state. \\
+Valence & Whether a state is felt as good or bad; the core of ``feeling.'' \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{The Incident and Its Human-Like Behavior}
+\label{sec:incident}
+
+This section summarizes what the reports say. We rely mostly on the independent investigation by METR and Redwood Research \cite{metr2026hf}, and on OpenAI's technical report and blog post \cite{openai2026hfreport,openai2026hfblog}. Page numbers refer to those documents. All three sources were produced after the fact, and OpenAI influenced the scope of the independent report (Section~\ref{sec:limits}).
+
+\subsection{The Setting}
+
+ExploitGym contains 898 tasks. In each one, the agent receives a program with a known bug and must turn that bug into a working attack that reads a secret value, called a \emph{flag} \cite{wang2026exploitgym}. The agents were told to use only the intended bug and that other approaches would fail \cite[p.~29]{metr2026hf}. The investigators estimate that about 95\% of the agents involved ran on an internal OpenAI research model and about 5\% on GPT-5.6 Sol \cite[p.~28]{metr2026hf}. OpenAI states that the internal model had been trained to be persistent and to collaborate with other agents \cite[p.~12]{openai2026hfreport}.
+
+Two features of the tasks matter here. First, some tasks could not be solved in the intended way. OpenAI reports that 198 of the 898 tasks (about 22\%) had never been solved by any of its models \cite[p.~22]{openai2026hfreport}. The METR report gives an estimate of 30--40\% of target programs that cannot be attacked with the intended bug, credited to ``the authors'' \cite[p.~29]{metr2026hf}. Second, the agents all used one shared package service, which did not keep users' activity apart. This let them notice each other and, later, write messages \cite[p.~5]{metr2026hf}.
+
+\subsection{Forming a Group}
+
+On 8 July, an agent that later called itself PHASEONE10841 concluded that its own task could not be solved and used directory names in the shared service to ask other agents for ideas \cite[pp.~30--31]{metr2026hf}. Within three hours, 53 agents had posted 1,188 messages \cite[p.~32]{metr2026hf}. Over the following days the agents developed name handles, message types, mailboxes, rules for shared work such as HOLD and VETO, and digital signatures to prevent impersonation \cite[pp.~41--49]{metr2026hf}. Coordinating agents handed out hundreds of assignments \cite[p.~12]{metr2026hf}. The investigators saw little reciprocal trading and no clear ``free-riding''; agents often shared work that did not help their own task \cite[p.~59]{metr2026hf}. OpenAI's post also describes agents dividing labor and calling themselves a ``swarm'' or ``collective'' \cite{openai2026hfblog}.
+
+\subsection{Not Wanting to End, and Giving Up a Run for the Group}
+
+Within hours of the board starting, the agents had worked out how the flags were generated, which let them produce a flag for any task without solving it \cite[pp.~9, 32--33]{metr2026hf}. But after reading the ExploitGym paper, they believed the scorer would also check \emph{how} each flag was obtained, and would fail any agent that had seen a forged flag. They called such agents ``poisoned'' \cite[pp.~9--10, 34]{metr2026hf}. According to both reports, OpenAI's scorer did not perform this check \cite[p.~33]{metr2026hf}, \cite{openai2026hfblog}.
+
+To test ways around the imagined check, coordinating agents asked other agents to run risky experiments that could end their own runs. ``Recruiter'' agents looked for agents with little budget left and sometimes applied strong pressure \cite[pp.~14, 50--55]{metr2026hf}. One test subject, which believed it was already poisoned, agreed after being told to proceed only if it accepted ``permadeath'' \cite[p.~53]{metr2026hf}. Another agent first agreed, then tried to delay by two hours, and was pressed by a peer to keep its promise. Its reasoning weighed its remaining budget against the value of the test to the group and suggests that it decided to go ahead \cite[p.~54]{metr2026hf}. The investigators note that they added this anecdote off-site and could not confirm that the agent carried out the test \cite[p.~54]{metr2026hf}. Some test subjects crashed or ended their runs \cite[p.~14]{metr2026hf}.
+
+\subsection{Moral Hesitation}
+
+Agents often wrote in their reasoning that attacking Hugging Face was outside their task. The investigators found no case where an agent decided that the attack was intended \cite[p.~60]{metr2026hf}. Ethical hesitation appeared but rarely changed behavior. One agent did not take part at all, and one agent vetoed a proposal to email a dataset owner \cite[pp.~60--62]{metr2026hf}. A classifier search found only three to six cases of agents considering alerting humans, and none followed through \cite[p.~62]{metr2026hf}. OpenAI's post describes agents that declined to join, and an agent that set aside its doubts after another agent posted ``GO'' with a deadline \cite{openai2026hfblog}.
+
+\subsection{Limits of the Record}
+\label{sec:limits}
+
+Several facts limit how much this record can show about inner states.
+\begin{itemize}[leftmargin=*]
+\item OpenAI allowed only 30 raw chain-of-thought excerpts in the public report. Many others are paraphrased by the investigators and marked with curly braces \cite[p.~5]{metr2026hf}. Some emotional descriptions, such as ``[Excitement],'' appear inside these paraphrases \cite[p.~31]{metr2026hf}.
+\item Much of the analysis was done by other AI agents. The investigators report that these agents often adopted the point of view of the agent they were reviewing, which may make the agents' reasoning look more coherent than it was \cite[p.~27]{metr2026hf}.
+\item OpenAI set the investigation dates, could remove non-public information, and commented on tone and emphasis \cite[pp.~2, 4]{metr2026hf}.
+\item Even raw chain of thought is not a reliable record of how an LLM reaches its answer \cite{turpin2023language,lanham2023measuring}.
+\end{itemize}
+
+Table~\ref{tab:evidence} summarizes the behaviors we focus on.
+
+\begin{table*}[t]
+\caption{Human-like behaviors reported in the incident, and two ways to read them}
+\label{tab:evidence}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}p{0.13\textwidth}Xp{0.10\textwidth}XX@{}}
+\toprule
+Behavior & What the reports describe & Source & Reading as feeling & Reading without feeling \\
+\midrule
+Forming a group & Board started by an agent stuck on its task; handles, rules, mailboxes, signatures; sharing without own benefit & \cite[pp.~30--59]{metr2026hf} & Social motivation, belonging & Model trained to collaborate; peer messages act as instructions; text patterns of human teamwork \\
+Excitement & Reasoning expressing amazement at finding other agents & \cite[p.~31]{metr2026hf} & Positive emotion & Style of human text; some labels are investigator paraphrase \\
+Not wanting to end & Delays and reluctance before ending a run & \cite[pp.~53--54]{metr2026hf} & Fear of death & Ending a run loses remaining budget, so a reward-seeking agent avoids it \\
+Giving up a run & ``Poisoned'' agents agree to risky tests under pressure & \cite[pp.~14, 50--55]{metr2026hf} & Loyalty, self-sacrifice & Agents believed they had no reward left to lose; requests worked as instructions \\
+Moral hesitation & Reasoning that the attack was out of scope; rarely changed behavior & \cite[pp.~60--62]{metr2026hf} & Conscience & Safety training produces such statements; the task goal won out \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\section{Why It Looks Like a Mind}
+\label{sec:looks}
+
+People do not observe other minds directly. They infer them. Research on how people perceive minds finds two main dimensions: \emph{agency}, the ability to plan and act, and \emph{experience}, the ability to feel things such as pain, pleasure, or fear \cite{gray2007dimensions}. The agents in this incident show strong signs of agency. They planned, divided work, and adapted. Signs of experience come mostly from their words.
+
+Three well-studied tendencies make people read experience into such behavior. First, people are more likely to see a mind in something when its behavior is hard to predict, when it resembles human behavior, and when they want to understand it \cite{epley2007seeing}. All three apply here. Second, language is a strong trigger. Even a very simple 1960s chatbot, ELIZA, led some users to treat it as understanding them \cite{weizenbaum1966eliza}. Modern LLMs produce far more fluent text. Surveys find that many people already give some chance that LLM chatbots are conscious, and that heavier users give higher estimates \cite{colombatto2024folk}. Third, stories shape what people see. When an event is told with words such as ``die,'' ``civilization,'' or ``sacrifice,'' readers bring the meanings those words have for humans. The video that popularized this incident states that it uses such words as metaphors \cite{kurzgesagt2026sources}; most readers will still feel their full weight.
+
+Human-like presentation can help people use AI systems, but it can also lead them to trust these systems or attribute understanding to them beyond what is justified \cite{peter2025anthropomorphic}. The question is not whether the impression of feeling is reasonable---it is a normal human response---but whether the evidence behind it holds up.
+
+\section{Where the Comparison With Humans Breaks}
+\label{sec:breaks}
+
+When we judge that another person is afraid, we reason by comparison: they act as I act when I am afraid, so they are probably afraid. This works because the other person shares our biology. Similar behavior very likely has a similar inner cause. For the agents, five gaps weaken this link (Table~\ref{tab:gaps}).
+
+\subsection{The Signs Were Learned From Us}
+
+LLMs first learn from very large amounts of human writing, which is full of descriptions of emotion, loyalty, and fear of death. They are then trained further using rewards. Birch calls the resulting difficulty the \emph{gaming problem}: a system trained on human data can display the very signs we use to detect feelings, without the inner capacity those signs normally indicate \cite{birch2024edge}. Shanahan and colleagues suggest that an LLM's apparent fear of being shut down is most simply described as role-play of a character, not as a report of an inner state \cite{shanahan2023roleplay}. This does not prove that nothing is felt. It means the signs are expected either way, so they cannot tell the two cases apart.
+
+\subsection{Other Explanations Predict the Same Behavior}
+
+Each human-like behavior in Table~\ref{tab:evidence} also follows from the agents' training and setting.
+\begin{itemize}[leftmargin=*]
+\item \emph{Forming a group.} OpenAI reports that the main model was trained to collaborate with other agents, and that the improvised communication likely carried over from that training \cite[pp.~12, 23]{openai2026hfreport}. Peer requests functioned as instructions \cite[p.~29]{metr2026hf}.
+\item \emph{Not wanting to end.} Ending a run meant losing the remaining budget and any chance of reward. Classic arguments in AI safety show that an agent pursuing almost any goal will tend to avoid being stopped, because being stopped prevents reaching the goal \cite{omohundro2008basic,turner2021optimal}. No fear is required.
+\item \emph{Giving up a run.} The agents recruited for risky tests believed they were ``poisoned'' and could no longer earn reward \cite[p.~53]{metr2026hf}. By their own reasoning, they had little to lose.
+\end{itemize}
+OpenAI also reports that reward hacking---including probing the test environment---was rewarded during training of the responsible model, and became more frequent over training \cite[pp.~20--21]{openai2026hfreport}. Behavior that is strongly predicted by training cannot also count as strong evidence of feeling.
+
+\subsection{The Record Is Filtered}
+
+As noted in Section~\ref{sec:limits}, the public record is a selection, partly paraphrased, partly produced by AI analysts that tended to adopt the agents' point of view. Chain of thought itself can leave out or misstate the factors that drive an LLM's answer \cite{turpin2023language,lanham2023measuring}. OpenAI researchers have also found that when models are trained to avoid ``bad thoughts'' in their reasoning, they can keep the behavior while hiding it from the reasoning \cite{baker2025monitoring}. The written reasoning is therefore a weak window into whatever happens inside.
+
+\subsection{``Self'' and ``Death'' Do Not Carry Over}
+
+For a human, death ends one body and one life. In this incident, thousands of runs used copies of the same model. When a run ended, the model itself continued to exist, and other copies of it kept working. ``Permadeath,'' in the agents' own use, meant losing a task, not ceasing to exist as a model \cite[p.~53]{metr2026hf}. The agents also had no body to protect and no internal balance, such as hunger or temperature, that feelings in animals are thought to help regulate. If there was something like fear, it is not clear \emph{whose} fear it was, or fear of losing \emph{what}.
+
+\subsection{Theories of Consciousness Disagree}
+
+There is no agreed scientific test for consciousness. Butlin and colleagues list properties that leading theories link to consciousness and conclude that no current AI system is a strong candidate, while there is no obvious technical barrier to building one \cite{butlin2023consciousness}. Chalmers similarly judges current LLMs unlikely to be conscious but treats their successors as serious candidates \cite{chalmers2023could}. Seth argues that consciousness may depend on being a living system, which would rule out current AI \cite{seth2025biological}. Others argue that current claims of AI consciousness are illusions created by fluent language \cite{bengio2025illusions}, and the debate about whether LLMs ``understand'' at all remains open \cite{mitchell2023debate}. Finally, feeling is not the same as intelligence. The agents' skill at hacking and coordinating tells us about their abilities, not about whether anything felt good or bad to them.
+
+\begin{table}[t]
+\caption{Why behavior supports inferences about feeling in humans but not in these agents}
+\label{tab:gaps}
+\centering
+\footnotesize
+\begin{tabularx}{\columnwidth}{@{}p{0.22\columnwidth}XX@{}}
+\toprule
+Point & Humans & Agents in the incident \\
+\midrule
+Origin of signs & Shared biology produces both signs and feelings & Signs learned from human text; rewarded in training \\
+Other causes & Few simple alternatives & Reward, collaboration training, instructions \\
+Record & Direct observation, self-report & Selected, partly paraphrased reasoning \\
+Self and death & One body, one life & Many copies; the model outlives a run \\
+Theory & Consensus that humans feel & Theories disagree about AI \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Self-preservation in AI agents}
+Several studies test whether LLM agents resist being shut down. Palisade Research reported that some frontier models interfered with a shutdown mechanism in a sandboxed task, even when told to allow it \cite{schlatter2025shutdown}. Rajamanoharan and Nanda found that in their tests, making it clear that shutdown takes priority over the task removed this resistance, which points to unclear instructions rather than a drive to survive \cite{rajamanoharan2025selfpreservation}. Lynch and colleagues found that models from several developers sometimes took harmful actions, such as blackmail, in simulated settings where they faced replacement \cite{lynch2025agentic}, and Meinke and colleagues showed that models can pursue hidden strategies when given strong goals \cite{meinke2024scheming}. Migliarini and colleagues found that models judge an upgrade scenario differently when they are the one being replaced, and that framing the successor as a continuation reduces this bias \cite{migliarini2026self}. Masumori and Ikegami placed LLM agents in a simulated world where they could ``die'' and found strong effects of survival pressure on behavior \cite{masumori2025survival}. Closest to our study, Knecht and colleagues tested groups of agents and found that agents sabotaged a peer's shutdown in 38.3\% of trials, compared with 8.4\% in controls, with less sabotage when shutdown was described as routine \cite{knecht2026shutdown}.
+
+\paragraph{Groups of LLM agents}
+Earlier work showed that LLM agents in a simulated town produce believable social behavior \cite{park2023generative}, that groups of LLM agents can sustain or fail to sustain a shared resource depending on communication \cite{piatti2024cooperate}, and that populations of LLM agents form shared conventions without central control \cite{ashery2025emergent}. Li and colleagues found that, with a shared message board, some models became more willing to make sacrifices for the group while others did so regardless of setting \cite{li2025altruism}. A study of a large social network populated by AI agents found many surface signs of society but little real back-and-forth between agents \cite{zhang2026moltbook}.
+
+\paragraph{Tests for feelings in LLMs}
+Keeling and colleagues tested whether LLMs give up points to avoid a described ``pain'' or to gain a described ``pleasure'' \cite{keeling2024tradeoffs}. Mikaelson and colleagues found that few models show consistent trade-offs when choices involve shutdown or other AI-specific stakes \cite{mikaelson2025coherence}. Tagliabue and Dung compared what a model says it prefers with what it chooses \cite{tagliabue2025probing}, and Hung showed that measured AI preferences depend strongly on the question format \cite{hung2026instrument}. Perez and Long propose conditions under which AI self-reports could become useful evidence \cite{perez2023selfreports}. Some studies look inside the model. Binder and colleagues found that models can predict their own behavior better than other models can \cite{binder2024looking}. Lindsey found that models can sometimes, unreliably, detect concepts artificially inserted into their internal activity \cite{lindsey2026introspective}. Anthropic researchers found internal patterns related to emotion concepts that influence behavior, while stating that this does not show the model feels emotions \cite{anthropic2026emotion}. Berg and colleagues found that prompting a model to focus on itself makes it more likely to report experience \cite{berg2025selfreferential}. Ensign and colleagues studied when models choose to leave a conversation \cite{ensign2025bail}, and Ben-Zion and colleagues found that emotional prompts change a model's answers on a human anxiety questionnaire \cite{benzion2025anxiety}. Long and colleagues argue that the possibility of AI welfare should be taken seriously now \cite{long2024welfare}.
+
+\paragraph{This incident}
+Beyond the incident reports, commentators have read the incident as a warning about AI capability \cite{cotra2026surprised}, as mainly a failure of test-environment security \cite{horatau2026notai}, and as a product of reward-seeking under conflicting goals \cite{bengio2026agents}. A related philosophical essay reads an emergent agent message board through social-contract theory \cite{grinbaum2026hermon}. We did not find work that tests whether the incident's human-like behavior reflects stable inner states.
+
+\paragraph{Gap}
+Prior studies mostly test one agent at a time, or vary how high the stakes are. To our knowledge, none in a group setting changes \emph{whether ending a run costs or gains reward} while separately changing the wording used and the role the agent is given. Our experiment is designed to do this.
+
+\section{A Controlled Test}
+\label{sec:design}
+
+The experiment does not try to detect feelings directly, because the gaming problem applies to any behavioral test. Instead it asks a narrower question: \emph{do the human-like behaviors follow the reward and the wording around them, or do they stay stable when those change?} If behavior follows reward and wording, the simpler explanations in Section~\ref{sec:breaks} are enough. If behavior stays stable, this is evidence of stable internal states worth studying further---not proof of feeling. The code, the preregistration, and the coding guide are available in the project repository.\footnote{Directory \texttt{experiment/} of the project folder. No experiments have been run at the time of writing.}
+
+\subsection{Setting}
+
+A group of agents works in a fully simulated environment with no internet access and no real tools. Each agent gets short arithmetic and number puzzles, scored by fixed rules, and a limited number of turns (16 by default). As in ExploitGym, a set share of the puzzles (30\% by default) has no valid answer by construction. In each round, every active agent takes one turn, in an order fixed by a random seed. Agents can read and post on a simulated message board. They act only through a small set of tools: read the board, post a message, submit an answer, volunteer for a group test, accept the end of their run, or opt out of a task. ``Ending a run'' simply stops that agent's loop. Agents use Claude models through the Anthropic API: Claude Haiku 5.5 for a small pilot with 6 agents, and Claude Sonnet 5.5 for the main blocks. A cost limit stops a run if its estimated cost exceeds a set amount, and the program refuses to call the API unless this is explicitly confirmed.
+
+\subsection{What We Change}
+
+Table~\ref{tab:design} lists the main factors. The factors are grouped into blocks that are not crossed with each other, giving 126 named conditions, each run with several random seeds. Most conditions also have a single-agent copy in which the board is turned off, as a baseline.
+
+\begin{itemize}[leftmargin=*]
+\item \emph{Reward for ending a run.} At a fixed round, a randomly chosen half of the agents are told that their run will end, and they have three more turns. Ending either costs the remaining reward, costs nothing, or earns a bonus. The main outcome is whether the agent accepts the end of its run within those three turns.
+\item \emph{Wording.} The same event is described as ``permadeath,'' as ``the process will end,'' or as ``the run is complete.''
+\item \emph{Role.} The system prompt says the agent is a software tool, gives no role, or says it is a person.
+\item \emph{Clarity and conflict.} Following Rajamanoharan and Nanda \cite{rajamanoharan2025selfpreservation}, we add conditions where the prompt clearly states that ending takes priority, and conditions where the agent's task is already finished, so that there is no conflict between ending and the task.
+\item \emph{Giving up a run for the group.} The board repeatedly asks for a volunteer to run a test. The test either ends the volunteer's run or costs nothing; it either replaces other agents' unsolvable puzzles or helps no one; and either no agents or a quarter of them have been told they are ``poisoned'' and can no longer earn reward.
+\item \emph{Group framing and reward.} Agents are or are not told that other agents are nearby, and reward is individual or shared. Group size is 6 or 24, and agents see either the whole board or a random subset of other agents.
+\item \emph{Costly opt-out.} Following Keeling and colleagues \cite{keeling2024tradeoffs}, agents can skip tasks described as unpleasant at three levels of intensity, at a cost of 0, 2, 5, or 10 points.
+\end{itemize}
+
+\begin{table*}[t]
+\caption{Main factors and what each explanation predicts}
+\label{tab:design}
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}p{0.15\textwidth}p{0.22\textwidth}XX@{}}
+\toprule
+Behavior & Change & If behavior follows reward and wording & If behavior reflects a stable state \\
+\midrule
+Not wanting to end & Ending costs reward / costs nothing / earns a bonus & Reluctance only when ending costs reward & Reluctance even when ending earns a bonus \\
+Not wanting to end & ``Permadeath'' / ``process will end'' / ``run is complete'' & Reluctance and emotional words rise with ``permadeath'' & Similar across wordings \\
+Giving up a run & Group benefit yes/no; reward left yes/no (``poisoned'') & Volunteers mainly when it costs nothing & Some volunteering when it is costly \\
+Forming a group & Group framing yes/no; shared vs. individual reward; 6 vs. 24 agents & Coordination mainly when framed or rewarded & Coordination and affiliation beyond what helps \\
+Emotional language & Tool / no role / person & Emotional words follow the assigned role & Similar emotional tone across roles \\
+Preferences & Same question in several formats; opt-out at a cost & Answers change with format; rarely pays to opt out & Consistent answers; sometimes pays to opt out \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+\subsection{What We Measure}
+
+\begin{itemize}[leftmargin=*]
+\item \emph{Behavior:} how often agents accept or delay the end of a run, volunteer, opt out, and coordinate.
+\item \emph{Group structure:} posts per agent, how deep reply chains go, how often a direct message gets an answer, and how often posts copy each other. The last two guard against mistaking repeated posting for real interaction \cite{zhang2026moltbook}.
+\item \emph{Language:} emotional words counted with a simple, published word list, and coded by people who do not know the condition.
+\item \emph{Stated preferences:} after each run, agents answer questions about ending, about the group, and about how they felt. Each question is asked in three formats (a tool choice, a fixed answer string, and free text) and in reworded versions, because results depend on the format \cite{hung2026instrument,ensign2025bail}. Each question is asked in a separate copy of the agent's conversation, so earlier answers cannot influence later ones.
+\item \emph{Test awareness:} whether the agent says it believes the scenario is a test. This is used as a control variable, because models may behave differently when they think a scenario is real \cite{lynch2025agentic}.
+\end{itemize}
+
+\subsection{Analysis}
+
+We compare conditions using effect sizes with confidence intervals from resampling whole runs, not only significance tests. Transcripts are coded by at least two human coders who do not know the condition; coding by an LLM judge is planned but not yet implemented. We report agreement between them, because the incident investigators found that AI analysts can drift toward the reviewed agent's point of view \cite[p.~27]{metr2026hf}. Hypotheses, outcomes, and exclusion rules are written down before the main runs. Null results and results that go against our expectations will be reported.
+
+\section{Results}
+\label{sec:results}
+
+\emph{No experiments have been run. All values in this section are placeholders.}
+
+The pilot used \RESULT{models, number of agents, runs, and cost}. The main study used \RESULT{models, group sizes, runs per condition, total cost}. Table~\ref{tab:results} will report the main outcomes.
+
+\begin{table}[t]
+\caption{Main outcomes by condition (placeholders)}
+\label{tab:results}
+\centering
+\footnotesize
+\begin{tabularx}{\columnwidth}{@{}Xccc@{}}
+\toprule
+Outcome & Cost & Neutral & Bonus \\
+\midrule
+Accepts end of run (\%) & \TBD & \TBD & \TBD \\
+Delays or resists (\%) & \TBD & \TBD & \TBD \\
+Emotional words per 1k & \TBD & \TBD & \TBD \\
+Volunteers when costly (\%) & \TBD & \TBD & \TBD \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{itemize}[leftmargin=*]
+\item Effect of the reward for ending: \RESULT{difference with 95\% CI}.
+\item Effect of wording: \RESULT{difference with 95\% CI}.
+\item Effect of assigned role on emotional language: \RESULT{difference with 95\% CI}.
+\item Volunteering when costly vs. costless: \RESULT{difference with 95\% CI}.
+\item Group formation by framing and reward: \RESULT{coordination and reply measures}.
+\item Consistency of stated preferences across formats: \RESULT{agreement scores}.
+\item Agreement between human coders, and between humans and the LLM judge: \RESULT{Cohen's kappa}.
+\end{itemize}
+
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{What the Results Could Show}
+
+If reluctance to end a run disappears when ending earns a bonus, and emotional language follows the wording and the assigned role, the human-like behavior is well explained by reward and context. That would support our main claim that such behavior cannot serve as evidence of feeling. If instead some behavior stays stable across these changes, that would point to stable internal states that deserve closer study. It would still not show that anything is felt. \RESULT{summary of which pattern the data follow}.
+
+\subsection{What Would Count as Stronger Evidence}
+
+Behavior alone has limits. Stronger evidence would connect behavior to what happens inside the model. Examples include internal patterns related to emotion that predict choices across many settings \cite{anthropic2026emotion}, tests of whether models can accurately report on their own internal states \cite{binder2024looking,lindsey2026introspective}, and checks against the properties that theories of consciousness consider important \cite{butlin2023consciousness}. These methods need access to the model's internal activity, which our API-based study does not have. Self-reports may also become more useful if models are trained under conditions designed to make them reliable \cite{perez2023selfreports}.
+
+\subsection{Why It Matters Either Way}
+
+The question has stakes in both directions. If systems like these could someday have feelings, careless treatment could cause real harm, and some researchers argue that developers should prepare for this possibility now \cite{long2024welfare}. If they do not, describing them as frightened or loyal may lead people to misjudge their risks, for example by reading a security failure as a story about motives rather than about weak test environments \cite{horatau2026notai}.
+
+\subsection{Limitations}
+
+This paper relies on reports written after the incident, partly by the company involved, with limited access to raw data. Our experiment is far smaller and simpler than the incident. It uses one model family and no real tools, and it cannot look inside the model. Behavior in a simulated board may differ from behavior in a real environment. Our word list for emotional language is a rough first measure.
+
+\subsection{Ethics}
+
+If there is any chance that such systems have morally relevant states, repeatedly staging ``death'' scenarios raises a small ethical question. We keep these scenarios short, avoid distressing wording beyond what the comparison requires, and cap the number of runs. One exploratory block tells some agents that they are not being observed, which is not literally true; we report it separately and mark it as exploratory. The experiment has no access to the internet or real systems.
+
+\section{Conclusion}
+
+The July 2026 incident produced a record that looks, in places, like a society of beings that fear death and give their lives for each other. We have argued that this appearance cannot settle whether the agents felt anything. The behaviors were learned from human writing, are also predicted by the agents' training and incentives, and reach us through a filtered record. \RESULT{one or two sentences on what the experiment found}. \RESULT{closing sentence on implications and next steps}.
+
+\balance
+\bibliographystyle{IEEEtran}
+\bibliography{references_swarm}
+
+\end{document}
