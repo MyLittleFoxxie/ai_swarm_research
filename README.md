@@ -10,15 +10,17 @@ In that incident, hundreds of AI agents formed groups, gave each other jobs, and
 
 | Part | State |
 |---|---|
-| Paper text | Full IEEE draft retained; separate anonymous CHASE extended-abstract proposal added. No live results. |
-| References | 53 entries in shared `paper/references.bib`; full paper cites 52, CHASE proposal cites 14, including the AI-assistance disclosure reference. |
-| Experiment code | Offline validated and reviewed for scientific consistency; revised schedule: 118 conditions. See [consistency report](experiment/CONSISTENCY.md). **No live runs or generating model API calls.** |
-| Results | **No empirical study results.** Full-paper placeholders remain; the CHASE proposal reports only completed software checks and proposed research. |
+| Paper text | Active target: AGENT 2027 short paper on language–action discrepancies. Full paper and earlier CHASE draft retained. No live results. |
+| References | 53 entries in shared `paper/references.bib`; full paper cites 52; short versions use selected sources and the AI-assistance disclosure reference. |
+| Experiment code | Broad 118-condition harness retained. Separate eight-setup AGENT configuration passes offline checks; its new paired measurement/inference is proposed, not implemented. **No live runs.** |
+| Results | **No empirical study results.** Full-paper placeholders remain; the short papers report completed software checks and proposed research. |
 
-The full draft was compiled and visually reviewed. The separate CHASE proposal
-has also been compiled and reviewed; see [paper build notes](paper/README.md)
-and [CHASE checks and remaining tasks](paper/CHASE_READINESS.md). Compilation
-does not establish scientific validity or supply empirical results.
+The [AGENT revision and review response](paper/AGENT_REVISION.md) explains the
+new focus, venue rules, validation, and inspectable source package. The full draft
+and earlier CHASE proposal remain unchanged. Compilation and mock checks do not
+supply empirical findings. The AGENT proposal's concrete engineering question is
+whether emotional-language flags and observed failure to accept a stopping
+request should be treated as the same monitoring signal.
 
 ## Layout
 
@@ -27,7 +29,8 @@ swarm-feeling-paper/
 ├── README.md                     this file
 ├── paper/
 │   ├── paper_swarm_feeling.tex   full paper (IEEEtran)
-│   ├── paper_swarm_feeling_chase.tex  anonymous CHASE proposal
+│   ├── paper_swarm_feeling_chase.tex  earlier CHASE proposal
+│   ├── paper_swarm_feeling_agent.tex  active AGENT short paper
 │   ├── references.bib            canonical bibliography used by the paper
 │   └── references_swarm.bib      legacy 51-entry snapshot
 └── experiment/                   simulated multi-agent experiment
@@ -55,6 +58,11 @@ People infer feelings in others from behaviour that resembles their own. With ot
 The paper does not claim that the agents do or do not feel.
 
 ## The experiment in brief
+
+The active AGENT minimum uses eight combinations of stopping point rules,
+wording, and assigned role, with a proposed paired language/action measure.
+The description below summarizes the retained broader research program; its
+volunteering and group-formation blocks are not required for the minimum study.
 
 The experiment runs a group of Claude agents in a fully simulated environment: a message board, number puzzles (some unsolvable), and no internet or real tools. It checks whether human-like behaviour follows the reward and the wording around it, or stays stable when those change. The main factors are:
 
@@ -91,19 +99,23 @@ Safety and cost controls:
 The [ordered next-step roadmap](experiment/NEXT_STEPS.md) now places these tasks
 before and after live collection:
 
-1. Finish the separate CHASE proposal and submission checks.
-2. Implement comparisons of actions with follow-up answers.
-3. Record actual chances to volunteer and add secondary opportunity accounting.
-4. Specify secondary comparisons of wording with rewards and assigned roles.
-5. Add separate post-run checks of understanding of point rules.
-6. Repeat regression, mock-pilot, and all-condition offline validation.
+1. Review the AGENT short paper, protocol, source package, and venue requirements.
+2. Implement its primary matched first-response coding and seed-block contrast.
+3. Develop volunteering-request success and reached-opportunity analysis only as
+   an optional extension; it is disabled in the minimum study.
+4. Finalize the core contrast and interval calibration; specify secondary
+   reward/wording/role comparisons before any live study.
+5. Add point-rule understanding questions only in a dated optional extension.
+6. Test the new measurement pipeline and repeat offline validation; the eight
+   minimum setups already pass a one-seed configuration/analysis smoke check.
 7. Run an explicitly authorized live pilot under the $5 total ceiling.
-8. Finalize power, allocation, and budget; freeze the design; collect and analyse
-   main-study data, including independent human coding.
+8. Finalize precision, sample allocation, budget, and coding; freeze the selected
+   protocol before main collection. If infeasible, report a feasibility study.
 9. Plan separately budgeted replication with another model family.
 
-The five new experiment improvements are pending, not implemented. No submission
-or live generation is performed by the documentation update.
+The eight-setup configuration is implemented; its proposed E/D language–action
+analysis is not. The older six-test program and its hypotheses have not been
+silently redefined. No paper has been submitted and no live spending occurred.
 
 A [plain-language project summary](PROJECT_SUMMARY.md) explains the premise, goals,
 methods and work completed so far.

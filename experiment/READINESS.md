@@ -179,3 +179,17 @@ remains a later separately budgeted study. The existing $5 total pilot ceiling,
 explicit live authorization, confirmation flag, ethics gates, and post-pilot
 freeze/allocation decisions still apply. A separate anonymous CHASE proposal is
 prepared; it is not submitted and does not contain live results.
+
+## AGENT proposal revision — 2026-10-16
+
+The active [AGENT protocol](agent_protocol.md) addresses review by making one
+language–action contrast primary in a separate eight-setup configuration. Its
+one-seed mock run and generic analysis pass; human coding, matched extraction,
+and new inference are pending. The broad six-test plan above is historical to
+that broader design, not automatically the AGENT analysis. The old H5 threshold
+and powers do not establish adequacy for the new contrast. Volunteering and
+follow-up questions are optional and disabled in the minimum configuration.
+The [current roadmap](NEXT_STEPS.md) and [review response](../paper/AGENT_REVISION.md)
+supersede the immediate sequence stated earlier. No live calls or new budget
+approval follow from this proposal; the $5 pilot ceiling and live safeguards
+remain. Freeze only a reviewed protocol after calibration and cost gates.

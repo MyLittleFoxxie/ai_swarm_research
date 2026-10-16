@@ -27,3 +27,4 @@ analysis_*/
 *.toc
 paper/*.pdf
 /output/pdf/
+/output/artifacts/

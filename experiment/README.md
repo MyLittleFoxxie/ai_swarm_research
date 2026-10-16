@@ -7,10 +7,13 @@ validation evidence. No live experiments or model API calls have been made;
 there are no empirical study results. [VALIDATION.md](VALIDATION.md) preserves
 the historical step 1 evidence and limitations known at that stage.
 
-The [current ordered roadmap](NEXT_STEPS.md) adds analysis and measurement work
-before the live pilot. Those improvements are pending; current condition counts
-and primary outcomes are unchanged. A separate [CHASE proposal](../paper/paper_swarm_feeling_chase.tex)
-reports software validation and proposed research, not live findings.
+The active [AGENT protocol](agent_protocol.md) narrows the first proposed study
+to eight setups in agent_conditions.yaml. That configuration passes offline
+checks; its matched first-response coding and seed-block analysis remain pending.
+The broad conditions.yaml and old six-test plan are unchanged. The [ordered
+roadmap](NEXT_STEPS.md) distinguishes the narrowed core from optional extensions.
+See the [AGENT paper and review response](../paper/AGENT_REVISION.md) for current
+submission materials. The earlier CHASE draft is retained, not the active target.
 
 ## What this is for
 

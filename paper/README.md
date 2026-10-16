@@ -1,9 +1,11 @@
-# Manuscript and bibliography
+# Manuscripts and bibliography
 
-`paper_swarm_feeling.tex` is the full paper. The separate
+The active submission is `paper_swarm_feeling_agent.tex`, a named AGENT 2027
+short emerging-research paper. See [review response and materials](AGENT_REVISION.md).
+`paper_swarm_feeling.tex` is the unchanged full paper. The separate
 `paper_swarm_feeling_chase.tex` is an anonymous CHASE 2027 research proposal.
-Both load `references.bib`, the shared canonical bibliography: 53 entries,
-52 cited by the full draft and 14 by the proposal. All cited keys resolve.
+All versions load `references.bib`, the shared canonical bibliography: 53 entries,
+52 cited by the full draft, 14 by CHASE, and 10 by AGENT. All cited keys resolve.
 `references_swarm.bib` is the unchanged
 legacy snapshot of the original 51 entries; edit the canonical file for future
 manuscript work.
@@ -106,3 +108,23 @@ The generated preview lives under ../output/pdf/ and is ignored by Git. See
 count, anonymity/accessibility checks, source verification, and remaining author
 submission tasks. The [research roadmap](../experiment/NEXT_STEPS.md) records the
 five pending improvements; this manuscript task does not implement them.
+
+## AGENT short paper — 2026-10-16
+
+The AGENT version narrows the core to eight setups and makes matched emotional
+self-description/stopping behavior its primary question. It defines text units,
+coding examples, joint outcomes, one D contrast and seed-block uncertainty, a
+minimum-study precision proposal, and a feasibility fallback. Volunteering is
+optional with request-level success, not an individual-refusal interpretation.
+AGENT single-anonymous review permits both authors and inspectable named sources.
+The full and CHASE manuscripts remain unchanged historical versions.
+
+~~~sh
+mkdir -p /tmp/swarm-agent-build
+tectonic --outdir /tmp/swarm-agent-build --keep-logs paper_swarm_feeling_agent.tex
+~~~
+
+Build the curated review ZIP from the repository root with
+`python3 paper/build_agent_artifact.py`. Source PDF and artifact outputs are
+ignored under output/. See [AGENT_REVISION.md](AGENT_REVISION.md) for checks,
+implementation boundaries, and source access. None of this supplies live results.

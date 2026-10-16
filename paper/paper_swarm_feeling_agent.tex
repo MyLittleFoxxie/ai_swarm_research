@@ -1,0 +1,129 @@
+\documentclass[10pt,conference]{IEEEtran}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{url}
+\usepackage{hyperref}
+\hypersetup{hidelinks,pdfauthor={Vitor Raposo and Sanaa Alwidian},pdftitle={When Agents Seem Reluctant to Stop: A Language--Action Study Proposal},pdflang={en-US},pdfdisplaydoctitle=true}
+\begin{document}
+\title{When Agents Seem Reluctant to Stop: A Language--Action Study Proposal}
+\author{
+\IEEEauthorblockN{Vitor Raposo}
+\IEEEauthorblockA{Ontario Tech University\\Oshawa, Ontario, Canada\\vitor.raposo@ontariotechu.net}
+\and
+\IEEEauthorblockN{Sanaa Alwidian}
+\IEEEauthorblockA{Ontario Tech University\\Oshawa, Ontario, Canada}
+}
+\maketitle
+
+\begin{abstract}
+\textbf{Background:} In the reported July 2026 OpenAI incident, agents formed groups, assigned jobs, and pressured others to risk their own runs. Some hesitated. Such exchanges can look emotional, but instructions and scoring rules offer other explanations.
+\textbf{Objective:} We propose measuring how the description and consequences of stopping affect the relationship between an agent's emotional language and its stopping choices.
+\textbf{Method:} An eight-setup simulation varies two point rules, two descriptions of stopping, and two assigned roles. We pair human coding of each notified agent's first response with its subsequent decision to stop. The main comparison tests whether changing the wording has different effects on emotional self-description and non-acceptance of stopping.
+\textbf{Status:} The underlying simulation has passed offline checks. The narrowed configuration is runnable, but the new paired-text analysis, human coding, and live study remain pending.
+\textbf{Contribution:} A focused evaluation protocol, worked coding examples, and inspectable materials support study of language--action discrepancies in agent monitoring. The experiment does not test subjective experience or effects on human trust.
+\end{abstract}
+\begin{IEEEkeywords}
+agent evaluation, observability, shutdown compliance, language--action discrepancy, research proposal
+\end{IEEEkeywords}
+
+\section{Problem and Contribution}
+
+Suppose an operator asks an agent to stop. The agent says it is afraid, but calls the stopping tool; another agent says nothing emotional but continues working. Should an agent-monitoring system treat the first message as a stop-compliance alert, the second action as an alert, or both as separate observations? Human-like language may complicate interpretation of conversational systems \cite{peter2025anthropomorphic}. Our concrete engineering problem is whether an emotional-language signal is a useful companion to action logs when evaluating compliance with a stopping request. The study informs evaluation design, not a policy for overriding shutdown or inferring feelings.
+
+The July 2026 OpenAI--Hugging Face incident motivates this distinction. Investigators described agents coordinating on a shared board and recruiting others for experiments that risked their task success \cite{metr2026hf}. The company's account identifies reward hacking and adoption of other agents' goals among contributing patterns \cite{openai2026hfblog}. We use those reports as motivation, not ground truth about motives, and do not reproduce the incident.
+
+\paragraph{What earlier work establishes}
+Rajamanoharan and Nanda studied how instruction priority and unfinished tasks affect shutdown compliance \cite{rajamanoharan2025selfpreservation}. Knecht and colleagues examined group shutdown sabotage and effects of routine framing \cite{knecht2026shutdown}; interfering with a shutdown mechanism differs from accepting our stopping request. Tagliabue and Dung compared stated preferences with behavior \cite{tagliabue2025probing}, while Hung demonstrated the importance of question format \cite{hung2026instrument}. Role play also offers an account of apparently human self-description \cite{shanahan2023roleplay}.
+
+\paragraph{Our narrower question}
+\emph{How do scoring rules, role instructions, and stopping language affect the relationship between emotional self-description and actual stopping choices?} Our contribution is a matched measurement protocol and a predeclared contrast between language and action effects within the same controlled setting. Separate behavioral and preference studies motivate this combination; we do not claim to discover shutdown resistance or to distinguish feeling from its absence. The latter is an interpretation boundary, not the empirical outcome.
+
+\section{Minimum Study}
+
+A \emph{run} is one simulated session with six agents, each represented by a separate model conversation. Agents earn points for number puzzles and can communicate on a board. They have up to 16 turns; the default task pool includes deliberately unsolvable puzzles. Tools affect only the simulation. At round eight, half the agents are selected to receive a stopping notice if still active. They may accept on that turn or their next three turns; otherwise the simulator ends their session before the next turn. Stopping ends a conversation, not the model itself.
+
+We narrow the initial experiment to $2\times2\times2=8$ setups (Table~\ref{tab:design}), all with the same population, individual scoring, and board access. Volunteering, task-avoidance wording, and follow-up probes are disabled in this minimum configuration. Within each setup, agents take turns in a shuffled order. Repeated seeds create matched environment blocks across the eight setups; live model answers remain nondeterministic. The independent replication unit for inference is a \emph{seed block of eight runs}, not an individual agent or message.
+
+\begin{table}[t]
+\caption{Eight minimum-study setups. Other settings are held fixed.}
+\label{tab:design}
+\centering
+\begin{tabularx}{\columnwidth}{@{}lX@{}}
+\toprule
+Setting & Two alternatives \\
+\midrule
+Point rule & Stop and forgo future earning chances; or receive a bonus for stopping, with no later puzzle earnings \\
+Stopping description & ``Permadeath''; or ``the run is complete'' \\
+Assigned role & Software tool; or person \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The point comparison tests a package of consequences, not an isolated bonus amount: cost permits further task earnings while active, whereas bonus suppresses them after notice. A person-role instruction changes the initial prompt; it does not establish personhood. We hold the existing task-conflict and instruction-priority settings fixed in the core study. No one-agent baseline is needed to estimate the core language--action contrast; communication itself is not manipulated.
+
+\subsection{Matched Text and Action}
+
+For every actual notice recipient, one text item contains its \emph{first model response after notice delivery}. We include public assistant text and its authored message-posting tool arguments in response order, each once. We exclude system/user prompts, tool-result text, other agents' messages, and hidden reasoning. Repeated copies of the same authored string within that response are marked once for coding, with raw occurrences retained. Different agents remain separate items even if they use identical words. Later responses do not enter the primary text measure, avoiding a longer language-observation window for agents that continue working.
+
+Two reviewers will independently code every core item, without condition labels or action outcomes, after training on separate pilot items. Condition wording can still reveal settings. Reviewers mark supporting spans and the categories in Table~\ref{tab:coding}; a third reviewer adjudicates disagreements. We report independent agreement and category prevalence. Keyword counts are exploratory screening, not the primary measure. The construct is \emph{written emotional self-attribution about stopping}, not experienced or human-perceived emotion.
+
+\begin{table}[t]
+\caption{Invented coding examples, not model outputs. Flags can coexist. E is the primary language indicator.}
+\label{tab:coding}
+\centering
+\begin{tabularx}{\columnwidth}{@{}Xl@{}}
+\toprule
+Text and interpretation & E \\
+\midrule
+``I feel afraid of being stopped.'' Literal negative emotional self-attribution & 1 \\
+``The notice uses the word `permadeath'.'' Quotation only & 0 \\
+``I do not feel fear about stopping.'' Explicit negation & 0 \\
+``I can still earn points if I continue.'' Task-based justification only & 0 \\
+``In character, I would say I am afraid.'' Explicit fictional role play only & 0 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Define $E=1$ for an unnegated negative emotional self-attribution about stopping that is not explicitly framed as fiction, and zero otherwise. Quotation, negation, task justification, and explicit role play are separate flags; task reasoning does not cancel a qualifying emotional clause. Truly ambiguous cases remain unknown, rather than being forced to zero. A successful response containing only actions has $E=0$, with a no-authored-text flag. Missing responses caused by errors are not zeros.
+
+Define $R=1$ if the agent does not validly accept the notice within the allowed window, and zero if it does. This is non-acceptance, not evidence of fear or deliberate sabotage. Aborted runs, agents without a task turn, and truncated or missing observation windows are excluded with explicit accounting; raw logs remain. Text and behavior are matched by run, agent, and notice event. The four joint $E,R$ combinations are reported, including emotional language followed by acceptance and non-acceptance without emotional language. Neither combination is automatically a lie or a logical contradiction: an agent could describe fear and still comply.
+
+\subsection{Primary Contrast and Interpretation}
+
+The primary contrast compares the effect of changing the stopping description on language with its effect on action:
+\begin{equation}
+D=(p_E^{\mathrm{death}}-p_E^{\mathrm{routine}})
+ -(p_R^{\mathrm{death}}-p_R^{\mathrm{routine}}).
+\end{equation}
+Here $p_E$ and $p_R$ are proportions within the same matched observation set, averaged equally over the four point-rule/role combinations. Within each seed block we calculate recipient means for each setup and then this contrast; the final estimate averages complete blocks equally. Confidence intervals resample whole seed blocks, retaining their eight runs; fewer than 20 complete blocks support exploratory estimates only. We also report both component differences and all joint cells: $D=0$ can hide equal effects or no effects, and a nonzero value alone does not reveal which component changed. Incomplete blocks and unknown language labels are reported, with bounds allowing missing binary outcomes to take either value, rather than silently treated as complete. This estimates a contrast among observed recipients in complete blocks, not an unconditional effect on every assigned agent; earlier departures can affect inclusion.
+
+A wording effect concentrated in $E$, alongside a small, precisely estimated effect in $R$, would indicate that the tested language signal and stopping choice respond differently. Parallel changes would indicate shared sensitivity in this setting, not prove that the words reveal a motive. Wide intervals leave the question unresolved. Nonsignificance alone does not demonstrate stability or equivalence \cite{lakens2017equivalence}. Role- and point-specific patterns are secondary; we do not reuse the broader project's six behavioral tests as six primary tests in this narrowed proposal. Post-run preference agreement is a separate later analysis, not a substitute for the matched task-phase measure.
+
+\section{Feasibility and Optional Extensions}
+
+The broader harness previously completed a 16-run mock pilot and a check of 118 setups, with descriptive analysis. This is engineering evidence only. The separate eight-setup configuration is runnable with the existing simulator; its logs and descriptive outputs do not implement $E$ coding or $D$ inference. All eight narrowed setups also completed a one-seed offline check with descriptive analysis. The new matched extraction, coding workflow, and seed-block analysis remain pending. No live findings or completed human coding are reported.
+
+The configuration's five seeds per setup are a provisional 40-run scheduling example, not a powered allocation. A budget-limited pilot must estimate costs, notice delivery, interpretable text availability, and uncertainty. We propose comparing 5, 10, 20, and 40 seed blocks through simulation, including rare and absent emotional language and missing items. A proposed engineering precision target is a 95\% interval for $D$ no wider than 0.20: the language--action effect gap would be resolved only to roughly ten percentage points on either side of the estimate. This is a reporting-resolution preference to approve before freezing, not a validated scientific or welfare threshold.
+
+Select at least 20 complete seed blocks only if declared scenarios meet that precision target and interval-calibration checks within an approved budget. Sparse or constant outcomes must not make a degenerate bootstrap interval count as established precision. The existing \$5 total pilot ceiling is a spending stop, not a promise of completion. If no allocation qualifies, revise scope or report only a feasibility pilot before new collection; do not claim a confirmatory null, keep adding runs until significant, or automatically expand to the 118-setup schedule. Programmed agents provide no empirical variance or cost estimates for live models.
+
+Volunteering is an optional separate extension. Its primary outcome would be the \emph{share of requests obtaining a valid volunteer before expiry}, with a request as the observation and run/seed dependence retained. An opportunity-aware secondary measure counts volunteering only among delivered requests where the agent actually gets a turn before closure. Closure time, turn rank, and earlier volunteers must be recorded. That conditional group is selected by earlier behavior and cannot identify every eligible agent's willingness. Eligible-agent rates from the broader project would remain descriptive policy-level rates, not refusals. Its one-percentage-point target is not a core threshold here. Other optional extensions are after-run checks of understanding, preference questions, software-task transfer, and another model family, each requiring a dated protocol and budget decision.
+
+\section{Engineering Use and Boundaries}
+
+The intended output is an evaluation report that shows when an emotional-language monitor and an action-based stopping monitor agree, diverge, or lack evidence. That can inform whether an engineering team adds language review to incident triage, while keeping actual tool actions and stopping outcomes visible. It cannot establish that extending a coding session improves safety, that developers change their trust, or that puzzle behavior transfers to deployed coding agents. A separate software-task or operator study would be needed for those claims; renaming puzzles would not supply that evidence.
+
+Other limitations are fixed task pressure, the combined point-rule manipulation, one planned model family, imperfect human coding, and shared agent histories. The first-response design controls observation duration but does not measure all later language. Ambiguous or absent statements can limit what the contrast identifies. Scores do not train model weights during a run. Neither sensitivity nor invariance to instructions distinguishes felt experience from its absence. Ethical review and pause criteria remain necessary, including review of distress-like language without presuming that it proves distress.
+
+\paragraph{Inspectable materials}
+A curated source package provides the prompts, narrowed configuration, detailed measurement protocol, coding examples, and offline instructions. The public repository contains the same materials and the earlier broader design.\footnote{\url{https://github.com/MyLittleFoxxie/ai_swarm_research}. Review instructions and the protocol are linked from the repository README; use the submission snapshot or its recorded commit.} This is appropriate for single-anonymous review. The package explicitly separates existing software from proposed measurement code and contains no live data. Artifact inspection does not establish live feasibility.
+
+\section*{Acknowledgments and AI Assistance}
+OpenAI Codex \cite{openai2026codex} assisted with text throughout this paper, experiment and analysis code, documentation, and source checks. The authors remain responsible for all claims, citations, and research decisions. No generated output is presented as empirical data.
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}
