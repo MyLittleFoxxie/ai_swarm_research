@@ -151,3 +151,14 @@ Tectonic 0.17.0 compiled the revision to four pages including references, within
 the five-page limit. All pages were rendered and visually checked; existing
 underfull spacing warnings and untagged-PDF status remain. No study settings,
 measurements, or results changed.
+
+## Points, sessions, and research question — 2026-10-16
+
+Used the author's approved question about following requests versus continuing
+assigned tasks. Defined points as additions to the puzzle score and a session as
+one period of work involving six agents. The methods also connect session to the
+software's term run. Replaced an earlier undefined use of sessions in the
+abstract's incident background. No experimental settings changed. The revision
+compiled with Tectonic 0.17.0 to four pages including references; all pages were
+rendered and inspected without overlap or clipping. Existing underfull spacing
+warnings and the untagged-PDF limitation remain.
