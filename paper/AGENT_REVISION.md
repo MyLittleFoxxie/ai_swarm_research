@@ -126,3 +126,14 @@ review. At most a proposal and engineering smoke checks are ready at this stage.
 The [review-aligned roadmap](../experiment/NEXT_STEPS.md) gives the dependency
 order, completion criteria, and a seven-concern traceability table. It separates
 the minimum experiment from submission preparation and optional extensions.
+
+## Abstract clarity revision — 2026-10-16
+
+Replaced the CHASE-style labeled abstract with one paragraph. It introduces the
+language/action question without relying on the incident, defines sessions and
+ending a conversation, and explains the eight combinations of settings. It
+separates completed simulator checks from pending coding, analysis, and model
+experiments. No design settings or findings changed. Tectonic 0.17.0 compiled
+the revision to three pages with all ten references resolved; all pages were
+rendered and visually inspected. Existing underfull-box warnings remain; no
+overlap or clipping was observed. The PDF remains untagged.
