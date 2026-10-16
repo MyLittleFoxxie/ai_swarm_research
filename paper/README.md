@@ -69,3 +69,15 @@ volunteering opportunities, and statistical procedures are explained in plain
 language. The study settings, six primary comparisons, and pending-live-data
 status are unchanged. The revised ten-page draft compiled with all 52 citation
 keys resolved and was visually inspected.
+
+## Contribution clarification
+
+The gap paragraph now credits earlier group-shutdown, helping, behavioral
+preference, and question-format studies. It identifies the contribution as
+combining controlled comparisons of point rules, wording, roles, and helping
+opportunities in a shared environment. It explicitly marks action--answer
+agreement analysis as pending and avoids an unsupported claim to be the first
+study of these behaviors or to identify agents' internal experiences. The
+adjacent incident paragraph now uses the same interpretation boundary. This
+revision changes the manuscript's claims, not the experimental settings or
+analysis plan.
