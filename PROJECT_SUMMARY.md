@@ -62,12 +62,12 @@ has been performed and there are no empirical study results. Account access
 remains unverified because an API key was unavailable in this session. The
 paper still contains result placeholders and has not been compiled.
 
-One important design issue surfaced: only one agent can volunteer successfully
-per request. With about 24 eligible agents, a 10-percentage-point difference in
-the eligible-agent volunteering rate is unattainable. The planning tools flag
-that target rather than pretending it has adequate power. The project lead
-must explicitly choose a smaller H5 threshold or revise the primary outcome
-before freezing the study.
+One important design issue was resolved: only one agent can volunteer per
+request, making the original 10-percentage-point H5 target unattainable with
+about 24 eligible agents. You chose to keep the eligible-agent outcome and use
+a one-percentage-point target instead. That target is feasible within the
+winner limit; whether the study has enough runs to detect it remains a
+post-pilot power question.
 
 The next operational step is a small live pilot under the chosen $5 ceiling,
 with account preflight, explicit authorization, actual cost/transcript inspection

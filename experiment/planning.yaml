@@ -4,7 +4,7 @@ family_alpha: 0.05
 primary_tests: 6
 power_target: 0.80
 binary_difference: 0.10
-h5_difference: 0.10  # Original choice; feasibility check may reject this target.
+h5_difference: 0.01  # Project lead approved 2026-10-15; eligible-agent outcome retained.
 posting_rate_ratio: 1.25
 candidate_seeds: [5, 10, 20, 40, 80]
 binary_baselines: [0.2, 0.5, 0.8]

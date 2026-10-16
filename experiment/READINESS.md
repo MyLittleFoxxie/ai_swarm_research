@@ -2,8 +2,9 @@
 
 Step 3 implementation is complete. It has not launched a live pilot. No generating
 model request, live study measurement or model spending occurred. Account access
-is unverified because this session has no `ANTHROPIC_API_KEY`. Final allocation,
-full-study budget and the H5 target revision remain pre-confirmation decisions.
+is unverified because this session has no `ANTHROPIC_API_KEY`. Final allocation
+and full-study budget remain pre-confirmation decisions. The project lead has
+approved H5's revised one-percentage-point target, retaining the eligible-agent outcome.
 
 ## Public documentation versus actual verification
 
@@ -73,21 +74,22 @@ changes, not an unpriced override.
 ## Statistical decisions and feasibility
 
 Six two-sided primary tests, Holm alpha .05, relevance targets of 10 percentage
-points for binary effects and 25% for posting rates, and at least 80% target power
+points for H1–H4 acceptance, one percentage point for H5 eligible-agent volunteering,
+and 25% for H6 posting rates, and at least 80% target power
 were chosen before any live data. Exact formulas, typical-run contrasts, nuisance
 weighting, convergence handling, software and references are in the preregistration
 and statistics/README.md. Zero-variance/singular fits are flagged, not silently
 refitted with another model. Fully population-marginal effects and formal
 equivalence claims are not implied by the typical-run Wald contrasts.
 
-H5 needs an explicit revision: only one volunteer can succeed per request. Under
-24 agents and three run-ending requests, the highest eligible-agent rate is
-3/(24+23+22), about 4.35%. A 10-percentage-point contrast cannot occur. The original
-choice remains flagged in planning.yaml until the project lead changes it. The
-screening output marks infeasible scenarios and the R generator rejects them;
-no seed count can make an unattainable effect meaningful. A smaller row-rate
-threshold or a different request-level outcome is a design revision, not a
-technical default. No revision was silently inferred from elapsed time.
+H5's target revision is resolved: on 2026-10-15 the project lead explicitly
+retained the eligible-agent/request outcome and approved a one-percentage-point
+contrast. The original 10-point target was unattainable because only one
+volunteer succeeds per request (maximum aggregate row rate about 4.35% under
+the default 24-agent, three-request schedule). The new 0.01 target is recorded
+in planning.yaml, the preregistration and paper. It is feasible at the declared
+screening baselines but still needs post-pilot power validation. Winner ceilings
+remain enforced; the revision does not change simulated behavior or event counts.
 
 Final seed counts are pending the live pilot. The existing 118-condition,
 514-run YAML schedule is provisional. Candidate primary allocations are
@@ -152,5 +154,13 @@ of spending beyond its remaining conservative allowance.
 
 Step 4 still needs environment credentials, successful account preflight, explicit
 live authorization with the $5 limit, actual transcript/cost/gate inspection and
-ethics review. Confirmation additionally needs the H5 decision, calibrated power
+ethics review. Confirmation additionally needs calibrated power
 scenarios, final seed allocation, a full-study budget and a dated freeze commit.
+
+### H5 follow-up validation
+
+The approved 0.01 target replaces the previously flagged 0.10 configuration.
+Regression checks now assert this value and feasibility of every declared H5
+screening baseline. Approximate screening and a two-replicate R smoke run at
+baseline .01, ICC .10 and effect .01 were rerun on synthetic assumptions only.
+Neither supplies an empirical power estimate or justifies a final allocation.

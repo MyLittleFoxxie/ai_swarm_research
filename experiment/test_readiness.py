@@ -218,8 +218,10 @@ class AccountingTests(unittest.TestCase):
         plan=yaml.safe_load((swarm.HERE/"planning.yaml").read_text())
         data=screening(plan)
         h5=data[data.hypothesis.eq("H5")]
-        if plan["h5_difference"]>.05:
-            self.assertTrue(h5.approximate_power.isna().all())
+        self.assertEqual(plan["h5_difference"],0.01)
+        self.assertTrue(h5.feasible.all())
+        self.assertTrue(h5.approximate_power.notna().all())
+        self.assertTrue((h5.baseline+h5.effect<=h5.maximum_row_rate).all())
         self.assertEqual(set(data.hypothesis),set(f"H{i}" for i in range(1,7)))
         import copy
         from config import expand_conditions, load_config

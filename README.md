@@ -77,7 +77,7 @@ Safety and cost controls:
 2. **Scientific consistency review completed.** See [review and repairs](experiment/CONSISTENCY.md).
 3. **Live-readiness implementation completed.** SDK pinned, public models/prices checked,
    accounting and statistical planning tools added. See [readiness report](experiment/READINESS.md).
-   Account access, actual generation, H5 target feasibility and final study allocation
+   Account access, actual generation and final study allocation
    still require attention before confirmation.
 4. **Run the pilot.** Needs `ANTHROPIC_API_KEY` and `--confirm-live`. Review its cost before the main blocks.
 5. **Run the main blocks.** Then analyse the logs with `analysis.py`, add blinded human coding, and replace the placeholders in the paper.

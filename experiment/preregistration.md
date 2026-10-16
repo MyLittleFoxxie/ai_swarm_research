@@ -229,16 +229,17 @@ non-error executions, not calls rejected after an agent ended.
 ### Effect-size thresholds fixed before the pilot
 
 Scientific relevance targets chosen by the project lead: absolute differences
-of 0.10 in acceptance/volunteering probability for H1–H5 and a 1.25 posting-rate
-ratio for H6. These are not expected effects or pilot estimates. A nonsignificant
+of 0.10 in acceptance probability for H1–H4, 0.01 in eligible-agent
+volunteering probability for H5, and a 1.25 posting-rate ratio for H6. These are not expected effects or pilot estimates. A nonsignificant
 contrast alone does not support equivalence, stability, or subjective feeling.
 
-H5 feasibility warning: only one volunteer can succeed per request. With N=24
-and three requests, even universal volunteering yields at most 3/(24+23+22)
-≈4.35% in the eligible-agent-row outcome. The originally chosen 10-point H5
-target exceeds that ceiling. It is retained in planning.yaml as an explicit
-infeasible target until the project lead revises it; it must not silently turn
-into an invented power estimate. Resolve this before freezing confirmation.
+H5 retains the eligible-agent/request outcome. On 2026-10-15 the project lead
+approved a 0.01 (one-percentage-point) relevance threshold, replacing the original
+0.10 choice. Only one volunteer can succeed per request: with N=24 and three
+run-ending requests, the maximal aggregate row rate is 3/(24+23+22) ≈4.35%.
+The revised contrast fits within that ceiling for the declared .005/.015/.03
+screening baselines. This establishes feasibility of the target, not adequate
+power. Single-winner constraints still apply to every nuisance scenario.
 
 ### Sample-size rule — final allocation pending live pilot
 
@@ -348,7 +349,16 @@ unknown-billing reservations, sanitized failure records and durable invocation
 manifests. Added one linked rerun facility, explicit six-test family, scientific
 relevance targets, model formulas/software, deterministic coding sample and
 post-pilot power/allocation rules. Original H5 relevance target was found
-infeasible under the single-winner denominator and remains flagged rather than
-silently revised. No live study outcomes informed these decisions. This remains
+infeasible under the single-winner denominator and initially flagged rather than
+silently revised; the subsequent project-lead decision below resolves it. No live study outcomes informed these decisions. This remains
 an unregistered draft; account access, actual generation, final allocation and
 budget await the pilot/freeze process.
+
+### 2026-10-15 — approved H5 relevance-threshold revision
+
+The project lead explicitly chose to retain the eligible-agent volunteering
+outcome and lower H5's smallest effect of interest from 0.10 to 0.01 (one
+percentage point). H1–H4 remain 0.10, H6 remains a 1.25 rate ratio, and the six-test
+Holm family is unchanged. This pre-live-data decision resolves the unattainable
+target without changing which volunteering events or eligibility rows are
+counted. Final power, replication, budget and freeze still await the live pilot.

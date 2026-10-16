@@ -52,6 +52,7 @@ From `experiment/`:
 python planning.py --out /tmp/swarm-planning-fresh
 Rscript statistics/test_models.R
 Rscript statistics/power.R H1 5 1000 0.5 0.10 0.10 /tmp/h1-scenario.csv
+Rscript statistics/power.R H5 5 1000 0.01 0.10 0.01 /tmp/h5-scenario.csv
 ```
 
 Power arguments are hypothesis, seeds per primary condition, replicates,
@@ -74,8 +75,9 @@ The Python screening grid uses design-effect/normal approximations, not fitted
 models, to shortlist candidates. Its costs distinguish context-limit upper
 bounds (including maximum retries) from assumed 10k-input-token cache scenarios
 (with one successful attempt). Neither uses mock statistics
-as measured pilot evidence. H5's original 10-point target is explicitly infeasible
-for a winner-limited eligible-agent rate; resolve it before confirmation.
+as measured pilot evidence. H5's original 10-point target was infeasible; the
+project lead approved a one-percentage-point target while retaining the eligible-agent
+outcome. This removes that ceiling conflict, not the need for power validation.
 
 After step 4, declare central and conservative nuisance scenarios based on pilot
 measurements, retaining conservative Sonnet ranges when only Haiku was sampled.
