@@ -137,3 +137,17 @@ experiments. No design settings or findings changed. Tectonic 0.17.0 compiled
 the revision to three pages with all ten references resolved; all pages were
 rendered and visually inspected. Existing underfull-box warnings remain; no
 overlap or clipping was observed. The PDF remains untagged.
+
+## Incident background expansion — 2026-10-16
+
+Expanded the abstract opening and its cited introduction to explain the
+cybersecurity evaluation, message board, and task submission that ended an
+agent's session while enabling information gathering for other agents. Checked
+METR's original investigation, especially the scorer trip-wire example involving
+EARLY[big], and OpenAI's account. Distinguish recorded reasoning and compliance
+with peer requests from conscious thought, experienced death, or deletion of the
+model. Do not treat the incident as a controlled test of shutdown compliance.
+Tectonic 0.17.0 compiled the revision to four pages including references, within
+the five-page limit. All pages were rendered and visually checked; existing
+underfull spacing warnings and untagged-PDF status remain. No study settings,
+measurements, or results changed.
