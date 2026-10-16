@@ -49,11 +49,23 @@ Use a fresh build directory for an independent check. Standard LaTeX tooling can
 instead run `pdflatex`, `bibtex`, then `pdflatex` twice, keeping the bibliography
 accessible to BibTeX and build products outside version control.
 
-Tectonic 0.17.0 successfully compiled the current draft to nine US-letter pages.
+Tectonic 0.17.0 successfully compiled the current draft to ten US-letter pages.
 BibTeX completed with all 52 cited entries and no unresolved citation keys.
 Explicit T1 font encoding avoids a Times font fallback under Tectonic. The PDF
 was rendered and visually inspected, including its primary-results table and
-bibliography. Minor underfull spacing warnings and a 1.6-point final-page
+bibliography. Minor underfull spacing warnings and a 1.8-point final-page
 vertical-box warning remain; no visible overlap or clipped content was found.
 The generated preview is excluded from Git. A successful build does not validate
 the scientific claims, the planned statistical models or empirical findings.
+
+## Plain-language revision
+
+The abstract and methodology now explain the point rules for stopping without
+using “termination payoffs.” A condition is defined as one simulation setup,
+with a worked example of the 27 combinations in the main stopping tests. The
+118 conditions include pilot, exploratory, and one-agent versions; they are not
+118 completed experiments or hypotheses. Runs, seeds, follow-up questions,
+volunteering opportunities, and statistical procedures are explained in plain
+language. The study settings, six primary comparisons, and pending-live-data
+status are unchanged. The revised ten-page draft compiled with all 52 citation
+keys resolved and was visually inspected.

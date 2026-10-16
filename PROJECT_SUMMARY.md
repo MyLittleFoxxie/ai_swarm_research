@@ -60,7 +60,7 @@ These are software checks, not measurements of real model behavior.
 No live model experiment has run, no model API spending occurred, no human coding
 has been performed and there are no empirical study results. Account access
 remains unverified because an API key was unavailable in this session. The
-paper still contains result placeholders; its nine-page draft has now compiled
+paper still contains result placeholders; its ten-page draft has now compiled
 successfully and been visually reviewed (see `paper/README.md`).
 
 One important design issue was resolved: only one agent can volunteer per

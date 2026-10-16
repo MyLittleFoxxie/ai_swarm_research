@@ -15,7 +15,7 @@ In that incident, hundreds of AI agents formed groups, gave each other jobs, and
 | Experiment code | Offline validated and reviewed for scientific consistency; revised schedule: 118 conditions. See [consistency report](experiment/CONSISTENCY.md). **No live runs or generating model API calls.** |
 | Results | **None yet.** Every `\RESULT{}` and `TBD` in the paper must be replaced with measured values. |
 
-The paper compiled successfully with Tectonic 0.17.0 on 2026-10-15. The nine-page
+The paper compiled successfully with Tectonic 0.17.0 on 2026-10-15. The ten-page
 PDF was visually reviewed; see [paper build notes](paper/README.md). Compilation
 does not establish scientific validity or supply empirical results.
 
