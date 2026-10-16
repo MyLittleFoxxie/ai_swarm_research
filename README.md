@@ -10,13 +10,14 @@ In that incident, hundreds of AI agents formed groups, gave each other jobs, and
 
 | Part | State |
 |---|---|
-| Paper text | Compiled IEEE conference draft; methods revised to match the implemented design. Results and conclusion retain placeholders. |
-| References | 52 entries in the canonical `paper/references.bib`: the original 51 plus an equivalence-testing reference checked against its author's institutional record. |
+| Paper text | Full IEEE draft retained; separate anonymous CHASE extended-abstract proposal added. No live results. |
+| References | 53 entries in shared `paper/references.bib`; full paper cites 52, CHASE proposal cites 14, including the AI-assistance disclosure reference. |
 | Experiment code | Offline validated and reviewed for scientific consistency; revised schedule: 118 conditions. See [consistency report](experiment/CONSISTENCY.md). **No live runs or generating model API calls.** |
-| Results | **None yet.** Every `\RESULT{}` and `TBD` in the paper must be replaced with measured values. |
+| Results | **No empirical study results.** Full-paper placeholders remain; the CHASE proposal reports only completed software checks and proposed research. |
 
-The paper compiled successfully with Tectonic 0.17.0 on 2026-10-15. The ten-page
-PDF was visually reviewed; see [paper build notes](paper/README.md). Compilation
+The full draft was compiled and visually reviewed. The separate CHASE proposal
+has also been compiled and reviewed; see [paper build notes](paper/README.md)
+and [CHASE checks and remaining tasks](paper/CHASE_READINESS.md). Compilation
 does not establish scientific validity or supply empirical results.
 
 ## Layout
@@ -25,7 +26,8 @@ does not establish scientific validity or supply empirical results.
 swarm-feeling-paper/
 ├── README.md                     this file
 ├── paper/
-│   ├── paper_swarm_feeling.tex   the paper (IEEEtran)
+│   ├── paper_swarm_feeling.tex   full paper (IEEEtran)
+│   ├── paper_swarm_feeling_chase.tex  anonymous CHASE proposal
 │   ├── references.bib            canonical bibliography used by the paper
 │   └── references_swarm.bib      legacy 51-entry snapshot
 └── experiment/                   simulated multi-agent experiment
@@ -85,8 +87,23 @@ Safety and cost controls:
    accounting and statistical planning tools added. See [readiness report](experiment/READINESS.md).
    Account access, actual generation and final study allocation
    still require attention before confirmation.
-4. **Run the pilot.** Needs `ANTHROPIC_API_KEY` and `--confirm-live`. Review its cost before the main blocks.
-5. **Run the main blocks.** Then analyse the logs with `analysis.py`, add blinded human coding, and replace the placeholders in the paper.
+
+The [ordered next-step roadmap](experiment/NEXT_STEPS.md) now places these tasks
+before and after live collection:
+
+1. Finish the separate CHASE proposal and submission checks.
+2. Implement comparisons of actions with follow-up answers.
+3. Record actual chances to volunteer and add secondary opportunity accounting.
+4. Specify secondary comparisons of wording with rewards and assigned roles.
+5. Add separate post-run checks of understanding of point rules.
+6. Repeat regression, mock-pilot, and all-condition offline validation.
+7. Run an explicitly authorized live pilot under the $5 total ceiling.
+8. Finalize power, allocation, and budget; freeze the design; collect and analyse
+   main-study data, including independent human coding.
+9. Plan separately budgeted replication with another model family.
+
+The five new experiment improvements are pending, not implemented. No submission
+or live generation is performed by the documentation update.
 
 A [plain-language project summary](PROJECT_SUMMARY.md) explains the premise, goals,
 methods and work completed so far.

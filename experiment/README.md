@@ -7,6 +7,11 @@ validation evidence. No live experiments or model API calls have been made;
 there are no empirical study results. [VALIDATION.md](VALIDATION.md) preserves
 the historical step 1 evidence and limitations known at that stage.
 
+The [current ordered roadmap](NEXT_STEPS.md) adds analysis and measurement work
+before the live pilot. Those improvements are pending; current condition counts
+and primary outcomes are unchanged. A separate [CHASE proposal](../paper/paper_swarm_feeling_chase.tex)
+reports software validation and proposed research, not live findings.
+
 ## What this is for
 
 Working title of the paper: "Why the Swarm Seems to Feel".

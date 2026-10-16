@@ -166,3 +166,16 @@ Regression checks now assert this value and feasibility of every declared H5
 screening baseline. Approximate screening and a two-replicate R smoke run at
 baseline .01, ICC .10 and effect .01 were rerun on synthetic assumptions only.
 Neither supplies an empirical power estimate or justifies a final allocation.
+
+## Roadmap update — 2026-10-16
+
+The [ordered next steps](NEXT_STEPS.md) supersede the earlier suggestion that
+live generation is the immediate next task. Complete action–answer agreement,
+volunteering-opportunity accounting, secondary interaction specifications, and
+separate post-run understanding checks, then repeat offline validation before
+the live pilot. These are pending proposals, not changes made by this update.
+Recalculate calls and costs when questions change. Cross-model-family replication
+remains a later separately budgeted study. The existing $5 total pilot ceiling,
+explicit live authorization, confirmation flag, ethics gates, and post-pilot
+freeze/allocation decisions still apply. A separate anonymous CHASE proposal is
+prepared; it is not submitted and does not contain live results.

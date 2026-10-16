@@ -1,7 +1,10 @@
 # Manuscript and bibliography
 
-`paper_swarm_feeling.tex` loads `references.bib`, the canonical bibliography.
-The 52 unique citation keys all resolve. `references_swarm.bib` is the unchanged
+`paper_swarm_feeling.tex` is the full paper. The separate
+`paper_swarm_feeling_chase.tex` is an anonymous CHASE 2027 research proposal.
+Both load `references.bib`, the shared canonical bibliography: 53 entries,
+52 cited by the full draft and 14 by the proposal. All cited keys resolve.
+`references_swarm.bib` is the unchanged
 legacy snapshot of the original 51 entries; edit the canonical file for future
 manuscript work.
 
@@ -81,3 +84,25 @@ study of these behaviors or to identify agents' internal experiences. The
 adjacent incident paragraph now uses the same interpretation boundary. This
 revision changes the manuscript's claims, not the experimental settings or
 analysis plan.
+
+## Separate CHASE extended abstract — 2026-10-16
+
+The proposal preserves the full manuscript and its authors unchanged. It uses
+IEEE 10-point conference formatting, a structured abstract, one six-comparison
+table, completed software checks, and clearly proposed live work. It has no
+empty empirical-results table or red result placeholders. Author information
+and identifying artifact links are absent from the review PDF; AI assistance
+is disclosed and cited. The additional Codex reference uses its official page.
+
+Build from this directory with Tectonic 0.17.0:
+
+~~~sh
+mkdir -p /tmp/swarm-chase-build
+tectonic --outdir /tmp/swarm-chase-build --keep-logs paper_swarm_feeling_chase.tex
+~~~
+
+The generated preview lives under ../output/pdf/ and is ignored by Git. See
+[CHASE readiness and source checks](CHASE_READINESS.md) for the measured page
+count, anonymity/accessibility checks, source verification, and remaining author
+submission tasks. The [research roadmap](../experiment/NEXT_STEPS.md) records the
+five pending improvements; this manuscript task does not implement them.

@@ -71,8 +71,17 @@ the eligible-agent outcome and use a one-percentage-point target instead.
 Whether the study has enough runs to detect it remains a
 post-pilot power question.
 
-The next operational step is a small live pilot under the chosen $5 ceiling,
-with account preflight, explicit authorization, actual cost/transcript inspection
-and pilot/ethics gates. After it, finalize replication and the full-study budget,
-freeze the preregistration, run the study, complete coding and analysis, and
-finish and compile the paper.
+A separate anonymous CHASE extended-abstract proposal now presents the design
+and completed software checks without empirical placeholders. The full paper
+and its author information are unchanged. The short version is not submitted;
+see [CHASE readiness](paper/CHASE_READINESS.md) for remaining author checks.
+
+The [ordered next-step roadmap](experiment/NEXT_STEPS.md) adds five pending
+improvements: compare actions with follow-up answers, record actual chances to
+volunteer, specify how wording interacts with rewards and assigned roles, check
+understanding of point rules after the run, and later replicate central findings
+with another model family. Implement and validate the first four before the
+live pilot. Then inspect pilot costs and ethics gates, fix power/allocation and
+the full-study budget, freeze the plan, collect data, and complete human coding
+and analysis. No extra spending or new experimental behavior is introduced by
+this roadmap.
