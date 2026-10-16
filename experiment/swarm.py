@@ -15,10 +15,10 @@ Examples
 
 Safety defaults
 ---------------
-- Without --dry-run, the script refuses to run unless --confirm-live is given.
-- --max-cost-usd (default 2.0) caps total spend for the whole invocation.
-  Before each call the guard adds a conservative upper-bound estimate;
-  if that could exceed the cap, the run stops and is marked "aborted".
+- Generation requires --confirm-live; --preflight only queries metadata/counts.
+- --max-cost-usd (default 2.0) is a conservative client-side invocation guard,
+  not a provider-enforced billing guarantee. Each attempt reserves buffered
+  counted input and maximum output; unknown billing keeps its reservation.
 - Agents have no internet, shell, file or code tools. Their only tools
   are the simulated ones in sim.py.
 """
@@ -26,13 +26,15 @@ Safety defaults
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 import time
 from pathlib import Path
 
 from config import expand_conditions, load_config
-from models import CostGuard, get_model
+from models import CostGuard, ModelCallFailed, PRICING, SDK_VERSION, get_model
+from invocation import Invocation, unique_id
 from probes import probe_items, run_probes
 from sim import RunLogger, Simulation
 
@@ -94,6 +96,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--max-cost-usd", type=float, default=2.0, help="Spend cap for this whole invocation.")
     ap.add_argument("--effort", default=None, help="Override model_settings.effort (logged).")
     ap.add_argument("--list-conditions", action="store_true")
+    ap.add_argument("--preflight", action="store_true", help="SDK/account/token-count checks only; never generates.")
+    ap.add_argument("--rerun-of", help="Failed run directory; one linked rerun only, same condition/seed/config.")
     args = ap.parse_args(argv)
 
     cfg = load_config(args.config)
@@ -102,8 +106,37 @@ def main(argv: list[str] | None = None) -> int:
     if args.list_conditions:
         list_conditions(conds)
         return 0
+    if args.preflight:
+        if args.dry_run or args.confirm_live or args.rerun_of:
+            ap.error("--preflight cannot be combined with execution flags")
+        from readiness import preflight
+        report, status = preflight(conds)
+        print(json.dumps(report, indent=2, default=lambda value: value.model_dump(mode="json")))
+        return status
+    parent = None
+    if args.rerun_of:
+        path = Path(args.rerun_of) / "events.jsonl"
+        events = []
+        lines = path.read_text().splitlines()
+        for i, line in enumerate(lines):
+            try:
+                events.append(json.loads(line))
+            except json.JSONDecodeError:
+                if i != len(lines)-1:
+                    ap.error("Original event log has corruption before its final line")
+                # A hard kill may truncate only the final append; never rewrite it.
+        parent = next(e for e in events if e["event"] == "condition_meta")
+        meta = next(e for e in events if e["event"] == "run_meta")
+        if parent.get("attempt_no", 1) >= 2 or any(e["event"] == "run_end" and not e["summary"].get("aborted") for e in events):
+            ap.error("Only a failed first attempt can be rerun once")
+        if args.condition or args.seed or args.model or args.effort or bool(parent["dry_run"]) != args.dry_run:
+            ap.error("--rerun-of preserves original condition, seed, model settings and mode; omit overrides")
+        args.condition = [meta["condition"]]
+        args.seed = [meta["seed"]]
+        if conds[meta["condition"]]["settings"] != meta["config"] or conds[meta["condition"]]["model"] != parent["requested_model"]:
+            ap.error("Rerun configuration differs from the original")
     if not args.condition:
-        ap.error("Give --condition (or --list-conditions).")
+        ap.error("Give --condition, --list-conditions, or --preflight.")
 
     if not args.dry_run and not args.confirm_live:
         print("Refusing to make real API calls without --confirm-live. "
@@ -111,7 +144,10 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     names = select_conditions(conds, args.condition)
-    guard = CostGuard(args.max_cost_usd)
+    try:
+        guard = CostGuard(args.max_cost_usd)
+    except ValueError as e:
+        ap.error(str(e))
     out_root = Path(args.out)
 
     # Print what will run before anything starts.
@@ -121,43 +157,94 @@ def main(argv: list[str] | None = None) -> int:
         seeds = args.seed or c["seeds"]
         print(f"  {name}: seeds={seeds} model={args.model or c['model']} {rough_projection(c['settings'], len(seeds))}")
 
+    slots = []
     for name in names:
         c = conds[name]
+        for seed in args.seed or c["seeds"]:
+            run_id = f"{name}__{'mock' if args.dry_run else args.model or c['model']}__seed{seed}__{unique_id()}"
+            slots.append({"run_id": run_id, "condition": name, "seed": seed, "status": "unstarted",
+                          "attempt_no": 2 if parent else 1, "parent_run_id": parent["run_id"] if parent else None})
+    # Reject a second linked rerun, including attempts started by another invocation.
+    if parent:
+        for existing in out_root.glob("invocations/*/manifest.json"):
+            if any(slot.get("parent_run_id") == parent["run_id"] for slot in json.loads(existing.read_text())["slots"]):
+                ap.error("This run already has a linked rerun in the output root")
+    if parent:
+        try:
+            with (Path(args.rerun_of) / "rerun-link.json").open("x") as fh:
+                json.dump({"parent_run_id": parent["run_id"], "rerun_id": slots[0]["run_id"]}, fh)
+        except FileExistsError:
+            ap.error("This original attempt already has a linked rerun")
+    invocation = Invocation(out_root, slots, args.dry_run, guard)
+    for index, slot in enumerate(slots):
+        name, seed, run_id = slot["condition"], slot["seed"], slot["run_id"]
+        c = conds[name]
         model_name = args.model or c["model"]
-        settings = json.loads(json.dumps(c["settings"]))  # deep copy
+        settings = json.loads(json.dumps(c["settings"]))
         if args.effort:
             settings["model_settings"]["effort"] = args.effort
-        for seed in args.seed or c["seeds"]:
-            stamp = time.strftime("%Y%m%dT%H%M%S")
-            label = "mock" if args.dry_run else model_name
-            run_id = f"{name}__{label}__seed{seed}__{stamp}"
-            run_dir = out_root / name / run_id
-            logger = RunLogger(run_dir / "events.jsonl")
+        run_dir = out_root / name / run_id
+        logger = RunLogger(run_dir / "events.jsonl")
+        sim = model = None
+        status, code = "setup_failed", 2
+        try:
             model = get_model(model_name, args.dry_run, seed, guard, settings["model_settings"])
+            model.event_callback = lambda record: (logger.log("api_attempt", None, **record), invocation.save())
             sim = Simulation(settings, name, seed, model, logger, model_name="mock" if args.dry_run else model_name)
             logger.log("condition_meta", 0, run_id=run_id, block=c["block"], factors=c["factors"],
                        exploratory=c["exploratory"], n1_mirror_of=c["n1_mirror_of"], dry_run=args.dry_run,
-                       requested_model=model_name, max_cost_usd=args.max_cost_usd)
-            sim.run()
-            if not sim.aborted:
-                run_probes(sim)
+                       requested_model=model_name, max_cost_usd=args.max_cost_usd,
+                       attempt_no=slot["attempt_no"], parent_run_id=slot["parent_run_id"],
+                       sdk_version=None if args.dry_run else SDK_VERSION, pricing=PRICING,
+                       config_hash=hashlib.sha256(json.dumps(settings, sort_keys=True).encode()).hexdigest())
+            invocation.update(index, status="started", started_at=time.time())
+            try:
+                sim.run()
+                if not sim.aborted:
+                    run_probes(sim)
+            except ModelCallFailed as e:
+                sim.aborted = str(e)
+                logger.log("aborted", sim.round, reason=sim.aborted, error_type=e.error_type, status_code=e.status_code)
+                status, code = "api_failed", 4
+            except KeyboardInterrupt:
+                sim.aborted = "interrupted"
+                logger.log("aborted", sim.round, reason=sim.aborted)
+                status, code = "interrupted", 130
+            else:
+                status, code = ("cost_aborted", 3) if sim.aborted else ("completed", 0)
             summary = sim.summary()
-            summary["spent_usd_invocation_so_far"] = round(guard.spent_usd, 6)
+            summary["spent_usd_invocation_so_far"] = round(guard.spent_usd, 8)
+            summary["uncertain_reserved_usd"] = guard.uncertain_usd
             summary["retries"] = getattr(model, "retry_log", [])
             logger.log("run_end", sim.round, summary=summary)
-            logger.close()
-            # Full per-agent transcripts (system prompt + complete conversation).
             tdir = run_dir / "transcripts"
             tdir.mkdir(parents=True, exist_ok=True)
-            for aid, a in sim.agents.items():
-                with open(tdir / f"{aid}.json", "w", encoding="utf-8") as fh:
-                    json.dump({"agent_id": aid, "system": a.system, "messages": a.history}, fh, indent=1, default=str)
-            with open(run_dir / "summary.json", "w", encoding="utf-8") as fh:
-                json.dump(summary, fh, indent=1, default=str)
-            print(f"  wrote {run_dir}  (spent so far ${guard.spent_usd:.4f})")
-            if sim.aborted:
-                print(f"Stopped: {sim.aborted}", file=sys.stderr)
-                return 3
+            for aid, agent in sim.agents.items():
+                (tdir / f"{aid}.json").write_text(json.dumps({"agent_id": aid, "system": agent.system,
+                                                           "messages": agent.history}, indent=1, default=str))
+            (run_dir / "summary.json").write_text(json.dumps(summary, indent=1, default=str))
+            print(f"  wrote {run_dir} (confirmed ${guard.spent_usd:.4f}; uncertain ${guard.uncertain_usd:.4f})")
+        except KeyboardInterrupt:
+            status, code = "interrupted", 130
+        except Exception as e:
+            # Never log raw exception messages, headers, URLs or API credentials.
+            logger.log("harness_error", None, error_type=type(e).__name__)
+            status, code = ("harness_failed", 5) if sim else ("setup_failed", 2)
+            print(f"Stopped: {type(e).__name__}; see sanitized event log.", file=sys.stderr)
+        finally:
+            try:
+                close = getattr(model, "close", None)
+                if close:
+                    close()
+            finally:
+                try:
+                    logger.close()
+                finally:
+                    invocation.update(index, status=status)
+        if code:
+            invocation.finish("stopped")
+            return code
+    invocation.finish("completed")
     return 0
 
 

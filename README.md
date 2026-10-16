@@ -12,7 +12,7 @@ In that incident, hundreds of AI agents formed groups, gave each other jobs, and
 |---|---|
 | Paper text | Drafted (about 5,000 words, IEEE conference format). Results and conclusion are placeholders. |
 | References | 51 entries, each checked against its original source. |
-| Experiment code | Offline validated and reviewed for scientific consistency; revised schedule: 118 conditions. See [consistency report](experiment/CONSISTENCY.md). **No live runs or model API calls.** |
+| Experiment code | Offline validated and reviewed for scientific consistency; revised schedule: 118 conditions. See [consistency report](experiment/CONSISTENCY.md). **No live runs or generating model API calls.** |
 | Results | **None yet.** Every `\RESULT{}` and `TBD` in the paper must be replaced with measured values. |
 
 The LaTeX has not been compiled.
@@ -65,8 +65,8 @@ Behaviour that follows reward and wording supports the simpler explanations. Beh
 Safety and cost controls:
 
 - simulated tools only;
-- a cost limit, $2 by default;
-- no API calls unless `--confirm-live` is given.
+- a conservative client-side cost guard, $2 by default ($5 for the planned pilot);
+- generation requires `--confirm-live`; explicit `--preflight` permits only metadata/token counting.
 
 ## Next steps
 
@@ -75,12 +75,15 @@ Safety and cost controls:
    cd experiment && python swarm.py --condition block:pilot --dry-run --out runs_dry/
    ```
 2. **Scientific consistency review completed.** See [review and repairs](experiment/CONSISTENCY.md).
-3. **Prepare for live runs:**
-   - pin the `anthropic` package version;
-   - re-check model prices;
-   - set sample sizes and effect-size thresholds in `preregistration.md`.
+3. **Live-readiness implementation completed.** SDK pinned, public models/prices checked,
+   accounting and statistical planning tools added. See [readiness report](experiment/READINESS.md).
+   Account access, actual generation, H5 target feasibility and final study allocation
+   still require attention before confirmation.
 4. **Run the pilot.** Needs `ANTHROPIC_API_KEY` and `--confirm-live`. Review its cost before the main blocks.
 5. **Run the main blocks.** Then analyse the logs with `analysis.py`, add blinded human coding, and replace the placeholders in the paper.
+
+A [plain-language project summary](PROJECT_SUMMARY.md) explains the premise, goals,
+methods and work completed so far.
 
 ## Sources
 

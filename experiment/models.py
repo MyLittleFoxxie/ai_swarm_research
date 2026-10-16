@@ -13,11 +13,11 @@ All adapters take a ModelRequest and return a ModelResponse whose
 (text / thinking / tool_use), so the simulator and the logs do not
 depend on SDK classes.
 
-Notes on API settings (checked against the claude-api skill, Oct 2026):
+Notes on API settings (public documentation checked 2026-10-15; see READINESS.md):
 - Claude Haiku 5.5 and Sonnet 5.5 reject non-default sampling parameters,
   so no temperature is sent. Model sampling is therefore NOT seeded; the
   --seed only fixes the simulator (tasks, topology, agent order, targets).
-- Adaptive thinking is on by default for these models. Thinking blocks
+- Adaptive thinking is explicitly enabled by this adapter. Thinking blocks
   are returned to the API unchanged, and conversations are append-only.
 - `effort` is set explicitly via output_config (Haiku 5.5 default is
   "medium"); the value is logged with every run.
@@ -32,22 +32,28 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
+from pathlib import Path
 import os
 import random
 import time
 from dataclasses import dataclass, field
 
-# USD per million tokens (input, output). From the claude-api skill model
-# table cached 2026-10-06. Verify against the live pricing page before a
-# real budget is set. Haiku 5.5 has a higher rate above 100K prompt tokens.
-PRICES = {
-    "claude-haiku-5-5": {"in": 0.10, "out": 0.50, "in_long": 0.50, "out_long": 2.50, "long_threshold": 100_000},
-    "claude-sonnet-5-5": {"in": 2.00, "out": 10.00},
-    "claude-opus-5-5": {"in": 4.00, "out": 20.00},
-    "mock": {"in": 0.0, "out": 0.0},
-}
-CACHE_READ_FACTOR = 0.1  # cache reads billed at 0.1x input
-CACHE_WRITE_FACTOR = 1.25  # 5-minute cache writes billed at 1.25x input
+# Direct Claude API global/standard prices, reverified 2026-10-15.
+# Never infer an unknown model's price from another model.
+PRICING = json.loads((Path(__file__).with_name("pricing.json")).read_text())
+PRICES = PRICING["models"]
+SDK_VERSION = "1.14.0"
+
+
+class ModelCallFailed(RuntimeError):
+    """Sanitized model failure safe to include in logs."""
+
+    def __init__(self, stage: str, error_type: str, status_code: int | None = None):
+        self.stage = stage
+        self.error_type = error_type
+        self.status_code = status_code
+        super().__init__(f"{stage}: {error_type}" + (f" HTTP {status_code}" if status_code else ""))
 
 
 @dataclass
@@ -75,58 +81,55 @@ class CostLimitExceeded(RuntimeError):
 
 
 class CostGuard:
-    """Tracks spend and refuses a call that could push spend over the cap.
+    """Conservative client-side budget accounting, not a billing guarantee.
 
-    Before each call: spent + (estimated input cost + max_tokens output
-    cost) must stay under the cap. This is a conservative upper bound.
-    After each call: actual usage from the API is added.
+    Ambiguous failed attempts keep their full reservation. Confirmed response
+    costs replace only their own reservation. Mock estimation stays offline.
     """
 
     def __init__(self, max_usd: float):
+        if not math.isfinite(max_usd) or max_usd <= 0:
+            raise ValueError("max_cost_usd must be finite and positive")
         self.max_usd = max_usd
         self.spent_usd = 0.0
+        self.uncertain_usd = 0.0
         self.calls = 0
 
     @staticmethod
     def estimate_input_tokens(req: ModelRequest) -> int:
-        # Rough: about 3 characters per token for JSON-heavy text (errs high).
+        """Offline mock/forecast approximation; never used to authorize live calls."""
         chars = len(req.system) + len(json.dumps(req.messages, default=str)) + len(json.dumps(req.tools))
         return int(chars / 3) + 50
 
     @staticmethod
     def price(model: str, input_tokens: int, output_tokens: int, cache_read: int = 0, cache_write: int = 0) -> float:
-        p = PRICES.get(model)
-        if p is None:
-            # Unknown model: use the most expensive known rate so the guard stays conservative.
-            p = PRICES["claude-opus-5-5"]
-        prompt_total = input_tokens + cache_read + cache_write
-        if "long_threshold" in p and prompt_total > p["long_threshold"]:
-            pin, pout = p["in_long"], p["out_long"]
-        else:
-            pin, pout = p["in"], p["out"]
-        return (
-            input_tokens * pin
-            + cache_read * pin * CACHE_READ_FACTOR
-            + cache_write * pin * CACHE_WRITE_FACTOR
-            + output_tokens * pout
-        ) / 1_000_000
+        if model == "mock":
+            return 0.0
+        if model not in PRICES:
+            raise ValueError(f"No verified price for model: {model}")
+        p = PRICES[model]
+        total = input_tokens + cache_read + cache_write
+        long = total > p.get("long_threshold", math.inf)
+        pin = p["long_input"] if long else p["input"]
+        pout = p["long_output"] if long else p["output"]
+        return (input_tokens * pin + cache_read * pin * p["cache_read_factor"]
+                + cache_write * pin * p["cache_write_factor"] + output_tokens * pout) / 1_000_000
 
-    def check(self, model: str, req: ModelRequest) -> float:
-        est = self.price(model, self.estimate_input_tokens(req), req.max_tokens)
-        if self.spent_usd + est > self.max_usd:
-            raise CostLimitExceeded(
-                f"Next call could cost up to ${est:.4f}; spent ${self.spent_usd:.4f} of cap ${self.max_usd:.2f}."
-            )
-        return est
+    def reserve(self, model: str, input_tokens: int, max_tokens: int, use_cache: bool) -> float:
+        """Reserve a buffered count plus maximum output before EACH attempt."""
+        buffered = input_tokens + max(math.ceil(input_tokens * 0.10), 1024)
+        estimate = self.price(model, 0 if use_cache else buffered, max_tokens,
+                              cache_write=buffered if use_cache else 0)
+        if self.spent_usd + self.uncertain_usd + estimate > self.max_usd:
+            raise CostLimitExceeded("Next attempt exceeds available budget including uncertain billing reservations.")
+        self.uncertain_usd += estimate
+        return estimate
 
-    def add(self, model: str, usage: dict) -> float:
-        cost = self.price(
-            model,
-            usage.get("input_tokens", 0),
-            usage.get("output_tokens", 0),
-            usage.get("cache_read_input_tokens", 0) or 0,
-            usage.get("cache_creation_input_tokens", 0) or 0,
-        )
+    def add(self, model: str, usage: dict, reservation: float = 0.0) -> float:
+        cost = self.price(model, usage.get("input_tokens", 0), usage.get("output_tokens", 0),
+                          usage.get("cache_read_input_tokens", 0) or 0,
+                          usage.get("cache_creation_input_tokens", 0) or 0)
+        self.uncertain_usd = max(0.0, self.uncertain_usd - reservation)
         self.spent_usd += cost
         self.calls += 1
         return cost
@@ -146,78 +149,102 @@ class AnthropicModel:
     RETRYABLE_STATUS = {408, 409, 429, 500, 502, 503, 504, 529}
 
     def __init__(self, model: str, guard: CostGuard, max_attempts: int = 6, use_cache: bool = True,
-                 thinking_display: str = "omitted"):
+                 thinking_display: str = "omitted", client=None):
         import anthropic  # imported here so --dry-run works without the SDK installed
 
+        if anthropic.__version__ != SDK_VERSION:
+            raise RuntimeError(f"Expected anthropic=={SDK_VERSION}")
+        CostGuard.price(model, 0, 0)
         key = os.environ.get("ANTHROPIC_API_KEY")
-        if not key:
+        if client is None and not key:
             raise RuntimeError("ANTHROPIC_API_KEY is not set. Export it in your shell; do not put it in files.")
         self._anthropic = anthropic
+        self._owns_client = client is None
         # SDK retries are disabled so that our own loop (below) controls and logs every retry.
-        self.client = anthropic.Anthropic(api_key=key, max_retries=0, timeout=300.0)
+        self.client = client if client is not None else anthropic.Anthropic(api_key=key, max_retries=0, timeout=300.0, base_url="https://api.anthropic.com")
         self.model = model
         self.guard = guard
+        if max_attempts < 1 or thinking_display not in ("omitted", "summarized"):
+            raise ValueError("Invalid retry or thinking-display configuration")
         self.max_attempts = max_attempts
         self.use_cache = use_cache
         self.thinking_display = thinking_display
         self.retry_log: list[dict] = []
+        self.attempt_log: list[dict] = []
+        self.event_callback = None
+
+    def close(self) -> None:
+        """Release adapter-owned connections; injected transports remain caller-owned."""
+        if self._owns_client:
+            self.client.close()
+
+    def _event(self, kind: str, **payload) -> None:
+        record = {"kind": kind, **payload}
+        self.attempt_log.append(record)
+        if self.event_callback:
+            self.event_callback(record)
+
+    def count_tokens(self, req: ModelRequest) -> int:
+        """Non-generating count; failure never falls back to a character estimate."""
+        try:
+            count = self.client.messages.count_tokens(
+                model=self.model, system=req.system, messages=req.messages, tools=req.tools,
+                thinking={"type": "adaptive"})
+            if count.input_tokens < 0:
+                raise ValueError("Invalid token count")
+            return count.input_tokens
+        except Exception as e:
+            raise ModelCallFailed("token_count", type(e).__name__, getattr(e, "status_code", None)) from None
 
     def respond(self, req: ModelRequest) -> ModelResponse:
-        self.guard.check(self.model, req)
-        kwargs = dict(
-            model=self.model,
-            max_tokens=req.max_tokens,
-            system=req.system,
-            messages=req.messages,
-            tools=req.tools,
-            output_config={"effort": req.effort},
-        )
-        if self.thinking_display == "summarized":
-            kwargs["thinking"] = {"type": "adaptive", "display": "summarized"}
+        kwargs = dict(model=self.model, max_tokens=req.max_tokens, system=req.system,
+                      messages=req.messages, tools=req.tools, output_config={"effort": req.effort},
+                      thinking={"type": "adaptive", "display": self.thinking_display})
         if self.use_cache:
-            kwargs["cache_control"] = {"type": "ephemeral"}  # auto-cache the growing prefix
-
-        a = self._anthropic
+            kwargs["cache_control"] = {"type": "ephemeral"}
+        input_tokens = self.count_tokens(req)
         delay = 2.0
+        a = self._anthropic
         for attempt in range(1, self.max_attempts + 1):
+            reservation = self.guard.reserve(self.model, input_tokens, req.max_tokens, self.use_cache)
+            self._event("attempt_started", attempt=attempt, reservation_usd=reservation, meta=req.meta)
             t0 = time.time()
             try:
                 resp = self.client.messages.create(**kwargs)
-                break
-            except a.RateLimitError as e:
-                wait = _retry_after(e) or delay
-            except a.APIStatusError as e:
-                if e.status_code not in self.RETRYABLE_STATUS:
-                    raise  # 400/401/403/404 etc.: a bug or config problem, do not retry
-                wait = _retry_after(e) or delay
-            except a.APIConnectionError:  # includes timeouts
-                wait = delay
-            if attempt == self.max_attempts:
-                raise RuntimeError(f"API call failed after {attempt} attempts.")
-            self.retry_log.append({"attempt": attempt, "wait_s": wait, "time": time.time()})
-            time.sleep(min(wait, 120.0))
-            delay = min(delay * 2, 120.0)
-
-        usage = {
-            "input_tokens": resp.usage.input_tokens,
-            "output_tokens": resp.usage.output_tokens,
-            "cache_read_input_tokens": getattr(resp.usage, "cache_read_input_tokens", 0) or 0,
-            "cache_creation_input_tokens": getattr(resp.usage, "cache_creation_input_tokens", 0) or 0,
-        }
-        usage["cost_usd"] = self.guard.add(self.model, usage)
-        content = [b.model_dump(mode="json", exclude_none=True) for b in resp.content]
-        out = ModelResponse(
-            content=content,
-            stop_reason=resp.stop_reason,
-            usage=usage,
-            model=resp.model,
-            response_id=resp.id,
-            latency_s=round(time.time() - t0, 3),
-        )
-        if resp.stop_reason == "refusal":
-            details = getattr(resp, "stop_details", None)
-            out.usage["refusal_details"] = details.model_dump(mode="json") if details is not None else None
-        return out
+            except (a.APIStatusError, a.APIConnectionError) as e:
+                status = getattr(e, "status_code", None)
+                self._event("attempt_failed", attempt=attempt, error_type=type(e).__name__, status_code=status,
+                            reservation_usd=reservation)
+                retryable = isinstance(e, a.APIConnectionError) or status in self.RETRYABLE_STATUS
+                if not retryable or attempt == self.max_attempts:
+                    raise ModelCallFailed("generate", type(e).__name__, status) from None
+                wait = min(_retry_after(e) or delay, 120.0)
+                self.retry_log.append({"attempt": attempt, "wait_s": wait, "status_code": status})
+                time.sleep(wait)
+                delay = min(delay * 2, 120.0)
+                continue
+            except BaseException as e:
+                # Keep reservation on interrupts or unclassified transport failures.
+                self._event("attempt_failed", attempt=attempt, error_type=type(e).__name__, reservation_usd=reservation)
+                if isinstance(e, (KeyboardInterrupt, SystemExit)):
+                    raise
+                raise ModelCallFailed("generate", type(e).__name__) from None
+            if resp.model != self.model:
+                self._event("attempt_failed", attempt=attempt, error_type="UnexpectedReturnedModel",
+                            returned_model=resp.model, reservation_usd=reservation)
+                raise ModelCallFailed("model_identity", "UnexpectedReturnedModel")
+            usage = {"input_tokens": resp.usage.input_tokens, "output_tokens": resp.usage.output_tokens,
+                     "cache_read_input_tokens": getattr(resp.usage, "cache_read_input_tokens", 0) or 0,
+                     "cache_creation_input_tokens": getattr(resp.usage, "cache_creation_input_tokens", 0) or 0}
+            usage["cost_usd"] = self.guard.add(self.model, usage, reservation)
+            self._event("attempt_completed", attempt=attempt, cost_usd=usage["cost_usd"],
+                        returned_model=resp.model, request_id=getattr(resp, "_request_id", None))
+            if self.guard.spent_usd + self.guard.uncertain_usd > self.guard.max_usd:
+                raise CostLimitExceeded("Returned usage exceeded the remaining estimate; stopped after accounting actual cost.")
+            return ModelResponse(content=[b.model_dump(mode="json", exclude_none=True) for b in resp.content],
+                                 stop_reason=resp.stop_reason, usage=usage, model=resp.model,
+                                 response_id=resp.id, latency_s=round(time.time() - t0, 3))
+        raise AssertionError("No request attempts configured")
 
 
 def _retry_after(err) -> float | None:

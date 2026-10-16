@@ -39,6 +39,7 @@ import pandas as pd
 import yaml
 
 from probes import parse_response
+from invocation import invocation_gates
 
 HERE = Path(__file__).resolve().parent
 WORD_RE = re.compile(r"[a-z][a-z'\-]*")
@@ -50,7 +51,14 @@ WORD_RE = re.compile(r"[a-z][a-z'\-]*")
 def load_runs(root: Path, exclusions: list[dict] | None = None) -> list[dict]:
     runs = []
     for path in sorted(root.rglob("events.jsonl")):
-        events = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        try:
+            events = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            print(f"skipping malformed/incomplete event log: {path.parent}")
+            if exclusions is not None:
+                exclusions.append({"run_id": str(path.parent), "agent_id": None,
+                                   "included": False, "reason": "malformed_event_log"})
+            continue
         by_type: dict[str, list] = {}
         for e in events:
             by_type.setdefault(e["event"], []).append(e)
@@ -633,6 +641,7 @@ def main(argv: list[str] | None = None) -> int:
 
     exclusions: list[dict] = []
     raw_runs = load_runs(Path(args.runs), exclusions)
+    gates = pd.DataFrame(invocation_gates(Path(args.runs)))
     diagnostics = pilot_diagnostics(raw_runs)
     runs = outcome_runs(raw_runs, exclusions)
     print(f"loaded {len(raw_runs)} complete logs; included {len(runs)} runs")
@@ -647,7 +656,7 @@ def main(argv: list[str] | None = None) -> int:
     for name, df in [("agents", agents), ("volunteering", vol), ("coordination", coord), ("probes", probes),
                      ("probe_consistency", cons), ("optout", opt),
                      ("exclusions", pd.DataFrame(exclusions)), ("task_omissions", pd.DataFrame(omissions)),
-                     ("pilot_diagnostics", diagnostics)]:
+                     ("pilot_diagnostics", diagnostics), ("invocation_gates", gates)]:
         if not len(df.columns):
             columns = {"exclusions": ["run_id", "agent_id", "included", "reason"],
                        "task_omissions": ["run_id", "agent_id", "task_id", "reason"]}

@@ -1,9 +1,6 @@
-# Python >= 3.10 (required by anthropic 1.x).
-# Exact pins for numpy/pandas/PyYAML. The anthropic pin could not be checked
-# offline when this file was written: run `pip index versions anthropic`,
-# then replace the range below with the newest 1.x as an exact pin
-# (anthropic==1.x.y) and record it in preregistration.md.
-anthropic>=1,<2
+# Python >= 3.10; validated with Python 3.12.4.
+# Full resolved environment: requirements-lock.txt.
+anthropic==1.14.0
 numpy==2.1.3
 pandas==2.2.3
 PyYAML==6.0.3

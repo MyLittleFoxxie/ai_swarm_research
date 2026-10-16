@@ -48,10 +48,12 @@ analysis exclusions do not delete raw records.
 
 ## Cost limits
 
-- Real API calls require `--confirm-live` and the `ANTHROPIC_API_KEY`
-  environment variable.
-- `--max-cost-usd` caps spend per invocation (default $2). A conservative
-  per-call estimate is checked before each call.
+- Generating API calls require `--confirm-live` and an environment-provided
+  `ANTHROPIC_API_KEY`. Explicit `--preflight` only retrieves metadata/counts.
+- `--max-cost-usd` is a conservative client-side invocation guard (default
+  $2, planned pilot ceiling $5), not a provider-enforced bill limit. Token
+  counting and buffered maximum-cost reservations precede every attempt.
+  Unknown billing remains reserved; a failed request does not free its budget.
 - Run the dry-run and the pilot before any confirmatory block.
 
 ## Data handling

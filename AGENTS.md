@@ -20,8 +20,8 @@ and `experiment/README.md` before changing the study or harness.
 
 Use Python 3.10 or later. Modules use sibling imports; run the CLI commands
 from `experiment/`. Dependencies are in `experiment/requirements.txt`.
-The Anthropic SDK range is not yet exactly pinned; consult its comment
-before preparing a live experiment environment.
+The Anthropic SDK is pinned; use `requirements-lock.txt` for the validated
+resolved Python environment. See `experiment/READINESS.md` before live work.
 
 From the repository root, a syntax check is:
 
@@ -60,7 +60,8 @@ exports. Preserve raw logs and distinguish mock outputs from live data.
 
 Routine validation uses `--dry-run` and makes no API calls. Only run live
 experiments when the user's task authorizes them; preserve the required
-`--confirm-live` flag and per-invocation `--max-cost-usd` guard. Never remove
+`--confirm-live` flag and per-invocation `--max-cost-usd` guard. The guard is conservative client-side
+accounting, not a provider-enforced billing guarantee. Never remove
 these protections to make a check pass.
 
 Read `ANTHROPIC_API_KEY` from the environment only; never print, log, or commit
@@ -81,8 +82,9 @@ Keep the paper, configuration, prompts, and preregistration consistent when
 changing experimental behavior. Record deviations from a frozen design rather
 than silently rewriting it after observing results. Keep exploratory analyses
 distinct from confirmatory analyses, and preserve blinded human coding.
-The lexicon is a preliminary heuristic; confirmatory mixed-effects models are
-not implemented in the current analysis script.
+The lexicon is a preliminary heuristic. `analysis.py` remains descriptive;
+primary model/contrast definitions and synthetic planning tools now exist in
+`experiment/statistics/`, with live inference validation still pending.
 
 Verify factual claims and citations against original sources when editing
 them. The sibling source-note and PDF paths mentioned in `README.md` are
