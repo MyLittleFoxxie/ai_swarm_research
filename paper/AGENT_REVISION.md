@@ -122,3 +122,7 @@ checks. Select/upload a clean source snapshot, check references and policy
 requirements, and have both authors review the final paper before submission.
 No paper results, human coding, or live-model costs are fabricated to answer the
 review. At most a proposal and engineering smoke checks are ready at this stage.
+
+The [review-aligned roadmap](../experiment/NEXT_STEPS.md) gives the dependency
+order, completion criteria, and a seven-concern traceability table. It separates
+the minimum experiment from submission preparation and optional extensions.

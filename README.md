@@ -99,19 +99,19 @@ Safety and cost controls:
 The [ordered next-step roadmap](experiment/NEXT_STEPS.md) now places these tasks
 before and after live collection:
 
-1. Review the AGENT short paper, protocol, source package, and venue requirements.
-2. Implement its primary matched first-response coding and seed-block contrast.
-3. Develop volunteering-request success and reached-opportunity analysis only as
-   an optional extension; it is disabled in the minimum study.
-4. Finalize the core contrast and interval calibration; specify secondary
-   reward/wording/role comparisons before any live study.
-5. Add point-rule understanding questions only in a dated optional extension.
-6. Test the new measurement pipeline and repeat offline validation; the eight
-   minimum setups already pass a one-seed configuration/analysis smoke check.
-7. Run an explicitly authorized live pilot under the $5 total ceiling.
-8. Finalize precision, sample allocation, budget, and coding; freeze the selected
-   protocol before main collection. If infeasible, report a feasibility study.
-9. Plan separately budgeted replication with another model family.
+1. Review and settle the minimum eight-setup protocol and its limited claims.
+2. Implement auditable matching of first responses and complete stopping windows.
+3. Build the independent human-coding workflow, rubric, and reliability reporting.
+4. Implement the primary contrast and calibrate uncertainty using independent seed blocks.
+5. Validate the full measurement and analysis pipeline offline.
+6. Conduct a separately authorized live feasibility pilot under the $5 total ceiling.
+7. Freeze an affordable main-study design, or adopt feasibility-only reporting.
+8. Collect, code, analyse, and report only after the design and budget are approved.
+
+Submission preparation can proceed alongside development. Volunteering, follow-up
+answers, understanding checks, additional interactions, software-task transfer,
+and model-family replication are separate optional extensions. The roadmap maps
+all seven review criticisms to concrete work and completion criteria.
 
 The eight-setup configuration is implemented; its proposed E/D language–action
 analysis is not. The older six-test program and its hypotheses have not been

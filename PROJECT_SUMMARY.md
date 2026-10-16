@@ -86,10 +86,13 @@ extra primary outcomes. The [review response and materials](paper/AGENT_REVISION
 explain how the revision addresses each criticism. No live results or human
 coding have been added, and the 40-run example is not a powered allocation.
 
-The [ordered roadmap](experiment/NEXT_STEPS.md) now prioritizes the narrowed
-measurement pipeline, calibration, and a separately authorized live pilot. Its
-precision target is proposed, not an approved substantive threshold. If the
-pilot shows the study is unaffordable or uninformative, revise before freezing
-or report feasibility only. The old H5 threshold belongs to the broader study,
-not this minimum experiment. Cross-model and software-task transfer remain later
-work. No paper has been submitted.
+The [ordered roadmap](experiment/NEXT_STEPS.md) translates all seven review
+criticisms into work with completion criteria. It first settles the narrow
+question, implements matched language/action records, prepares independent human
+coding, calibrates analysis, and validates the whole pipeline offline. Only then
+does it reach a separately authorized $5 feasibility pilot and a decision on an
+affordable main study. The precision target remains a proposal; the study may
+need revision or feasibility-only reporting. Submission preparation can proceed
+in parallel. Volunteering, follow-up questions, additional interactions, and
+transfer or replication studies are optional extensions rather than prerequisites.
+The old H5 threshold belongs to the broader study. No paper has been submitted.

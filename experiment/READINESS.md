@@ -193,3 +193,14 @@ The [current roadmap](NEXT_STEPS.md) and [review response](../paper/AGENT_REVISI
 supersede the immediate sequence stated earlier. No live calls or new budget
 approval follow from this proposal; the $5 pilot ceiling and live safeguards
 remain. Freeze only a reviewed protocol after calibration and cost gates.
+
+### Roadmap alignment after review — 2026-10-16
+
+The [revised plan](NEXT_STEPS.md) now separates the core study, submission
+preparation, and optional extensions, and maps all seven criticisms to evidence
+needed for completion. Matched extraction, independent coding, seed-block
+inference/calibration, and end-to-end offline validation precede an authorized
+live pilot. Final allocation follows feasibility and cost evidence; no adequate,
+affordable allocation means revision or feasibility-only reporting. This is a
+planning update, not new measurement code, validation evidence, or authorization
+for generation. Historical readiness statements above retain their original scope.
