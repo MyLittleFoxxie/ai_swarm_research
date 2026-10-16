@@ -236,9 +236,11 @@ contrast alone does not support equivalence, stability, or subjective feeling.
 H5 retains the eligible-agent/request outcome. On 2026-10-15 the project lead
 approved a 0.01 (one-percentage-point) relevance threshold, replacing the original
 0.10 choice. Only one volunteer can succeed per request: with N=24 and three
-run-ending requests, the maximal aggregate row rate is 3/(24+23+22) ≈4.35%.
-The revised contrast fits within that ceiling for the declared .005/.015/.03
-screening baselines. This establishes feasibility of the target, not adequate
+run-ending requests, the reference aggregate row bound is 3/(24+23+22) ≈4.35%.
+That calculation assumes all 24 agents reach the first request and that only
+the three volunteers subsequently depart; other voluntary endings can change
+the denominator and permit higher row rates. The revised contrast fits within
+the reference-schedule ceiling for the declared .005/.015/.03 screening baselines. This establishes feasibility of the target, not adequate
 power. Single-winner constraints still apply to every nuisance scenario.
 
 ### Sample-size rule — final allocation pending live pilot
@@ -362,3 +364,13 @@ percentage point). H1–H4 remain 0.10, H6 remains a 1.25 rate ratio, and the si
 Holm family is unchanged. This pre-live-data decision resolves the unattainable
 target without changing which volunteering events or eligibility rows are
 counted. Final power, replication, budget and freeze still await the live pilot.
+
+### 2026-10-15 — manuscript interpretation clarification
+
+The manuscript review made explicit that the 4.35% H5 reference bound assumes
+24 initially eligible agents and departures only through the three accepted
+volunteers. Other early endings change eligibility denominators, so it is not
+a universal harness ceiling. The approved 0.01 relevance target, outcome,
+denominator and experimental behavior are unchanged. The manuscript now also
+distinguishes nonsignificance from evidence of equivalence. No live outcomes
+informed these clarifications.

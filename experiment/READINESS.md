@@ -86,9 +86,10 @@ H5's target revision is resolved: on 2026-10-15 the project lead explicitly
 retained the eligible-agent/request outcome and approved a one-percentage-point
 contrast. The original 10-point target was unattainable because only one
 volunteer succeeds per request (maximum aggregate row rate about 4.35% under
-the default 24-agent, three-request schedule). The new 0.01 target is recorded
+the reference 24-agent, three-request schedule with only volunteer departures). The new 0.01 target is recorded
 in planning.yaml, the preregistration and paper. It is feasible at the declared
-screening baselines but still needs post-pilot power validation. Winner ceilings
+screening baselines but still needs post-pilot power validation. Other voluntary endings can reduce eligibility and permit higher rates; the
+reference calculation is not a universal harness ceiling. Scenario winner limits
 remain enforced; the revision does not change simulated behavior or event counts.
 
 Final seed counts are pending the live pilot. The existing 118-condition,
@@ -136,9 +137,10 @@ The API key was checked for presence only, never printed or stored.
   remains 1,000+ replicates per scenario after nuisance decisions.
 - No actual account metadata/token request or generating API request was made.
   Running `swarm.py --preflight` returned credentials_missing / account unverified.
-- Citation keys remain checked against the unchanged bibliography; paper result
-  placeholders are preserved. LaTeX tooling remains unavailable, so compilation
-  and visual layout are unverified.
+- Citation keys were checked against the bibliography and paper result
+  placeholders were preserved. LaTeX tooling was unavailable during that pass.
+  The subsequent manuscript review compiled and visually inspected the draft
+  with Tectonic 0.17.0; see `../paper/README.md` for the current build status.
 
 ## Budget interpretation and next step
 

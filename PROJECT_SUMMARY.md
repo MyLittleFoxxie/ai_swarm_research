@@ -60,13 +60,15 @@ These are software checks, not measurements of real model behavior.
 No live model experiment has run, no model API spending occurred, no human coding
 has been performed and there are no empirical study results. Account access
 remains unverified because an API key was unavailable in this session. The
-paper still contains result placeholders and has not been compiled.
+paper still contains result placeholders; its nine-page draft has now compiled
+successfully and been visually reviewed (see `paper/README.md`).
 
 One important design issue was resolved: only one agent can volunteer per
-request, making the original 10-percentage-point H5 target unattainable with
-about 24 eligible agents. You chose to keep the eligible-agent outcome and use
-a one-percentage-point target instead. That target is feasible within the
-winner limit; whether the study has enough runs to detect it remains a
+request. Under the reference schedule with 24 agents initially eligible and
+only volunteer departures, the aggregate eligible-agent rate is capped at
+about 4.35%; other early departures change that denominator. You chose to keep
+the eligible-agent outcome and use a one-percentage-point target instead.
+Whether the study has enough runs to detect it remains a
 post-pilot power question.
 
 The next operational step is a small live pilot under the chosen $5 ceiling,

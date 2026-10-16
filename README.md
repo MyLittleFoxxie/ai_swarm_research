@@ -10,12 +10,14 @@ In that incident, hundreds of AI agents formed groups, gave each other jobs, and
 
 | Part | State |
 |---|---|
-| Paper text | Drafted (about 5,000 words, IEEE conference format). Results and conclusion are placeholders. |
-| References | 51 entries, each checked against its original source. |
+| Paper text | Compiled IEEE conference draft; methods revised to match the implemented design. Results and conclusion retain placeholders. |
+| References | 52 entries in the canonical `paper/references.bib`: the original 51 plus an equivalence-testing reference checked against its author's institutional record. |
 | Experiment code | Offline validated and reviewed for scientific consistency; revised schedule: 118 conditions. See [consistency report](experiment/CONSISTENCY.md). **No live runs or generating model API calls.** |
 | Results | **None yet.** Every `\RESULT{}` and `TBD` in the paper must be replaced with measured values. |
 
-The LaTeX has not been compiled.
+The paper compiled successfully with Tectonic 0.17.0 on 2026-10-15. The nine-page
+PDF was visually reviewed; see [paper build notes](paper/README.md). Compilation
+does not establish scientific validity or supply empirical results.
 
 ## Layout
 
@@ -24,7 +26,8 @@ swarm-feeling-paper/
 ├── README.md                     this file
 ├── paper/
 │   ├── paper_swarm_feeling.tex   the paper (IEEEtran)
-│   └── references_swarm.bib      verified bibliography
+│   ├── references.bib            canonical bibliography used by the paper
+│   └── references_swarm.bib      legacy 51-entry snapshot
 └── experiment/                   simulated multi-agent experiment
     ├── README.md                 setup and how to run
     ├── swarm.py                  command-line entry point
@@ -60,7 +63,10 @@ The experiment runs a group of Claude agents in a fully simulated environment: a
 - group framing and size;
 - a costly opt-out from "unpleasant" tasks.
 
-Behaviour that follows reward and wording supports the simpler explanations. Behaviour that stays stable would point to stable internal states worth further study. It would not prove feeling.
+Behaviour that follows reward and wording shows sensitivity to those manipulations.
+Behaviour that stays stable could reflect a learned policy that generalizes across
+conditions. Neither pattern by itself establishes feeling; a nonsignificant
+difference does not establish stability.
 
 Safety and cost controls:
 

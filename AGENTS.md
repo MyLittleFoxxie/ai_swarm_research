@@ -6,7 +6,7 @@ This is the standalone “Why the Swarm Seems to Feel” research project: an
 IEEE-format paper and a simulated multi-agent experiment. Read `README.md`
 and `experiment/README.md` before changing the study or harness.
 
-- `paper/paper_swarm_feeling.tex`: paper source; `references_swarm.bib`: bibliography.
+- `paper/paper_swarm_feeling.tex`: paper source; `paper/references.bib`: canonical bibliography.
 - `experiment/swarm.py`: CLI; `sim.py`: simulation, tool execution, and logging.
 - `experiment/board.py` and `tasks.py`: message board and scored puzzles.
 - `experiment/prompts.py` and `probes.py`: agent-facing wording and post-run probes.
@@ -74,7 +74,8 @@ Follow the pilot gates and ethics rules before confirmatory runs.
 ## Research and paper integrity
 
 The harness has passed offline mock validation; see `experiment/VALIDATION.md`.
-There are no measured study results, and the paper remains uncompiled. Update status statements
+There are no measured study results. The draft has been compiled and visually reviewed;
+see `paper/README.md`. Update status statements
 when work actually changes that status. Never invent results or replace
 `\RESULT{}` / `\TBD` placeholders with mock statistics or estimates.
 

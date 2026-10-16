@@ -26,3 +26,4 @@ analysis_*/
 *.synctex.gz
 *.toc
 paper/*.pdf
+/output/pdf/

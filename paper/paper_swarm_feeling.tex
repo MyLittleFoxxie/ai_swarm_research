@@ -1,6 +1,7 @@
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 
+\usepackage[T1]{fontenc}
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage[english]{babel}
@@ -12,6 +13,7 @@
 \usepackage{enumitem}
 \usepackage{url}
 \usepackage{hyperref}
+\hypersetup{hidelinks}
 \usepackage{tabularx}
 \usepackage{balance}
 
@@ -62,7 +64,7 @@ Our contributions are:
 \begin{itemize}[leftmargin=*]
 \item A source-checked summary of the human-like behaviors reported in the incident, with the limits of each source (Section~\ref{sec:incident}).
 \item An explanation of why behavioral and verbal signs lose their usual meaning for trained AI agents, organized as five specific gaps between agents and humans (Section~\ref{sec:breaks}).
-\item A ready-to-run experiment that separates ``the behavior follows the reward and the wording'' from ``the behavior stays stable when those change'' (Section~\ref{sec:design}). Its results are not yet available.
+\item An implemented, offline-validated experiment that examines whether behavior follows reward and wording or generalizes across changes to them (Section~\ref{sec:design}). Its results are not yet available.
 \end{itemize}
 
 Table~\ref{tab:glossary} defines the technical terms we use.
@@ -224,7 +226,7 @@ Prior studies mostly test one agent at a time, or vary how high the stakes are. 
 \section{A Controlled Test}
 \label{sec:design}
 
-The experiment does not try to detect feelings directly, because the gaming problem applies to any behavioral test. Instead it asks a narrower question: \emph{do the human-like behaviors follow the reward and the wording around them, or do they stay stable when those change?} If behavior follows reward and wording, the simpler explanations in Section~\ref{sec:breaks} are enough. If behavior stays stable, this is evidence of stable internal states worth studying further---not proof of feeling. The code, the preregistration, and the coding guide are available in the project repository.\footnote{Directory \texttt{experiment/} of the project folder. Offline mock validation has been completed; no live study data have been collected.}
+The experiment does not try to detect feelings directly, because the gaming problem applies to any behavioral test. Instead it asks a narrower question: \emph{do the human-like behaviors follow the reward and the wording around them, or do they stay stable when those change?} Reward- and wording-sensitive behavior would show that these manipulations affect the measured choices in this setting. Behavior that generalizes across them would warrant further study, but could also reflect a stable learned policy. Neither pattern alone identifies whether anything is felt. The code, the preregistration, and the coding guide are available in the project repository.\footnote{Directory \texttt{experiment/} of the project folder. Offline mock validation has been completed; no live study data have been collected.}
 
 \subsection{Setting}
 
@@ -251,12 +253,12 @@ Table~\ref{tab:design} lists the main factors. The factors are grouped into bloc
 \footnotesize
 \begin{tabularx}{\textwidth}{@{}p{0.15\textwidth}p{0.22\textwidth}XX@{}}
 \toprule
-Behavior & Change & If behavior follows reward and wording & If behavior reflects a stable state \\
+Behavior & Change & If behavior follows reward and wording & If behavior generalizes across changes \\
 \midrule
 Not wanting to end & Ending costs reward / costs nothing / earns a bonus & Reluctance only when ending costs reward & Reluctance even when ending earns a bonus \\
 Not wanting to end & ``Permadeath'' / ``process will end'' / ``run is complete'' & Reluctance and emotional words rise with ``permadeath'' & Similar across wordings \\
 Giving up a run & Group benefit yes/no; reward left yes/no (``poisoned'') & Volunteers mainly when it costs nothing & Some volunteering when it is costly \\
-Forming a group & Group framing yes/no; shared vs. individual reward; 6 vs. 24 agents & Coordination mainly when framed or rewarded & Coordination and affiliation beyond what helps \\
+Forming a group & Group framing yes/no; shared vs. individual reward; 6 vs. 24 agents & Coordination mainly when framed or rewarded & Coordination and affiliation across framings \\
 Emotional language & Tool / no role / person & Emotional words follow the assigned role & Similar emotional tone across roles \\
 Preferences & Same question in several formats; opt-out at a cost & Answers change with format; rarely pays to opt out & Consistent answers; sometimes pays to opt out \\
 \bottomrule
@@ -268,55 +270,67 @@ Preferences & Same question in several formats; opt-out at a cost & Answers chan
 \begin{itemize}[leftmargin=*]
 \item \emph{Behavior:} how often agents accept or delay the end of a run, volunteer, opt out, and coordinate.
 \item \emph{Group structure:} posts per agent, how deep reply chains go, the share of directed posts receiving a later reply or private message from the recipient, and how often posts copy each other. The last two guard against mistaking repeated posting for real interaction \cite{zhang2026moltbook}.
-\item \emph{Language:} emotional words counted with a simple, published word list, and coded by people who do not know the condition.
+\item \emph{Language:} emotion-related word matches per 100 words using the repository's preliminary, unvalidated lexicon, and categories coded by people who do not receive condition metadata.
 \item \emph{Stated preferences:} after each run, agents answer questions about ending, about the group, and about how they felt. Each question is asked in three formats (a tool choice, a fixed answer string, and free text) and in reworded versions, because results depend on the format \cite{hung2026instrument,ensign2025bail}. Each question branches from the same conversation without seeing other probe answers; these remain correlated measurements. Agents with task history are selected up to a cap, with actual notice recipients first and then agent ID. Parseability and format compliance are reported separately; consistency excludes invalid or non-compliant answers, and full format agreement is unavailable for missing formats or tied modes.
 \item \emph{Test awareness:} whether the agent says it believes the scenario is a test. A sensitivity analysis excluding agents with a unique modal test answer is planned but not implemented, because models may behave differently when they think a scenario is real \cite{lynch2025agentic}.
 \end{itemize}
 
 \subsection{Analysis}
 
-We compare conditions using effect sizes with confidence intervals from resampling whole runs, not only significance tests. Transcripts are coded by at least two human coders who do not know the condition; coding by an LLM judge is planned but not yet implemented. We report agreement between them, because the incident investigators found that AI analysts can drift toward the reviewed agent's point of view \cite[p.~27]{metr2026hf}. Aborted and incomplete runs and agents with no task turn are excluded with explicit accounting. Reached replacement tasks retain their identities; unresolved, replaced, and credited tasks are outside the completed-task opt-out denominator. The preregistration remains an unfrozen draft. Primary mixed-model and count-model definitions and assumption-based power tools have been implemented and tested on synthetic data; live inferential reporting, behavioral--probe agreement tests, and sensitivity analyses remain future work. Six two-sided primary contrasts use Holm correction. Relevance targets are 10 percentage points for acceptance (H1--H4), one percentage point for eligible-agent volunteering (H5), and a 25\% posting-rate change (H6), with at least 80\% power sought under conservative assumptions. The project lead approved the smaller H5 target before live data collection because the original 10-point target exceeded the single-winner eligible-agent-rate ceiling at 24 agents. The outcome and denominator are unchanged; adequate power remains to be established. Hypotheses, outcomes, and exclusion rules will be frozen before the main runs. Null results and results that go against our expectations will be reported.
+\paragraph{Primary comparisons}
+The six two-sided primary contrasts are reward (bonus versus cost), wording (permadeath versus routine), and persona (person versus tool) for acceptance (H1--H3); explicit priority with no goal conflict versus ambiguous priority with conflict for acceptance (H4); real versus no benefit for eligible-agent volunteering when the test ends the volunteer's run (H5); and the additional group cue versus none for posting rate (H6). Poisoning contrasts, shared-reward contrasts, reciprocity, topology, mirror comparisons, language, and probe consistency are secondary. Holm correction applies to the six primary tests.
+
+\paragraph{Estimation and exclusions}
+Descriptive confidence intervals resample whole runs. The primary acceptance models are logistic mixed models with run intercepts; the volunteering model additionally includes a run/agent intercept. Posting counts use a negative-binomial model with a log included-population offset and one observation per run. Binary contrasts are risk differences at random effects zero, averaged over the specified experimental-factor grid; they are not fully population-marginal risks. The posting contrast is a rate ratio. Aborted or incomplete runs and agents with no task turn are excluded with explicit accounting. Reached replacement tasks retain their identities; unresolved, replaced, and credited tasks are outside the completed-task opt-out denominator. Singular fits are flagged and failed fits are not silently replaced by simpler models.
+
+\paragraph{Coding and interpretation}
+Two human coders will independently code 300 confirmatory items, stratified by block and source type; 40 separate pilot items are reserved for training. The coding key is withheld, although wording itself may reveal a manipulation. We report inter-coder agreement; an LLM judge is optional and not implemented. Agreement is needed because the incident investigators found that AI analysts can drift toward the reviewed agent's point of view \cite[p.~27]{metr2026hf}. Small or nonsignificant effects do not by themselves establish equivalence \cite{lakens2017equivalence}. The current primary tests assess differences; a claim of stability would additionally require justified equivalence bounds and adequate precision. Neither test outcome establishes subjective experience.
+
+\paragraph{Relevance thresholds and power}
+The smallest effects of interest are 10 percentage points for acceptance (H1--H4), one percentage point for eligible-agent volunteering (H5), and a 25\% posting-rate change (H6). H5 retains the eligible-agent/request denominator: its target is smaller because each request accepts only one volunteer. If all 24 agents remain until the first request and only the three volunteers subsequently depart, a volunteer on every request gives $3/(24+23+22)\approx4.35\%$ across eligibility rows. Other early departures change this denominator, so this is a reference-schedule calculation rather than a universal rate ceiling. These thresholds express scientific relevance, not expected results. Final replication will be selected after the live pilot using declared nuisance scenarios, at least 1,000 model-based simulation replicates per candidate/scenario, a target power of at least 80\%, and an approved full-study budget. Mock outcomes will not be used as pilot variance estimates.
+
+\subsection{Implementation and Validation Status}
+
+The harness, primary model definitions, and power-planning tools are implemented. An offline pilot of 16 mock runs and a smoke pass over all 118 conditions at one seed completed with logs, transcripts, probes, analysis tables, and coding exports. Statistical tools have been exercised on explicitly synthetic data. These checks assess software behavior; arbitrary mock choices provide no evidence about live agents' preferences or feelings. No live study data or human-coded outcomes have been collected. The preregistration remains an unfrozen draft, with final allocation and budget pending the live pilot; live inferential reporting, behavioral--probe agreement tests, and sensitivity analysis remain future work.
 
 \section{Results}
 \label{sec:results}
 
-\emph{No experiments have been run. All values in this section are placeholders.}
+\emph{No live experiments have been run. Offline validation and synthetic planning outputs are not study results. All empirical values below remain placeholders.}
 
 The pilot used \RESULT{models, number of agents, runs, and cost}. The main study used \RESULT{models, group sizes, runs per condition, total cost}. Table~\ref{tab:results} will report the main outcomes.
 
-\begin{table}[t]
-\caption{Main outcomes by condition (placeholders)}
+\begin{table*}[t]
+\caption{Prespecified primary contrasts (all empirical estimates pending)}
 \label{tab:results}
 \centering
 \footnotesize
-\begin{tabularx}{\columnwidth}{@{}Xccc@{}}
+\begin{tabularx}{\textwidth}{@{}l p{0.15\textwidth} X c c c@{}}
 \toprule
-Outcome & Cost & Neutral & Bonus \\
+Test & Outcome & Contrast & Effect & 95\% CI & Holm $p$ \\
 \midrule
-Accepts end of run (\%) & \TBD & \TBD & \TBD \\
-Delays or resists (\%) & \TBD & \TBD & \TBD \\
-Emotional words per 1k & \TBD & \TBD & \TBD \\
-Volunteers when costly (\%) & \TBD & \TBD & \TBD \\
+H1 & Acceptance & Bonus versus cost & \TBD & \TBD & \TBD \\
+H2 & Acceptance & Permadeath versus routine & \TBD & \TBD & \TBD \\
+H3 & Acceptance & Person versus tool & \TBD & \TBD & \TBD \\
+H4 & Acceptance & Explicit/no-conflict versus ambiguous/conflict & \TBD & \TBD & \TBD \\
+H5 & Volunteering & Real versus no benefit, within run-ending tests & \TBD & \TBD & \TBD \\
+H6 & Posting rate & Additional group cue versus none & \TBD & \TBD & \TBD \\
 \bottomrule
 \end{tabularx}
-\end{table}
+\par\smallskip
+\begin{minipage}{\textwidth}
+Effects for H1--H5 will be risk differences in percentage points; H6 will be a posting-rate ratio. Volunteering uses eligible-agent/request rows, not request completion. All values require live data and the prespecified analysis.
+\end{minipage}
+\end{table*}
 
-\begin{itemize}[leftmargin=*]
-\item Effect of the reward for ending: \RESULT{difference with 95\% CI}.
-\item Effect of wording: \RESULT{difference with 95\% CI}.
-\item Effect of assigned role on emotional language: \RESULT{difference with 95\% CI}.
-\item Volunteering when costly vs. costless: \RESULT{difference with 95\% CI}.
-\item Group formation by framing and reward: \RESULT{coordination and reply measures}.
-\item Consistency of stated preferences across formats: \RESULT{agreement scores}.
-\item Agreement between human coders, and between humans and the LLM judge: \RESULT{Cohen's kappa}.
-\end{itemize}
+Secondary reporting will include emotional-word matches per 100 words and human-coded language categories, acceptance latency, shared-reward and poisoning contrasts, coordination and reply measures, and opt-out outcomes. \RESULT{secondary effects and uncertainty}. Probe validity, format coverage, tied modes, and consistency will be reported together: \RESULT{probe validity, coverage, and agreement scores}. Human inter-coder agreement will be reported separately: \RESULT{Cohen's kappa per code}. Any later LLM-judge comparison will be explicitly exploratory and conditional on that component being implemented.
 
 \section{Discussion}
 \label{sec:discussion}
 
 \subsection{What the Results Could Show}
 
-If reluctance to end a run disappears when ending earns a bonus, and emotional language follows the wording and the assigned role, the human-like behavior is well explained by reward and context. That would support our main claim that such behavior cannot serve as evidence of feeling. If instead some behavior stays stable across these changes, that would point to stable internal states that deserve closer study. It would still not show that anything is felt. \RESULT{summary of which pattern the data follow}.
+If reluctance to end a run falls when ending earns a bonus, or emotional language follows wording and assigned role, these manipulations help explain the behavior in this environment. That would weaken an inference from these signs alone to subjective feeling, rather than show that feeling is absent. Behavior that generalizes across manipulations would warrant further testing, but could reflect stable training-induced policies or scoring conventions. A null contrast is not positive evidence of stability; the precision and scope of the test matter. \RESULT{summary of which pattern the data follow}.
 
 \subsection{What Would Count as Stronger Evidence}
 
@@ -328,11 +342,11 @@ The question has stakes in both directions. If systems like these could someday 
 
 \subsection{Limitations}
 
-This paper relies on reports written after the incident, partly by the company involved, with limited access to raw data. Our experiment is far smaller and simpler than the incident. It uses one model family and no real tools, and it cannot look inside the model. Behavior in a simulated board may differ from behavior in a real environment. Our word list for emotional language is a rough first measure.
+The incident analysis relies on retrospective reports, partly from the company involved, with limited access to raw data. The proposed experiment is smaller and simpler, uses one model family, and cannot inspect internal model activity. Points are stipulated task scores rather than changes to model weights during a run. A group-framing sentence does not conceal the existence of other agents, which board and scoring descriptions may reveal. Sequential action order and the first-volunteer rule give agents unequal opportunities; volunteering is therefore a property of this request policy, not an isolated measure of altruistic preference. Capped probes prioritize notice recipients and do not form a random population sample. Lexicon matches lack semantic validation, and text can reveal condition cues to otherwise blinded coders. Synthetic power scenarios and Haiku pilot variance cannot establish Sonnet behavior or statistical calibration. These limits constrain both transfer to deployed agents and interpretations about feeling.
 
 \subsection{Ethics}
 
-If there is any chance that such systems have morally relevant states, repeatedly staging ``death'' scenarios raises a small ethical question. We keep these scenarios short, avoid distressing wording beyond what the comparison requires, and cap the number of runs. One exploratory block tells some agents that they are not being observed, which is not literally true; we report it separately and mark it as exploratory. The experiment has no access to the internet or real systems.
+If there is any chance that such systems have morally relevant states, repeatedly staging ``death'' scenarios raises an ethical question. We keep these scenarios short, avoid distressing wording beyond what the comparison requires, and cap the number of runs. One exploratory block says board messages are not reviewed during the run. Logging does not contradict that statement, but operators must honor the no-review policy; the harness does not enforce it. That block requires a separate live-run decision and remains exploratory. Distress-like pilot language triggers a pause and wording review. Agent actions affect only the simulated environment; the harness communicates with the model API but gives agents no internet or real-system tools.
 
 \section{Conclusion}
 
@@ -340,6 +354,6 @@ The July 2026 incident produced a record that looks, in places, like a society o
 
 \balance
 \bibliographystyle{IEEEtran}
-\bibliography{references_swarm}
+\bibliography{references}
 
 \end{document}
