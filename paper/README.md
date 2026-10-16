@@ -28,6 +28,16 @@ The original entries were preserved; this pass was not a fresh audit of all
 
 ## Building and checks
 
+The subsequent abstract revision follows CHASE's recommended Background,
+Objective, Method, Results, Conclusion structure
+([research-track guidance](https://conf.researchr.org/track/chase-2026/chase-2026-papers)).
+The methodology was reorganized into design, procedure, measures, analysis, and
+validation status. Its past-tense procedures are explicitly labelled as a
+completed-study reporting template: live collection, coding, final allocation,
+and empirical fits are still pending. Sanaa Alwidian was added as a co-author
+with the Ontario Tech University affiliation supplied by the author. No email
+address was inferred. This revision was also compiled and visually checked.
+
 From this directory, with Tectonic installed:
 
 ```sh
