@@ -105,3 +105,10 @@ reported in this proposal.
 The intended empirical predictions remain in the draft study plan. All five new
 recommendations are explicitly pending in the roadmap; none was silently added
 to the implemented 118-condition configuration by this manuscript conversion.
+
+The abstract was subsequently rewritten in a more natural style, restoring the
+original full draft's incident-led background. The pressure and hesitation
+description was checked against the investigators' account of self-risking
+experiments. The structured headings, proposed-study status, anonymity, and
+three-page length remain intact. A long section heading was shortened to keep
+it within its column after the abstract changed the page layout.

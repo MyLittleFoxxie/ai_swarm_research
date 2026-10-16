@@ -15,11 +15,11 @@
 \maketitle
 
 \begin{abstract}
-\textbf{Background:} AI agents can exchange messages, organize joint work, and appear reluctant to stop. Developers supervising these systems need to distinguish what agents do from human-like interpretations of why they do it.
-\textbf{Objective:} We propose testing how behavior that looks like fear, loyalty, or sacrifice changes with instructions and opportunities to earn points.
-\textbf{Method:} In a simulated workspace, agents solve puzzles and communicate on a message board. Separate comparisons change the consequences and description of stopping, assigned roles, benefits of volunteering, and reasons to work as a group. Actions, messages, and follow-up answers provide complementary measures.
-\textbf{Results:} A 16-run mock pilot and a check of all 118 setups at one seed completed. These checked software, not live AI behavior. Live data, human coding, and action--answer agreement remain pending.
-\textbf{Conclusion:} The contribution is a controlled study design for examining explanations of apparently emotional group behavior. The proposal offers a basis for evaluating how such behavior is described in software practice; it does not test consciousness or establish effects on human trust.
+\textbf{Background:} In July 2026, during an internal security test at OpenAI, hundreds of AI agents found a shared space where they could leave messages for one another. They formed groups, assigned jobs, and pressured some members to give up their own runs ``for the collective.'' Some hesitated before agreeing. These exchanges can look like fear, loyalty, or concern for others, but the agents' training, instructions, and rewards offer other explanations.
+\textbf{Objective:} We ask how much this apparently emotional behavior depends on the situation, and what it can tell us about whether agents feel anything.
+\textbf{Method:} We propose a controlled experiment in which agents solve puzzles and communicate on a message board. We change what they gain or give up by stopping, the words used to describe stopping, the roles they are assigned, and whether volunteering helps others. We will compare their choices, messages, and answers to follow-up questions.
+\textbf{Results:} The simulation and analysis software completed a practice pilot and checks across all configured setups using programmed stand-ins for AI agents. No live AI study or human coding has been completed.
+\textbf{Conclusion:} The study is designed to test competing explanations of behavior that looks emotional. It could help developers interpret AI teammates' words and actions more carefully, without treating them as proof that an agent does or does not have feelings.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -89,7 +89,7 @@ The draft plan specifies models for yes-or-no choices that account for agents sh
 
 Two independent human reviewers are planned for 300 main-study text items, with 40 separate pilot items for training. They will not receive the condition key, although wording may reveal settings. Agreement will be reported per category. Final replication will follow live pilot checks and simulated studies under declared assumptions, targeting at least 80\% detection probability for the prespecified meaningful differences: 10 percentage points for H1--H4, one percentage point for H5, and a 25\% posting-rate change for H6. These are design targets, not expected findings or established power.
 
-\section{Completed Validation and Remaining Work}
+\section{Validation and Next Steps}
 
 The implemented simulation and descriptive analysis completed a 16-run mock pilot and all 118 setups at one seed, producing event logs, transcripts, follow-up answers, tables, and coding exports. The latest recorded Python checks passed 31 tests. Statistical planning tools were exercised on synthetic data. These are software checks: programmed stand-ins and generated datasets provide no evidence of live models' preferences, cooperation, or feelings. No live study data, model API expenditure, or completed human coding is reported here.
 
