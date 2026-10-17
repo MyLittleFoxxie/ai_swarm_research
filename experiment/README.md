@@ -13,10 +13,11 @@ checks; its matched first-response coding and seed-block analysis remain pending
 The broad conditions.yaml and old six-test plan are unchanged. The [ordered
 roadmap](NEXT_STEPS.md) now plans shared-goal situations for the four swarm
 questions. Those situations are not implemented: the eight existing setups do
-not test responses when stopping helps or hinders the swarm. A proposed
-[scenario specification](swarm_scenarios.md) now defines the shared report goal,
-three situations, and operator-request mechanics for author review. It is not
-runnable; the next task is step 2 of the roadmap.
+not test responses when stopping helps or hinders the swarm. The proposed
+[simple scenarios](simple_swarm_scenarios.md) start with a stopping-unlocks-a-puzzle
+comparison against a teammate who already has access. They map later tests to
+the other questions. The [six-entry report](swarm_scenarios.md) is a backup.
+None is runnable yet; step 2 specifies analysis and allocation for the first test.
 See the [AGENT paper and review response](../paper/AGENT_REVISION.md) for current
 submission materials. The earlier CHASE draft is retained, not the active target.
 

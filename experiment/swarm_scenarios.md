@@ -1,3 +1,7 @@
+> **Backup scenario, retained 2026-10-17.** The preferred first test is now the
+> [puzzle scenario](simple_swarm_scenarios.md). The report draft below is preserved
+> for possible later use; it is not the active first-test specification.
+
 # Swarm stopping scenarios — protocol extension draft v0.1
 
 Date: 2026-10-17. Status: **specified for author review; not implemented, tested,

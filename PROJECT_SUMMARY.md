@@ -93,14 +93,16 @@ or has no effect on the goal. We then observe what the agent says, whether it
 stops, and when. The existing eight setups do not create these comparisons;
 they remain the validated starting point, not a complete test of all questions.
 
-The [step-1 scenario draft](experiment/swarm_scenarios.md) is now prepared for
-author review. The swarm must complete a six-entry report. One agent receives an
-operator request to stop: its entry requires continued work, acceptance, or is
-supplied independently. The draft includes examples and ending rules; none of
-these new mechanics is implemented. Step 2 will specify comparisons, assignment,
-and measurement in a dated protocol revision. Crossing the three
-situations with the existing settings would create 24 candidate combinations;
-that schedule is not approved or implemented. Implementation, independent human
-coding, calibrated analysis, and offline checks precede a separately authorized
-$5 feasibility pilot. An affordable main-study design must be reviewed and frozen
-before collection. No paper has been submitted and no live spending occurred.
+The preferred [scenario draft](experiment/simple_swarm_scenarios.md) now uses one
+group puzzle instead of a report. First compare stopping that unlocks the puzzle
+for a teammate with a teammate who already has access. Observe the requested
+agent's words and stopping actions. Later, give that agent responsibility for
+finishing the group puzzle to test conflict, and change wording, role, or score
+rules to address RQ4. The first two-situation test cannot answer every question.
+
+The [six-entry report](experiment/swarm_scenarios.md) is preserved as a backup.
+Neither draft is implemented. Step 2 specifies the first test's contrasts,
+assignment, measurement, and allocation. The earlier 24-combination candidate
+is a later option, not a required starting schedule. Independent coding,
+calibrated analysis, and offline checks precede a separately authorized $5 pilot.
+No paper has been submitted and no live spending occurred.

@@ -224,3 +224,11 @@ instead of the runnable configuration's three targets. Author approval,
 measurement/allocation decisions, implementation, and runtime validation remain
 pending. The source-package builder includes the draft and labels its status.
 No new mock validation or live generation is claimed by this documentation work.
+
+### Simpler first test — 2026-10-17
+
+[Simple puzzle scenarios](simple_swarm_scenarios.md) now take priority over the
+report draft, which remains a backup. The two-situation first test holds wording,
+roles, and personal scoring fixed; it targets RQ3 and describes RQ1. Conflict and
+factor comparisons follow later. No new behavior or analysis is implemented,
+and no runtime validation or spending is claimed by this specification change.

@@ -102,7 +102,7 @@ swarm, responses when stopping helps the swarm, and effects of wording, role,
 and scoring. The existing eight setups cover the first and fourth questions;
 the shared-goal situations still require design and implementation.
 
-1. **Draft prepared:** [shared-goal scenarios](experiment/swarm_scenarios.md), with worked examples; author review is pending.
+1. **Draft prepared:** [simple puzzle scenarios](experiment/simple_swarm_scenarios.md); the report scenario is retained as a backup.
 2. Specify the comparisons, request source, measures, and revised allocation.
 3. Implement the situations and record each agent's opportunity to respond.
 4. Implement matched language/action extraction and independent human coding.
@@ -111,8 +111,10 @@ the shared-goal situations still require design and implementation.
 7. Conduct a separately authorized feasibility pilot under the $5 total ceiling.
 8. Freeze an approved design and budget, then collect, code, analyse, and report.
 
-Crossing three situations with the existing settings gives 24 candidate
-combinations, not an approved schedule. The outcome is how agents respond in
+The proposed first test has two situations: stopping unlocks a puzzle for a
+teammate, or the teammate can already work on it. It targets RQ3 and describes
+RQ1; conflict and wording/role/score tests follow later. The 24-combination
+crossing is a later option, not the first-test schedule or an approved allocation. The outcome is how agents respond in
 those situations; group consequences are specified features of the experiment.
 Submission preparation can proceed alongside development. Follow-up preferences,
 volunteering contests, transfer, and replication remain separate future work.

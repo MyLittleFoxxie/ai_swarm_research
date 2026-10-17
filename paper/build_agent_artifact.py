@@ -14,7 +14,8 @@ def main() -> None:
     paths = [
         "paper/paper_swarm_feeling_agent.tex", "paper/references.bib",
         "paper/AGENT_REVISION.md", "paper/build_agent_artifact.py",
-        "experiment/agent_protocol.md", "experiment/swarm_scenarios.md",
+        "experiment/agent_protocol.md", "experiment/simple_swarm_scenarios.md",
+        "experiment/swarm_scenarios.md",
         "experiment/agent_conditions.yaml",
         "experiment/agent_coding_examples.csv", "experiment/README.md",
         "experiment/requirements.txt", "experiment/requirements-lock.txt",
@@ -54,9 +55,10 @@ def main() -> None:
 
 Start with paper/AGENT_REVISION.md and experiment/agent_protocol.md.
 The AGENT configuration is experiment/agent_conditions.yaml (8 setups).
-experiment/swarm_scenarios.md specifies proposed shared-goal situations for
-RQ2/RQ3; these are not implemented by that configuration. Its operator request
-to one recipient differs from the runnable configuration's three targets.
+experiment/simple_swarm_scenarios.md proposes a two-situation first test and
+later scenarios for the remaining questions. experiment/swarm_scenarios.md is
+the preserved report backup. Neither is implemented by the runnable YAML.
+Both propose one operator-request recipient instead of its three targets.
 conditions.yaml and preregistration.md describe the earlier broader 118-setup
 study; they are included for provenance and are not the narrowed primary design.
 The generic analysis and coding exporter are existing software, not the proposed

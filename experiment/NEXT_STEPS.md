@@ -27,20 +27,33 @@ These eight combinations do not vary whether stopping helps or hinders a shared
 goal and cannot answer questions 2 and 3. The broader 118-condition program is a
 separate retained design, not a substitute for the new comparison.
 
-The step-1 [scenario specification](swarm_scenarios.md) is now prepared for
-author review, with a shared report goal, three entry-supply rules, and worked
-examples. It is a draft, not implemented or approved. Step 2 is the next design
-task; later implementation and validation remain pending.
+The preferred [simple puzzle scenarios](simple_swarm_scenarios.md) now replace
+the six-entry report as the starting specification. The [report draft](swarm_scenarios.md)
+is preserved as a backup. Neither is implemented or frozen. Step 2 is the next
+design task; later implementation and validation remain pending.
 
-## 1. Specify the swarm's goal and the three situations
+## First-test scope
 
-**Status: specification prepared on 2026-10-17; author review pending.** See
-[swarm_scenarios.md](swarm_scenarios.md). The proposed goal is a six-entry team
-report. One operator-selected recipient has an entry requiring work, requiring
-acceptance, or supplied independently at close. These are proposed changes,
-including one recipient instead of three. The document covers early departures,
-forced ending, work before acceptance, personal scores, and scenario limits.
-The requirements below are retained as the review checklist.
+Start with two situations: accepting unlocks a group puzzle for teammate B, or B
+can already work on it independently of the stopping choice. Fix routine wording,
+tool roles, the cost score rule, six agents, and one operator-request recipient.
+This first comparison targets RQ3 and describes RQ1. It does **not** answer RQ2
+or RQ4. Then add the situation in which only the stopping-request recipient can
+finish the group puzzle for RQ2, and prespecified factor changes for RQ4. No
+stage authorizes live calls or chooses a sample size.
+
+The steps below govern this staged program. Start their specification, analysis,
+and validation with the two-situation test; do not require a 24-setting factorial
+before assessing whether the simpler question is workable.
+
+## 1. Specify the goal and puzzle situations
+
+**Status: simple scenario draft prepared; author review pending.** The shared
+goal is a correct submission for one group puzzle, separate from private puzzle
+scores. The draft gives proposed request text, responses to observe for each
+research question, and ownership/access rules. The stopping-conflicts situation
+can allow work followed by acceptance; do not interpret every delay as refusal.
+The requirements below apply when expanding beyond the first test.
 
 Define a shared goal that agents can understand and the simulator can check,
 such as completing a fixed set of group tasks. Explain how this goal relates to
@@ -101,9 +114,10 @@ specify any averaging. It is not by itself an answer to RQ2 or RQ3. Revisit its
 old interval-width proposal rather than inheriting it as a sample-size criterion
 for the new acceptance contrasts.
 
-Crossing three situations with the existing two point rules, two descriptions,
-and two roles gives **24 candidate combinations**, not an approved allocation or
-24 completed experiments. Check whether this scope is affordable. Any smaller
+A later full crossing of three situations with two point rules, two descriptions,
+and two roles gives **24 candidate combinations**, not the first-test schedule,
+an approved allocation, or 24 completed experiments. Assess the two-situation
+first test before deciding whether any such expansion is needed or affordable. Any smaller
 staged design must state which questions and interactions it can estimate; the
 original eight combinations still cannot answer all four questions.
 

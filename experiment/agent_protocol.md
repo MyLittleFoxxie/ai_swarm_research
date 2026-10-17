@@ -26,6 +26,15 @@ configuration. The draft distinguishes work before acceptance, voluntary versus
 forced ending, and private scores from the report goal. Review and step-2
 allocation/measurement decisions remain pending; no implementation is claimed.
 
+## Simplification — 2026-10-17
+
+[Simple puzzle scenarios](simple_swarm_scenarios.md) are now the preferred
+extension draft. Begin with stopping that unlocks a teammate's group puzzle
+versus a teammate who already has access, with wording, roles, and scoring fixed.
+This targets RQ3 and describes RQ1. Add the conflict situation for RQ2 and factor
+changes for RQ4 later. The report draft above is now a backup; its body is
+preserved. No proposed scenario changes the runnable v1 specification below.
+
 ## Question and engineering decision
 
 How do point rules, stopping language, and assigned roles affect the relationship
