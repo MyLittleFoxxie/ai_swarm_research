@@ -162,3 +162,17 @@ abstract's incident background. No experimental settings changed. The revision
 compiled with Tectonic 0.17.0 to four pages including references; all pages were
 rendered and inspected without overlap or clipping. Existing underfull spacing
 warnings and the untagged-PDF limitation remain.
+
+## Swarm questions and incident connection — 2026-10-17
+
+Added the author's incident-to-study explanation and four research questions,
+defining a swarm as agents that communicate and coordinate. Rechecked METR's
+original account of scorer-information experiments and task-risking requests.
+The paper distinguishes agents' responses in given group-goal situations from
+measuring the consequences of their actions for the group. The existing eight
+setups address questions 1 and 4; the help/conflict situations in questions 2
+and 3 require a future protocol extension and are not claimed implemented.
+No simulator settings or study outcomes changed. Tectonic 0.17.0 compiled four
+pages including references, all ten citation keys resolve, and all pages were
+rendered and visually inspected. Existing underfull spacing warnings and the
+untagged-PDF limitation remain. Earlier full and CHASE manuscripts are unchanged.
