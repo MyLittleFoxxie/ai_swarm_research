@@ -7,6 +7,16 @@ analysis remain intact. The AGENT paper is now the active submission version.
 The narrowed configuration is runnable; the new matched extraction and estimator
 specified here are not yet implemented or validated. No live data exist.
 
+## Planning update — 2026-10-17
+
+The [revised roadmap](NEXT_STEPS.md) plans a protocol extension for the four swarm
+research questions now in the paper. It will define a shared goal and situations
+where stopping helps, prevents a contribution, or has no effect. This v1 protocol
+and its eight-setup configuration remain unchanged below; they do not implement
+those situations. The proposed 24-combination candidate and revised acceptance
+contrasts require review, calibration, and a dated protocol revision. The old D
+contrast and planning thresholds alone do not answer or justify RQ2/RQ3.
+
 ## Question and engineering decision
 
 How do point rules, stopping language, and assigned roles affect the relationship

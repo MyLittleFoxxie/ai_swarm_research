@@ -11,7 +11,9 @@ The active [AGENT protocol](agent_protocol.md) narrows the first proposed study
 to eight setups in agent_conditions.yaml. That configuration passes offline
 checks; its matched first-response coding and seed-block analysis remain pending.
 The broad conditions.yaml and old six-test plan are unchanged. The [ordered
-roadmap](NEXT_STEPS.md) distinguishes the narrowed core from optional extensions.
+roadmap](NEXT_STEPS.md) now plans shared-goal situations for the four swarm
+questions. Those situations are not implemented: the eight existing setups do
+not test responses when stopping helps or hinders the swarm.
 See the [AGENT paper and review response](../paper/AGENT_REVISION.md) for current
 submission materials. The earlier CHASE draft is retained, not the active target.
 

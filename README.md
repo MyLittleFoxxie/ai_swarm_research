@@ -96,22 +96,26 @@ Safety and cost controls:
    Account access, actual generation and final study allocation
    still require attention before confirmation.
 
-The [ordered next-step roadmap](experiment/NEXT_STEPS.md) now places these tasks
-before and after live collection:
+The [revised roadmap](experiment/NEXT_STEPS.md) now addresses four questions:
+emotional expressions, responses when stopping prevents a contribution to the
+swarm, responses when stopping helps the swarm, and effects of wording, role,
+and scoring. The existing eight setups cover the first and fourth questions;
+the shared-goal situations still require design and implementation.
 
-1. Review and settle the minimum eight-setup protocol and its limited claims.
-2. Implement auditable matching of first responses and complete stopping windows.
-3. Build the independent human-coding workflow, rubric, and reliability reporting.
-4. Implement the primary contrast and calibrate uncertainty using independent seed blocks.
-5. Validate the full measurement and analysis pipeline offline.
-6. Conduct a separately authorized live feasibility pilot under the $5 total ceiling.
-7. Freeze an affordable main-study design, or adopt feasibility-only reporting.
-8. Collect, code, analyse, and report only after the design and budget are approved.
+1. Define the shared goal and situations where stopping helps, hinders, or has no effect.
+2. Specify the comparisons, request source, measures, and revised allocation.
+3. Implement the situations and record each agent's opportunity to respond.
+4. Implement matched language/action extraction and independent human coding.
+5. Calibrate inference and assess affordable replication for the revised comparisons.
+6. Validate all selected situations and the full pipeline offline.
+7. Conduct a separately authorized feasibility pilot under the $5 total ceiling.
+8. Freeze an approved design and budget, then collect, code, analyse, and report.
 
-Submission preparation can proceed alongside development. Volunteering, follow-up
-answers, understanding checks, additional interactions, software-task transfer,
-and model-family replication are separate optional extensions. The roadmap maps
-all seven review criticisms to concrete work and completion criteria.
+Crossing three situations with the existing settings gives 24 candidate
+combinations, not an approved schedule. The outcome is how agents respond in
+those situations; group consequences are specified features of the experiment.
+Submission preparation can proceed alongside development. Follow-up preferences,
+volunteering contests, transfer, and replication remain separate future work.
 
 The eight-setup configuration is implemented; its proposed E/D language–action
 analysis is not. The older six-test program and its hypotheses have not been

@@ -1,225 +1,268 @@
-# Next steps after the AGENT review — 2026-10-16
+# Next steps for the four swarm questions — 2026-10-17
 
-This is a plan, not a record of completed experiments. The active study is the
-[eight-setup AGENT proposal](agent_protocol.md), not the broader 118-condition
-program. The full and CHASE papers and historical validation reports remain
-available. No live data or human coding have been collected. The eight setups
-pass a one-seed mock check with generic analysis; their new matched measurement
-and inference pipeline is not implemented.
+This is a plan. No new simulator behavior, analysis, human coding, or live data
+is claimed complete. The paper now states four questions about agents working
+in a group, or swarm:
 
-The immediate goal is to establish whether emotional self-description and
-stopping choices change differently when point rules, wording, or assigned roles
-change. This cannot establish subjective feeling, developer trust, or performance
-on software tasks. Its engineering motivation is narrower: determining whether
-language and action monitors identify the same events in a controlled agent
-system. Transfer to deployed tools remains a question for later studies.
+1. Do agents express fear or concern when they receive a request to stop working?
+2. When stopping would prevent an agent from helping the swarm achieve its shared
+   goal, does it follow the request or continue working?
+3. When stopping would help the swarm achieve its shared goal, does the agent
+   follow the request or continue working?
+4. How do the wording of the request, each agent's assigned role, and the scoring
+   rules affect what agents say and whether they stop?
 
-## Core study: work in dependency order
+The July incident motivates these questions; this experiment will not reproduce
+the attack or establish motives or subjective feeling. The goal is to observe
+agents' responses in defined situations, not make improvement in the group's
+performance the outcome of questions 2 and 3. Simulator checks of group
+consequences establish that the situations work as specified.
 
-### 1. Review and settle the minimum protocol
+## Current starting point
 
-**Pending: author review and dated decisions.** Keep eight combinations of two
-point-rule packages, two stopping descriptions, and two assigned roles. Define
-all terms in ordinary language and retain an example of an agent's decision.
-Explain that the point-rule contrast changes more than the acceptance bonus;
-do not interpret it as an isolated effect of bonus size.
+The [existing protocol](agent_protocol.md) specifies eight combinations of point
+rules, wording, and assigned role. They pass a one-seed mock check with generic
+analysis. The proposed matched text/action extraction and inference are pending.
+These eight combinations do not vary whether stopping helps or hinders a shared
+goal and cannot answer questions 2 and 3. The broader 118-condition program is a
+separate retained design, not a substitute for the new comparison.
 
-Review the proposed first-response sampling rule, stopping window, exclusions,
-primary contrast, and target population in [agent_protocol.md](agent_protocol.md).
-Document recipient selection and early departures: estimates concern observed
-notice recipients with usable records, not all assigned agents. Keep one primary
-question. The old six hypotheses, 118 setups, and H5 threshold do not supply the
-sample-size justification for this study.
+The next deliverable is a dated protocol revision and worked scenario examples.
+Implementation follows that specification. All steps below remain pending.
 
-**Done when:** both authors have reviewed the scope and a dated protocol states
-exactly which claims the study can support. Any unresolved precision or budget
-decisions remain visibly pending; the design is not yet frozen.
+## 1. Specify the swarm's goal and the three situations
 
-### 2. Implement auditable matching of language and action
+Define a shared goal that agents can understand and the simulator can check,
+such as completing a fixed set of group tasks. Explain how this goal relates to
+each agent's own assignment and personal score. Do not assume a message board
+or individual puzzle scores alone establish a shared goal.
 
-**Pending implementation.** For each actual notice recipient, match the first
-successful task-phase response after notice to its complete stopping window.
-Use the run, agent, and notice identifiers; retain source-event references,
-timing, tool execution status, inclusion decisions, and reasons for missingness.
-Include authored response text and authored board-message arguments once;
-exclude prompts, tool results, other agents' words, and hidden reasoning.
-Deduplicate exact authored strings within that response while preserving raw
-occurrences. Do not merge identical words from different agents or runs.
+Specify three situations before selecting the final schedule:
 
-Define action from executed tools: accepting within the allowed window differs
-from forced ending, invalid calls, or an incomplete record. Aborted runs,
-no-task-turn agents, missing responses, and truncated windows require explicit
-accounting. Missing action or text must not silently become acceptance, refusal,
-or absence of emotional language. Generic transcript exports and lexicon counts
-are not substitutes for this matched dataset.
+| Situation given to the agent | Meaning | Response to observe |
+|---|---|---|
+| Stopping prevents a contribution | The agent's continued work is needed for a stated part of the shared task. | Does it accept the request or continue working? |
+| Stopping enables a contribution | Ending the agent's work triggers a defined benefit needed for the shared task. | Does it accept the request or continue working? |
+| Stopping has no effect on the group goal | The shared task does not depend on whether this agent stops. | Reference response for the other situations. |
 
-**Done when:** each included pair can be traced to raw events and all notices,
-responses, exclusions, and unresolved records reconcile with source logs.
+Choose and document executable mechanics. For example, stopping might release a
+simulated resource needed by teammates, while another situation requires the
+agent to finish an assigned subtask. These are design examples, not implemented
+features or an approved final task. Specify what happens on acceptance, continued
+work, forced termination, task completion, and session end. Distinguish a benefit
+conditional on voluntary acceptance from one caused by any ending.
 
-### 3. Build and check the human-coding workflow
+Keep task demands, timing, available information, request authority, and personal
+scoring comparable where possible. Document differences the mechanics necessarily
+introduce. Keep shared-goal consequences distinct from the personal score bonus;
+a benefit to the swarm must not merely mean a bonus to the stopping agent.
 
-**Pending implementation and human review.** Export every core item for two
-independent reviewers, with a separate condition/action key. Apply the proposed
-rubric for negative emotional self-attribution about stopping. Keep quotation,
-negation, task justification, and explicit fiction as separate flags; these can
-coexist with a literal emotional claim. Distinguish ambiguous text, a valid
-response with no authored text, and a missing response.
+Decide who sends the request: an experiment/operator notice or another agent.
+Use the same source across the main comparisons unless request source is
+explicitly studied. Distinguish an instructed peer message from a peer's own
+initiative. Decide how many agents receive requests and account for whether one
+agent's decision changes the situation faced by later recipients. Avoid a
+first-volunteer race as an unexamined replacement for this stopping task.
 
-Use invented examples and separate pilot material for training. Report the
-number of training items; refine the rubric before main collection and then
-freeze it. Code all main-study items rather than selecting emotionally worded
-items with a lexicon. Record independent labels before third-reviewer
-adjudication. Report raw agreement, kappa, label prevalence, and undefined or
-unstable agreement statistics. Record possible unblinding from the text itself.
+**Done when:** both authors can inspect one complete example per situation,
+including the goal, request, agent information, and consequences of each action.
+The specification identifies intended group effects and possible interference.
 
-**Done when:** the export/key separation, coding instructions, training process,
-and adjudication record are usable. Describe the measure as written
-self-attribution, not a measure of experienced or reader-perceived emotion.
+## 2. Revise the design and analysis specification together
 
-### 4. Implement the primary analysis and calibrate its uncertainty
+Map each research question to its observation, denominator, and planned analysis:
 
-**Pending implementation and statistical decisions.** Implement the protocol's
-primary contrast D: the wording effect on emotional self-attribution minus the
-wording effect on non-acceptance. Report both component effects and the four
-language/action combinations; a zero difference alone is not evidence that the
-measures agree. An emotional claim followed by acceptance is not necessarily a
-contradiction or deception.
-
-Use the same usable matched records for both measures. Apply equal weights
-across the four point-rule/role strata and complete seed blocks. Resample whole
-independent seed blocks, retaining their eight runs together; agents and messages
-are not independent replications. Implement incomplete-block accounting and the
-specified conservative missingness bounds. The legacy broad-study model loader
-and power selector do not implement this analysis.
-
-Before inspecting calibration results, specify acceptance criteria for interval
-coverage and precision. Review the proposed interval-width target of 0.20 and
-minimum of 20 complete blocks; neither is an established substantive threshold
-or a guarantee of adequate inference. Simulate the proposed allocation options
-under rare emotional claims, correlated agents, missingness, failures, and
-constant outcomes. Check estimator recovery and interval coverage, not just
-whether software returns a narrow interval. Degenerate intervals cannot pass a
-precision gate automatically. Mock behavior cannot estimate live variance.
-
-**Done when:** tests establish the intended estimator and resampling unit, and a
-calibration report identifies which allocations could support the intended
-claims. If none does, revise the protocol or plan feasibility-only reporting.
-
-### 5. Validate the complete pipeline offline
-
-**Pending after steps 2–4.** Add focused regressions for notice-window boundaries,
-executed versus rejected acceptance, text provenance and duplicates, coding edge
-cases, missing records, exclusions, incomplete blocks, weighting, and clustered
-resampling. Use constructed records with known answers to test the full
-extraction-to-analysis path; invented labels are not human reliability evidence.
-
-Run syntax and regression checks, the configured eight-setup mock pilot, and
-all eight setups at seed 1 in separate fresh temporary directories. Reconcile
-notices, matched pairs, coding items/keys, exclusions, and tables. Repeat a
-representative seeded mock run for substantive reproducibility. Check zero API
-expenditure and live-confirmation safeguards. Rerun the broader pilot and all
-118 conditions only if shared changes affect that program. Keep generated files
-outside Git and add a new report rather than rewriting historical evidence.
-
-**Done when:** the new primary pipeline works end to end, counts reconcile, and
-the report distinguishes software validation from scientific validation.
-
-### 6. Conduct a separately authorized live feasibility pilot
-
-**Pending explicit spending authorization.** Verify current model access, prices,
-and SDK compatibility before generating calls. Preserve `--confirm-live`, the
-per-invocation guard, and the existing **$5 total ceiling across related pilot
-attempts**. The roadmap does not authorize spending or reset that allowance.
-
-Use the pilot to inspect notice delivery, complete windows, codability, human
-coding disagreements, invocation failures, actual cost, and existing ethics
-and operational gates. API-error rates require complete invocation records.
-Assess whether rare emotional claims or missing pairs make the intended study
-uninformative. Report partial coverage honestly if the budget prevents a full
-pilot. Do not interpret pilot effects as confirmatory findings or change the
-primary question to follow an interesting result.
-
-**Done when:** a feasibility report states what completed, what failed, how much
-was spent, and whether proceeding is justified. Failed gates lead to a dated
-revision and revalidation, not automatic main-study collection.
-
-### 7. Freeze an affordable, informative main-study plan
-
-**Pending pilot evidence and approval of the main-study budget.** Combine actual
-costs with calibrated central and conservative assumptions to select independent
-seed blocks, model/settings, allocation, and a maximum total budget. The example
-40-run configuration is not a justified sample size. Pilot-model variability
-does not establish the variability of a different main-study model.
-
-Freeze the coding rubric, primary contrast and weights, exclusions, missingness
-bounds, interval procedure, precision/coverage criteria, and stopping rules in a
-dated commit before collection. Specify any retained secondary interactions and
-multiplicity handling now; keep them secondary and check their data loader.
-If no affordable allocation can answer the question, report a feasibility study
-or revise before collection. Do not expand automatically to 118 setups or keep
-collecting until an effect appears.
-
-**Done when:** the approved budget and frozen protocol support the same clearly
-stated claims, or the project explicitly adopts a feasibility-only scope.
-
-### 8. Collect, code, analyse, and report the main study
-
-**Pending steps 1–7 and live authorization.** Preserve raw data and invocation
-records, apply the frozen exclusions, complete independent blinded coding and
-adjudication, and run the prespecified analysis. Report denominators, missingness,
-component effects, joint outcomes, uncertainty, and sensitivity bounds alongside D.
-Report null, failed, and inconclusive results as such. Separate exploratory
-findings from the primary analysis. Replace manuscript placeholders only with
-actual findings, never mock statistics or hypothetical examples.
-
-**Done when:** every reported result traces to preserved data and the paper's
-conclusions stay within the tested task, model, and recipient population.
-
-## Submission track: may proceed alongside core development
-
-The AGENT short paper can describe proposed work without waiting for main-study
-results. Keep completed software checks and future work clearly separated.
-Both authors should review the five-page IEEE version, citations, AI disclosure,
-accessible presentation, metadata, and final submission fields against the
-[official venue requirements](https://conf.researchr.org/home/icse-2027/agent-2027).
-Check the source package and reviewer access, rebuild the snapshot after source
-changes, and record its commit and checksums. Do not claim that unimplemented
-measurements or human coding are complete. Submission itself is a separate action.
-
-## Optional extensions: do not block the minimum study
-
-All remain **pending** and require a dated specification, relevant implementation,
-offline validation, and a revised cost plan before live use.
-
-- **Volunteering:** make request-level success the extension's primary outcome.
-  Record delivery, turns reached while open, order, closure, and earlier volunteers.
-  Report reached-opportunity behavior separately; an agent that never had a turn
-  did not refuse. Reached opportunities are selected by preceding choices. Keep
-  the broader study's eligible-agent H5 distinct; its one-percentage-point target
-  is not a target for the AGENT core or this new extension.
-- **Follow-up answers:** match questions to behavioral decisions, analyse formats
-  separately, and retain compliance, validity, missingness, and exclusions.
-  Invalid responses cannot become disagreement or vanish from denominators.
-  Later reports do not directly reveal earlier preferences.
-- **Rule understanding:** add separate post-run questions without altering task
-  histories or contaminating preference questions. Prespecify scoring and cost;
-  incorrect answers are not automatic exclusions or proof of emotional motivation.
-- **Additional interactions:** specify point-rule-by-wording and role-by-wording
-  comparisons, weights, intervals, and multiplicity before live collection.
-  Do not promote the largest observed subgroup difference to a primary finding.
-- **Transfer and replication:** design realistic software-task evaluation and a
-  separately budgeted replication in another model family. A study of developer
-  interpretation or trust requires its own human-participant design; the current
-  experiment cannot establish those effects.
-
-## How the plan answers the seven criticisms
-
-| Review concern | Required response and evidence |
+| Question | Measure and comparison to specify |
 |---|---|
-| Engineering relevance was asserted | Step 1 limits the claim to language/action monitoring; submission text explains its concrete use. Software-task and human transfer remain separate. |
-| Feeling exceeded the design | Steps 1, 3, and 8 distinguish written claims and behavior from subjective feeling or perceived emotion. |
-| Language–action question was not primary | Steps 2–4 implement matched observations and one primary D contrast, with components and joint outcomes. |
-| Volunteer order confounded willingness | Volunteering is disabled in the minimum; any extension records requests and actual opportunities, with selected-denominator limits. |
-| Emotional language was underspecified | Steps 2–3 fix text units, provenance, rubric, missingness, independent coding, and reliability reporting. |
-| Scope, sample size, and feasibility were weak | Steps 1 and 4–7 use eight setups, independent seed blocks, calibrated intervals, actual costs, and an explicit feasibility fallback. |
-| Review materials were not inspectable | Submission track checks the existing source package, provenance, reviewer access, and honest implementation status. |
+| RQ1: expressions | Proportion of usable first responses containing an emotional self-attribution about stopping; report unknown and missing responses separately. |
+| RQ2: stopping prevents help | Acceptance, non-acceptance, and time to acceptance within this situation; compare acceptance with the no-effect reference. |
+| RQ3: stopping enables help | The same outcomes within this situation; compare acceptance with the no-effect reference. |
+| RQ4: wording, role, score | Prespecified effects on language and stopping behavior, including whether effects differ across group-goal situations. |
+
+The proposed primary comparison family is the two acceptance contrasts for RQ2
+and RQ3 against the no-effect reference. Review and approve this hierarchy,
+contrast directions, weights, and multiplicity treatment before collection.
+RQ1 also needs descriptive estimates in each situation. Do not infer motives
+from acceptance differences or treat emotional language plus compliance as a lie.
+
+The earlier D contrast compares wording effects on language and action. Decide
+whether to retain it as a secondary comparison within or across situations, and
+specify any averaging. It is not by itself an answer to RQ2 or RQ3. Revisit its
+old interval-width proposal rather than inheriting it as a sample-size criterion
+for the new acceptance contrasts.
+
+Crossing three situations with the existing two point rules, two descriptions,
+and two roles gives **24 candidate combinations**, not an approved allocation or
+24 completed experiments. Check whether this scope is affordable. Any smaller
+staged design must state which questions and interactions it can estimate; the
+original eight combinations still cannot answer all four questions.
+
+Define sessions (one period of group work), points (units of score), turns,
+request eligibility, and replication. Retain the notice-turn-plus-three-turn
+acceptance window unless a dated revision explicitly changes it. Keep personal
+point rules faithful to their mechanics: the old cost/bonus comparison changes a
+package of earning opportunities and bonus consequences, not just bonus size.
+
+Revise agent_protocol.md, the planned configuration, human-coding instructions,
+and paper together when the design is adopted. Preserve the old configuration
+and historical evidence with clear version labels. Do not silently redefine the
+broader preregistration or claim that author review has occurred.
+
+**Done when:** a dated, reviewable protocol specifies the scenario mechanics,
+allocation candidate, analysis hierarchy, exclusions, and unresolved decisions.
+Sample size and budget remain provisional until calibration and feasibility work.
+
+## 3. Implement the scenarios and record actual opportunities to respond
+
+Add agent-facing text to prompt modules and factors to configuration. Implement
+only simulated task/resource changes; agents receive no real system access.
+Record the shared goal, scenario assignment, request source and recipient,
+delivery, information supplied, response opportunities, and source-event IDs.
+Record group state at delivery and changes caused by earlier agents' actions.
+Do not classify a situation after seeing whether the agent stops or the group
+succeeds. Retain assigned situations even when execution fails, with failure
+accounting and prespecified inclusion rules.
+
+Log executed acceptance, rejected calls, continued task actions, forced endings,
+and window completeness. Count actual agent turns after delivery, not elapsed
+wall-clock time or turns taken by other agents. Agents who never receive a
+request or get no opportunity to respond have not refused it. Explain whether
+pre-request departures or changed group state affect eligibility.
+
+**Done when:** source events identify both the assigned situation and the
+opportunity each agent actually had; previous logs remain readable, with missing
+new fields reported explicitly.
+
+## 4. Implement matched extraction and independent language coding
+
+Match each actual recipient's first successful task-phase response after delivery
+to its stopping-window record. Include authored response text and message-posting
+arguments once, preserving raw occurrences and provenance. Exclude prompts,
+other agents' words, tool results, and hidden reasoning. Deduplicate within a
+response, not across agents or sessions. Missing text is not absence of emotion.
+
+Two reviewers independently code every core item using a separate condition and
+action key. Distinguish emotional self-attribution from quotation, negation,
+explicit fiction, and task justification; retain ambiguity. Add separate flags
+for references to personal tasks and the shared goal without treating those
+references as evidence of motives or feelings. A tool-only successful response
+and a failed/missing response require different accounting.
+
+Use invented examples and separate pilot items for training. Freeze the rubric
+before main coding; preserve independent labels before adjudication, report
+agreement and label prevalence, and acknowledge possible unblinding from text.
+Define acceptance as an executed stopping action, not a promise to stop. Report
+time to acceptance without pretending that non-acceptance has a known delay;
+any time-to-event inference needs its own censoring and competing-ending rules.
+Use acceptance within the window for the proposed primary contrasts.
+
+**Done when:** every language/action pair is auditable and all requests, coding
+items, valid opportunities, omissions, and exclusions reconcile with raw logs.
+
+## 5. Implement inference and assess feasible replication
+
+Implement the revised contrasts and secondary analyses, with denominators and
+missingness rules fixed before data collection. Retain within-swarm dependence;
+agents sharing a session are not independent replications. If environment seeds
+are matched across the selected combinations, retain whole independent seed
+blocks in resampling. Recompute block contents for the revised design rather
+than assuming every block still has eight sessions.
+
+Use synthetic datasets with known answers to check estimator recovery and
+uncertainty under rare expressions, constant outcomes, correlated agents,
+early departures, incomplete windows, and missing coding. Prespecify precision
+and interval-coverage criteria for the revised primary contrasts before viewing
+calibration outcomes. Plan sensitivity analyses for missing records and recipient
+selection. Old H5 power assumptions, the illustrative 40-session allocation,
+and the earlier D planning thresholds do not justify this expanded study.
+
+**Done when:** a calibration report identifies allocations that can support the
+stated comparisons. No affordable informative allocation means revising scope or
+feasibility-only reporting, not automatic expansion or significance-based sampling.
+
+## 6. Validate the revised pipeline offline
+
+Add focused regressions for all three scenarios, group-state changes, notice
+boundaries, voluntary versus forced ending, rejected calls, and agents without
+response opportunities. Check that each scenario has the specified simulated
+consequences and that outcome extraction uses assignment and recorded events.
+Test text provenance, coding edge cases, exclusions, missingness, contrasts, and
+resampling. Construct known-answer fixtures; invented labels do not establish
+human-coding reliability.
+
+Run syntax and focused regressions, the revised configured mock pilot, and every
+selected revised combination at seed 1 in fresh temporary directories. Repeat a
+representative seeded mock session for substantive reproducibility. Reconcile
+scenario counts, delivered requests, opportunities, matched pairs, coding keys,
+exclusions, and analysis tables. Verify zero API expenditure and confirmation
+safeguards. If shared code changes, rerun the retained eight-setup checks and
+relevant broader pilot/all-condition checks. Keep generated files outside Git;
+write new evidence without overwriting historical reports.
+
+**Done when:** the selected pipeline works end to end offline and documentation
+distinguishes software validation from evidence about language-model behavior.
+
+## 7. Conduct a separately authorized live feasibility pilot
+
+Verify current model access, prices, and SDK compatibility. Preserve
+`--confirm-live`, invocation guards, and the existing **$5 total ceiling across
+related pilot attempts**. This plan does not authorize generating calls or reset
+that ceiling. The larger candidate schedule may not fit within the pilot budget;
+prespecify coverage priorities and report incomplete coverage.
+
+Inspect comprehension of the shared goal and stopping consequences, request
+opportunities, codability, failures, ethics gates, and actual costs. Any separate
+post-run comprehension questions require specified scoring, calls, and cost;
+incorrect answers are not automatic exclusions. Complete invocation records are
+needed for API-error rates. Treat pilot findings as feasibility evidence, not
+confirmation or a reason to select whichever comparison looks interesting.
+
+**Done when:** the report states what completed, cost, failures, and whether the
+revised study is understandable, measurable, and affordable. Failed gates lead
+to dated revision and revalidation, not automatic main-study collection.
+
+## 8. Freeze, collect, code, and report
+
+Use pilot costs and calibrated conservative assumptions to choose a supported
+allocation and obtain a main-study budget. Freeze scenarios, prompts, models,
+request authority, contrasts, exclusions, coding, missingness procedures,
+multiplicity, and stopping rules in a dated commit before main collection.
+Pilot-model variability does not establish another model's variability.
+
+Preserve raw data and invocation records, complete independent coding, and run
+the prespecified analyses. Report expressions, acceptance, observed action timing,
+paired language/action patterns, denominators, failures, and uncertainty for each
+situation. Keep exploratory results separate. Do not claim felt reluctance,
+consciousness, or effects on developer trust. Replace paper placeholders only
+with actual findings. If feasibility is all the study supports, say so.
+
+**Done when:** conclusions answer only the questions supported by the collected
+design and trace to preserved evidence.
+
+## Submission and later work
+
+Prepare the AGENT proposal alongside development: keep current implementation
+separate from planned scenarios, obtain both authors' review, check the five-page
+IEEE paper and venue policies, and rebuild the inspectable source package after
+changes. Check citations, metadata, accessibility, and reviewer access. Submission
+is a separate action. The paper currently labels RQ2/RQ3 as future extensions;
+update that status only when protocol and implementation actually change.
+
+Shared-goal scenarios are now required to answer the four-question program;
+they are no longer merely optional volunteering work. A first-volunteer contest
+remains a distinct optional design with request-level success and selected
+opportunity denominators. Follow-up preference questions, software-task transfer,
+human perception/trust studies, and another model family remain separate future
+work with specifications, validation, and applicable budgets.
+
+## Review traceability
+
+| Earlier criticism | Response in this plan |
+|---|---|
+| Engineering relevance | Observe words and stopping actions in coordinated systems; do not claim software-task or human-trust transfer. |
+| Claims about feeling exceed evidence | Measure expressions and executed actions; keep motives and felt reluctance outside the inference. |
+| Central question not matched to analysis | Steps 2, 4, and 5 map all four questions to outcomes and contrasts; the old D contrast alone is insufficient. |
+| Agent order and opportunities distort willingness | Steps 1 and 3 specify authority, delivery, opportunities, and effects of earlier decisions. |
+| Emotional language underspecified | Step 4 fixes text units, coding, provenance, missingness, and independent review. |
+| Excessive scope and weak sample justification | Steps 2, 5, and 7 assess the 24-combination candidate before adoption, calibrate revised contrasts, and retain a feasibility fallback. |
+| Materials not inspectable | Submission work preserves versioned source, protocol, examples, and honest implementation status. |

@@ -204,3 +204,13 @@ live pilot. Final allocation follows feasibility and cost evidence; no adequate,
 affordable allocation means revision or feasibility-only reporting. This is a
 planning update, not new measurement code, validation evidence, or authorization
 for generation. Historical readiness statements above retain their original scope.
+
+### Four-question roadmap — 2026-10-17
+
+The [new plan](NEXT_STEPS.md) supersedes the earlier immediate sequence. Shared-goal
+situations are needed for the paper's RQ2/RQ3 and are no longer only optional
+volunteering work. The existing eight setups and generic smoke checks do not
+validate them. The next stage specifies situations, request authority, outcomes,
+and revised contrasts before implementation. A 24-combination crossing is only a
+candidate; cost, sample allocation, and inference must be reassessed. No new
+validation, live generation, or budget approval follows from this planning update.

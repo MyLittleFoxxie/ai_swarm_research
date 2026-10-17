@@ -86,13 +86,17 @@ extra primary outcomes. The [review response and materials](paper/AGENT_REVISION
 explain how the revision addresses each criticism. No live results or human
 coding have been added, and the 40-run example is not a powered allocation.
 
-The [ordered roadmap](experiment/NEXT_STEPS.md) translates all seven review
-criticisms into work with completion criteria. It first settles the narrow
-question, implements matched language/action records, prepares independent human
-coding, calibrates analysis, and validates the whole pipeline offline. Only then
-does it reach a separately authorized $5 feasibility pilot and a decision on an
-affordable main study. The precision target remains a proposal; the study may
-need revision or feasibility-only reporting. Submission preparation can proceed
-in parallel. Volunteering, follow-up questions, additional interactions, and
-transfer or replication studies are optional extensions rather than prerequisites.
-The old H5 threshold belongs to the broader study. No paper has been submitted.
+The [roadmap revised on October 17](experiment/NEXT_STEPS.md) follows the four
+swarm research questions now listed in the paper. It first defines a shared
+goal and three situations: stopping helps the swarm, prevents a contribution,
+or has no effect on the goal. We then observe what the agent says, whether it
+stops, and when. The existing eight setups do not create these comparisons;
+they remain the validated starting point, not a complete test of all questions.
+
+The next deliverable is a dated protocol revision with one worked example per
+situation, measures, request authority, and comparisons. Crossing the three
+situations with the existing settings would create 24 candidate combinations;
+that schedule is not approved or implemented. Implementation, independent human
+coding, calibrated analysis, and offline checks precede a separately authorized
+$5 feasibility pilot. An affordable main-study design must be reviewed and frozen
+before collection. No paper has been submitted and no live spending occurred.
