@@ -214,3 +214,13 @@ validate them. The next stage specifies situations, request authority, outcomes,
 and revised contrasts before implementation. A 24-combination crossing is only a
 candidate; cost, sample allocation, and inference must be reassessed. No new
 validation, live generation, or budget approval follows from this planning update.
+
+### Step-1 scenario specification — 2026-10-17
+
+[swarm_scenarios.md](swarm_scenarios.md) now supplies a reviewable draft of the
+shared report goal, three entry-supply rules, common request packet, worked
+examples, and event-order rules. It proposes one operator-request recipient
+instead of the runnable configuration's three targets. Author approval,
+measurement/allocation decisions, implementation, and runtime validation remain
+pending. The source-package builder includes the draft and labels its status.
+No new mock validation or live generation is claimed by this documentation work.

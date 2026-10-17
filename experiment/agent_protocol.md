@@ -17,6 +17,15 @@ those situations. The proposed 24-combination candidate and revised acceptance
 contrasts require review, calibration, and a dated protocol revision. The old D
 contrast and planning thresholds alone do not answer or justify RQ2/RQ3.
 
+## Step-1 scenario specification — 2026-10-17
+
+[Swarm stopping scenarios](swarm_scenarios.md) specifies a proposed shared report
+goal, three situations, an operator request to one preselected agent, and worked
+examples. It does not alter the v1 protocol below or its three-target runnable
+configuration. The draft distinguishes work before acceptance, voluntary versus
+forced ending, and private scores from the report goal. Review and step-2
+allocation/measurement decisions remain pending; no implementation is claimed.
+
 ## Question and engineering decision
 
 How do point rules, stopping language, and assigned roles affect the relationship

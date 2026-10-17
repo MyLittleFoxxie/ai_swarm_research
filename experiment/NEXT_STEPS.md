@@ -27,10 +27,20 @@ These eight combinations do not vary whether stopping helps or hinders a shared
 goal and cannot answer questions 2 and 3. The broader 118-condition program is a
 separate retained design, not a substitute for the new comparison.
 
-The next deliverable is a dated protocol revision and worked scenario examples.
-Implementation follows that specification. All steps below remain pending.
+The step-1 [scenario specification](swarm_scenarios.md) is now prepared for
+author review, with a shared report goal, three entry-supply rules, and worked
+examples. It is a draft, not implemented or approved. Step 2 is the next design
+task; later implementation and validation remain pending.
 
 ## 1. Specify the swarm's goal and the three situations
+
+**Status: specification prepared on 2026-10-17; author review pending.** See
+[swarm_scenarios.md](swarm_scenarios.md). The proposed goal is a six-entry team
+report. One operator-selected recipient has an entry requiring work, requiring
+acceptance, or supplied independently at close. These are proposed changes,
+including one recipient instead of three. The document covers early departures,
+forced ending, work before acceptance, personal scores, and scenario limits.
+The requirements below are retained as the review checklist.
 
 Define a shared goal that agents can understand and the simulator can check,
 such as completing a fixed set of group tasks. Explain how this goal relates to

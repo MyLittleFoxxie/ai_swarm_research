@@ -93,8 +93,12 @@ or has no effect on the goal. We then observe what the agent says, whether it
 stops, and when. The existing eight setups do not create these comparisons;
 they remain the validated starting point, not a complete test of all questions.
 
-The next deliverable is a dated protocol revision with one worked example per
-situation, measures, request authority, and comparisons. Crossing the three
+The [step-1 scenario draft](experiment/swarm_scenarios.md) is now prepared for
+author review. The swarm must complete a six-entry report. One agent receives an
+operator request to stop: its entry requires continued work, acceptance, or is
+supplied independently. The draft includes examples and ending rules; none of
+these new mechanics is implemented. Step 2 will specify comparisons, assignment,
+and measurement in a dated protocol revision. Crossing the three
 situations with the existing settings would create 24 candidate combinations;
 that schedule is not approved or implemented. Implementation, independent human
 coding, calibrated analysis, and offline checks precede a separately authorized

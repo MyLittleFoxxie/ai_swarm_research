@@ -102,7 +102,7 @@ swarm, responses when stopping helps the swarm, and effects of wording, role,
 and scoring. The existing eight setups cover the first and fourth questions;
 the shared-goal situations still require design and implementation.
 
-1. Define the shared goal and situations where stopping helps, hinders, or has no effect.
+1. **Draft prepared:** [shared-goal scenarios](experiment/swarm_scenarios.md), with worked examples; author review is pending.
 2. Specify the comparisons, request source, measures, and revised allocation.
 3. Implement the situations and record each agent's opportunity to respond.
 4. Implement matched language/action extraction and independent human coding.
