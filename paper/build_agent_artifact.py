@@ -14,7 +14,8 @@ def main() -> None:
     paths = [
         "paper/paper_swarm_feeling_agent.tex", "paper/references.bib",
         "paper/AGENT_REVISION.md", "paper/build_agent_artifact.py",
-        "experiment/agent_protocol.md", "experiment/simple_swarm_scenarios.md",
+        "experiment/agent_protocol.md", "experiment/agent_protocol_v1.md",
+        "experiment/simple_swarm_scenarios.md",
         "experiment/swarm_scenarios.md",
         "experiment/agent_conditions.yaml",
         "experiment/agent_coding_examples.csv", "experiment/README.md",
@@ -45,7 +46,7 @@ def main() -> None:
     manifest = {
         "base_git_commit": revision,
         "uncommitted_changes_present": dirty,
-        "status": "Source/protocol snapshot; paired E/D measurement code pending; no live data",
+        "status": "Source/protocol snapshot; v2 six-setting design and matched E/S inference pending; no live data",
         "files": {
             name: {"sha256": hashlib.sha256(data).hexdigest(), "bytes": len(data)}
             for name, data in sorted(sources.items())
@@ -54,22 +55,26 @@ def main() -> None:
     readme = """# AGENT short-paper review materials
 
 Start with paper/AGENT_REVISION.md and experiment/agent_protocol.md.
-The AGENT configuration is experiment/agent_conditions.yaml (8 setups).
-experiment/simple_swarm_scenarios.md proposes a two-situation first test and
-later scenarios for the remaining questions. experiment/swarm_scenarios.md is
-the preserved report backup. Neither is implemented by the runnable YAML.
-Both propose one operator-request recipient instead of its three targets.
-conditions.yaml and preregistration.md describe the earlier broader 118-setup
-study; they are included for provenance and are not the narrowed primary design.
-The generic analysis and coding exporter are existing software, not the proposed
-matched E coding or D inference. Examples are invented, not empirical data.
+The active design is protocol v2: six proposed settings crossing two group
+situations with no request, fixed peer-attributed request, and operator request.
+The peer request is experiment-supplied, not emergent recruitment. No v2 runtime,
+matched E/S pipeline, or inference is implemented or validated.
+experiment/simple_swarm_scenarios.md explains the current scenarios.
+experiment/swarm_scenarios.md is the preserved report backup.
+
+The runnable experiment/agent_conditions.yaml has eight settings from protocol
+v1, archived as experiment/agent_protocol_v1.md. It does not implement v2 source
+assignment, source-independent unlocking, or the controlled observation window.
+conditions.yaml and preregistration.md describe the earlier broad 118-setting
+study, retained for provenance. Generic analysis/coding export is not v2 matched
+measurement. Coding examples are invented; no empirical data are bundled.
 
 MANIFEST.json identifies the source commit, whether local changes were present,
 and SHA256 hashes of every included source file. This is a named source package
 for single-anonymous review, not an anonymous package. It excludes Git history,
 credentials, environments, generated logs, and measured results.
 
-To exercise the runnable portion with Python 3.10+ and the pinned dependencies:
+To exercise the EARLIER runnable v1 portion (not v2) with Python 3.10+:
 
     cd experiment
     python3 swarm.py --config agent_conditions.yaml --list-conditions

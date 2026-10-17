@@ -232,3 +232,16 @@ report draft, which remains a backup. The two-situation first test holds wording
 roles, and personal scoring fixed; it targets RQ3 and describes RQ1. Conflict and
 factor comparisons follow later. No new behavior or analysis is implemented,
 and no runtime validation or spending is claimed by this specification change.
+
+### Unified protocol v2 — 2026-10-17
+
+The [current protocol](agent_protocol.md) supersedes the earlier operator-only
+and source-experiment plans. Three questions share a six-setting first stage:
+helps/reference crossed with none/peer/operator. The old protocol is archived
+as [v1](agent_protocol_v1.md); historical checks above retain their scope.
+Source-independent voluntary-stop unlocking, a four-turn observation without
+forced end, paused peers, matched E/S measurements, and new inference are proposed,
+not implemented. The peer message is experiment-supplied source attribution.
+Old D precision thresholds, eight-setting seed blocks, and 40-session examples
+do not justify v2. Analysis specification, allocation/calibration, implementation,
+and fresh offline validation precede any separately authorized live pilot.

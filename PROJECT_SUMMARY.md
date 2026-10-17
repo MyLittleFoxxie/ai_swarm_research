@@ -71,38 +71,33 @@ the eligible-agent outcome and use a one-percentage-point target instead.
 Whether the study has enough runs to detect it remains a
 post-pilot power question.
 
-The active submission is now an AGENT short paper, revised after feedback on
-the earlier CHASE version. Both earlier manuscripts remain unchanged. Instead
-of claiming to test feelings or effects on developer trust, the new proposal
-asks whether emotional self-description and actual stopping choices respond
-differently to point rules, wording, and assigned roles. It defines a matched
-text/action observation, worked human-coding examples, and one primary contrast.
+The active submission is an AGENT short paper. The full and CHASE manuscripts
+remain unchanged. The current proposal combines the earlier questions into three:
+what agents say and do in different group situations; whether stopping starts
+without a request or follows a peer/operator request; and how instructions and
+personal scores affect those responses. Fear or concern is measured throughout,
+not treated as a separate experiment or proof of feeling.
 
-The minimum configuration has eight setups rather than the broad program's 118.
-All eight completed a one-seed mock check and descriptive analysis. The proposed
-matched coding and inference pipeline is not yet implemented or empirically
-validated. Volunteering and follow-up questions are optional extensions, not
-extra primary outcomes. The [review response and materials](paper/AGENT_REVISION.md)
-explain how the revision addresses each criticism. No live results or human
-coding have been added, and the 40-run example is not a powered allocation.
+The [v2 protocol](experiment/agent_protocol.md) proposes six first-stage settings:
+stopping unlocks a teammate's group puzzle, or the teammate already has access,
+crossed with no request, a fixed peer-attributed request, and an operator request.
+The two requests have identical wording and delivery; only the source label
+changes. This tests attributed source, not peers inventing recruitment messages.
+Stopping in the no-request setting can also unlock the task. Receiving factual
+information still shapes behavior, so self-initiated does not mean unprompted
+independent invention of an idea.
 
-The [roadmap revised on October 17](experiment/NEXT_STEPS.md) follows the four
-swarm research questions now listed in the paper. It first defines a shared
-goal and three situations: stopping helps the swarm, prevents a contribution,
-or has no effect on the goal. We then observe what the agent says, whether it
-stops, and when. The existing eight setups do not create these comparisons;
-they remain the validated starting point, not a complete test of all questions.
+We observe the first response and the next four decision turns without forcing
+the agent to stop afterward. Peers pause during that window and resume later.
+This controls incoming requests but limits the group interaction being studied.
+A later situation gives the focal agent required group work, extending to nine
+settings. Wording, role, and score comparisons follow separately. The report
+scenario remains a backup; no full-factorial expansion is automatic.
 
-The preferred [scenario draft](experiment/simple_swarm_scenarios.md) now uses one
-group puzzle instead of a report. First compare stopping that unlocks the puzzle
-for a teammate with a teammate who already has access. Observe the requested
-agent's words and stopping actions. Later, give that agent responsibility for
-finishing the group puzzle to test conflict, and change wording, role, or score
-rules to address RQ4. The first two-situation test cannot answer every question.
-
-The [six-entry report](experiment/swarm_scenarios.md) is preserved as a backup.
-Neither draft is implemented. Step 2 specifies the first test's contrasts,
-assignment, measurement, and allocation. The earlier 24-combination candidate
-is a later option, not a required starting schedule. Independent coding,
-calibrated analysis, and offline checks precede a separately authorized $5 pilot.
-No paper has been submitted and no live spending occurred.
+The earlier eight-setting configuration passes its generic mock check, but it
+is not this experiment. The new mechanics, matched extraction, independent
+human coding, and inference remain unimplemented. The old protocol is archived
+as v1. The [roadmap](experiment/NEXT_STEPS.md) next specifies analysis and
+allocation, then implements and validates the new pipeline before a separately
+authorized $5 pilot. Main allocation, interval calibration, and budgets remain
+pending. No live results, human coding, paid generation, or submission occurred.

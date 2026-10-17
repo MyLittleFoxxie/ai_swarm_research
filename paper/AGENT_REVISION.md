@@ -176,3 +176,27 @@ No simulator settings or study outcomes changed. Tectonic 0.17.0 compiled four
 pages including references, all ten citation keys resolve, and all pages were
 rendered and visually inspected. Existing underfull spacing warnings and the
 untagged-PDF limitation remain. Earlier full and CHASE manuscripts are unchanged.
+
+## Unified questions and experiment — 2026-10-17
+
+Consolidated the former expression, helping, hindering, factor, and proposed source
+questions into three: group situation/response, self-initiation/request source,
+and later instruction/scoring effects. The first stage is one six-setting design,
+not duplicate operator and source experiments. Its two group situations are
+crossed with none/peer/operator. The peer message is experiment-supplied source
+attribution with matched text/transport, not autonomous recruitment. Voluntary
+stopping unlocks the helping task without requiring a request. The first four
+turns are observed without forced ending at the window boundary, with peers paused
+and resumed identically. Hindering later gives nine settings; factors follow
+separately. Earlier D thresholds and eight-setting block assumptions do not carry
+over as primary justification. The prior protocol is archived as v1; runtime YAML
+and harness code remain unchanged. The report backup is preserved.
+
+The abstract, questions, design table, methods, analysis/status, and limitations
+now describe the same v2 proposal. Rechecked the incident account against METR's
+original investigation, including the uncertainty about the recruited agent's
+final attempt. Tectonic 0.17.0 compiled four pages including references. All ten
+citation keys resolve; all pages were rendered and visually inspected. Underfull
+spacing warnings remain without visible overlap/clipping; the PDF is untagged.
+No new simulator, matched extraction, coding, inference, or live-data validation
+is claimed. Full and CHASE manuscripts and empirical placeholders are unchanged.

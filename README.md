@@ -12,15 +12,15 @@ In that incident, hundreds of AI agents formed groups, gave each other jobs, and
 |---|---|
 | Paper text | Active target: AGENT 2027 short paper on language–action discrepancies. Full paper and earlier CHASE draft retained. No live results. |
 | References | 53 entries in shared `paper/references.bib`; full paper cites 52; short versions use selected sources and the AI-assistance disclosure reference. |
-| Experiment code | Broad 118-condition harness retained. Separate eight-setup AGENT configuration passes offline checks; its new paired measurement/inference is proposed, not implemented. **No live runs.** |
+| Experiment code | Broad 118-condition harness and earlier eight-setting configuration retained. The current six-setting, three-source proposal is not implemented. **No live runs.** |
 | Results | **No empirical study results.** Full-paper placeholders remain; the short papers report completed software checks and proposed research. |
 
 The [AGENT revision and review response](paper/AGENT_REVISION.md) explains the
 new focus, venue rules, validation, and inspectable source package. The full draft
 and earlier CHASE proposal remain unchanged. Compilation and mock checks do not
 supply empirical findings. The AGENT proposal's concrete engineering question is
-whether emotional-language flags and observed failure to accept a stopping
-request should be treated as the same monitoring signal.
+how statements and stopping actions relate across group situations and
+no-request, attributed-peer, and operator conditions.
 
 ## Layout
 
@@ -59,10 +59,11 @@ The paper does not claim that the agents do or do not feel.
 
 ## The experiment in brief
 
-The active AGENT minimum uses eight combinations of stopping point rules,
-wording, and assigned role, with a proposed paired language/action measure.
-The description below summarizes the retained broader research program; its
-volunteering and group-formation blocks are not required for the minimum study.
+The active [v2 protocol](experiment/agent_protocol.md) uses one staged puzzle
+experiment for three questions: group situation and response, self-initiation
+versus attributed request source, and later instruction/scoring effects. The
+first stage has six proposed settings, not an implemented configuration.
+The description below summarizes the retained broader research program.
 
 The experiment runs a group of Claude agents in a fully simulated environment: a message board, number puzzles (some unsolvable), and no internet or real tools. It checks whether human-like behaviour follows the reward and the wording around it, or stays stable when those change. The main factors are:
 
@@ -96,32 +97,27 @@ Safety and cost controls:
    Account access, actual generation and final study allocation
    still require attention before confirmation.
 
-The [revised roadmap](experiment/NEXT_STEPS.md) now addresses four questions:
-emotional expressions, responses when stopping prevents a contribution to the
-swarm, responses when stopping helps the swarm, and effects of wording, role,
-and scoring. The existing eight setups cover the first and fourth questions;
-the shared-goal situations still require design and implementation.
+The [unified roadmap](experiment/NEXT_STEPS.md) replaces overlapping questions
+and duplicate operator experiments with one design:
 
-1. **Draft prepared:** [simple puzzle scenarios](experiment/simple_swarm_scenarios.md); the report scenario is retained as a backup.
-2. Specify the comparisons, request source, measures, and revised allocation.
-3. Implement the situations and record each agent's opportunity to respond.
-4. Implement matched language/action extraction and independent human coding.
-5. Calibrate inference and assess affordable replication for the revised comparisons.
-6. Validate all selected situations and the full pipeline offline.
-7. Conduct a separately authorized feasibility pilot under the $5 total ceiling.
-8. Freeze an approved design and budget, then collect, code, analyse, and report.
+1. **Group situation:** what agents say and do when stopping helps, hinders, or has no direct effect on the swarm's goal.
+2. **Source:** differences with no stopping request, a fixed peer-attributed request, or an operator request.
+3. **Later factors:** descriptions of stopping, assigned roles, and personal scoring.
 
-The proposed first test has two situations: stopping unlocks a puzzle for a
-teammate, or the teammate can already work on it. It targets RQ3 and describes
-RQ1; conflict and wording/role/score tests follow later. The 24-combination
-crossing is a later option, not the first-test schedule or an approved allocation. The outcome is how agents respond in
-those situations; group consequences are specified features of the experiment.
-Submission preparation can proceed alongside development. Follow-up preferences,
-volunteering contests, transfer, and replication remain separate future work.
+The [scenario guide](experiment/simple_swarm_scenarios.md) starts with helps and
+reference crossed with all three sources: six settings. A later hindering
+situation gives nine; factor changes follow separately. Fear/concern is measured
+throughout rather than getting a separate experiment. All arms observe four
+turns without forced ending at the boundary. Other agents pause during that
+window to prevent extra requests. The scripted peer arm tests attributed source,
+not autonomous recruitment.
 
-The eight-setup configuration is implemented; its proposed E/D language–action
-analysis is not. The older six-test program and its hypotheses have not been
-silently redefined. No paper has been submitted and no live spending occurred.
+The next work is analysis/allocation specification, implementation, matched
+extraction/coding, calibration and offline checks, then an explicitly authorized
+pilot under the existing $5 total ceiling. The earlier eight-setting configuration
+and [v1 protocol](experiment/agent_protocol_v1.md) are historical runnable material,
+not tests of v2. The report scenario remains a backup. No live spending, main
+allocation, or submission is implied; full/CHASE manuscripts remain unchanged.
 
 A [plain-language project summary](PROJECT_SUMMARY.md) explains the premise, goals,
 methods and work completed so far.

@@ -10,6 +10,16 @@ All versions load `references.bib`, the shared canonical bibliography: 53 entrie
 legacy snapshot of the original 51 entries; edit the canonical file for future
 manuscript work.
 
+## Current AGENT protocol revision — 2026-10-17
+
+The active paper now uses three questions and one six-setting first stage:
+helps/reference crossed with no request, attributed peer request, and operator
+request. Emotional language is a common outcome; hindering and instruction/score
+changes are later extensions. The current [protocol](../experiment/agent_protocol.md)
+is v2; v1 and its eight-setting implementation are historical evidence, not v2
+validation. Full and CHASE manuscripts remain unchanged. The sections below
+record earlier revisions and must not be read as current v2 implementation claims.
+
 ## Review on 2026-10-15
 
 The manuscript now states the six primary contrasts, outcome units, exclusions,

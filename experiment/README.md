@@ -7,19 +7,19 @@ validation evidence. No live experiments or model API calls have been made;
 there are no empirical study results. [VALIDATION.md](VALIDATION.md) preserves
 the historical step 1 evidence and limitations known at that stage.
 
-The active [AGENT protocol](agent_protocol.md) narrows the first proposed study
-to eight setups in agent_conditions.yaml. That configuration passes offline
-checks; its matched first-response coding and seed-block analysis remain pending.
-The broad conditions.yaml and old six-test plan are unchanged. The [ordered
-roadmap](NEXT_STEPS.md) now plans shared-goal situations for the four swarm
-questions. Those situations are not implemented: the eight existing setups do
-not test responses when stopping helps or hinders the swarm. The proposed
-[simple scenarios](simple_swarm_scenarios.md) start with a stopping-unlocks-a-puzzle
-comparison against a teammate who already has access. They map later tests to
-the other questions. The [six-entry report](swarm_scenarios.md) is a backup.
-None is runnable yet; step 2 specifies analysis and allocation for the first test.
-See the [AGENT paper and review response](../paper/AGENT_REVISION.md) for current
-submission materials. The earlier CHASE draft is retained, not the active target.
+The current [v2 protocol](agent_protocol.md) combines three questions in one
+staged experiment. Its first stage crosses helping/reference situations with
+no request, a fixed peer-attributed request, and an operator request: six settings.
+The [scenario guide](simple_swarm_scenarios.md) and [roadmap](NEXT_STEPS.md) describe
+language/action measurement, a common four-turn window without forced ending,
+and paused peers. These new mechanics and inference are not implemented.
+
+agent_conditions.yaml and [protocol v1](agent_protocol_v1.md) retain the earlier
+runnable eight-setting design and its one-seed generic smoke check. The broader
+conditions.yaml and preregistration remain separate historical designs. Existing
+commands below exercise those implementations, not the new six-setting proposal.
+The [report scenario](swarm_scenarios.md) remains a backup. See the
+[AGENT revision record](../paper/AGENT_REVISION.md) for paper and build evidence.
 
 ## What this is for
 
