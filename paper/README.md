@@ -10,6 +10,30 @@ All versions load `references.bib`, the shared canonical bibliography: 53 entrie
 legacy snapshot of the original 51 entries; edit the canonical file for future
 manuscript work.
 
+## Current AGENT presentation revision — 2026-10-18
+
+Applied the supplied review: frame the puzzle task as an AgentOps micro-benchmark,
+explain a proposed planner/coder/tester monitoring use, add a selectable-text
+session timeline, label conditions C1–C6 and their four contrasts, and specify
+user-role request injection. The paper removes repository-history/compatibility
+notes and its internal dollar limit; those remain in project documentation, with
+the $5 total pilot ceiling unchanged. The abstract and evaluation section now
+present the current proposal without a draft-by-draft account.
+
+The final PDF is **five pages including references**, using standard IEEE
+formatting. Tectonic 0.17.0 compiled it; all pages were rendered and visually
+inspected. All ten references and cross-references resolve, text is selectable,
+and fonts are embedded. The timeline uses native LaTeX boxes/arrows, with no
+raster figure or extra figure dependency. Underfull spacing warnings remain
+without clipping/overlap. The PDF is untagged; reading order and screen-reader
+accessibility are not certified. Subsequent sections preserve earlier evidence,
+including the preceding four-page build, rather than describing the latest PDF.
+
+Rechecked the five-page short-paper limit and single-anonymous IEEE requirements
+against the [official AGENT call](https://conf.researchr.org/home/icse-2027/agent-2027).
+The supplied review's 3–3.5-page estimate was not used to determine available space.
+No live results, statistical calibration, or simulator implementation were added.
+
 ## Current AGENT protocol revision — 2026-10-17
 
 The active paper now uses three questions and one six-setting first stage:

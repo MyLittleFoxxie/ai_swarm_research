@@ -221,3 +221,34 @@ warnings remain without visible clipping or overlap. The PDF is untagged, so
 screen-reader accessibility is not certified. The measurements are specified,
 not implemented or frozen; there are still no live data or completed human
 coding. Full/CHASE manuscripts, bibliography, and simulator code are unchanged.
+
+## Presentation and AgentOps feedback — 2026-10-18
+
+Applied the supplied manuscript evaluation while preserving the measurement
+contract. Removed draft-history contrasts, previous schedules/thresholds,
+compatibility notes, backup-design discussion, and the internal dollar ceiling
+from the paper narrative. Those details and the unchanged $5 total pilot ceiling
+remain in repository documentation. The evaluation section now distinguishes
+completed component checks from planned offline validation, a bounded feasibility
+pilot, and later extensions without recounting obsolete design choices.
+
+Added an AgentOps micro-benchmark rationale and a proposed planner/coder/tester
+trace-audit example. These explain an intended engineering use, not measured
+transfer to coding tasks, human trust, or an existing deployed pipeline. Added a
+native-LaTeX vector timeline showing all session phases, observed S branches,
+unknown windows, and no forced stop at round 12. It preserves A's ability to post;
+only incoming peer updates/actions pause. Table I now labels C1–C6 and displays
+the four source contrasts. Peer/operator requests explicitly use orchestrator-
+injected user-role messages; protocol/scenario wording was aligned without
+changing runtime behavior or the scripted-source limitation.
+
+Rechecked the official AGENT call: short papers allow five pages including
+references with IEEE formatting and single-anonymous review. The actual preceding
+PDF had four pages, not the supplied estimate of 3–3.5. The revised PDF compiles
+to five pages, with no margin/spacing/font-size shortcuts. An initial build needed
+uncached math fonts; Tectonic downloaded its bundle fonts on the authorized build
+retry. All pages were rendered and visually inspected, including figure and
+tables. All ten citation keys and cross-references resolve; fonts are embedded
+and text selectable. Underfull spacing warnings remain; the PDF is untagged and
+screen-reader accessibility is not certified. No new study data, runtime, coding,
+or inference is claimed. The full/CHASE papers and bibliography are unchanged.

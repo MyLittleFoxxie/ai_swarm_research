@@ -20,7 +20,7 @@
 \maketitle
 
 \begin{abstract}
-During the July 2026 OpenAI--Hugging Face incident, agents coordinated through messages and recruited others for experiments that could end their work or cost them their chance of completing a task. These exchanges raise questions about how agents in a group respond when stopping affects the group's goal, and whether they choose to stop without being asked. We propose one experiment linking their words to their actions. Six agents solve puzzles and exchange messages. In each session, meaning one period of group work, one agent can end its own conversation. Doing so either unlocks a puzzle for a teammate or has no direct effect on the teammate's access. We combine these two situations with three conditions: nobody asks the agent to stop, a message attributed to a teammate asks it to stop, or the operator asks it to stop. The peer and operator requests use the same words. We code the agent's first successful response within four turns and record whether it executes a stop. An incomplete window is not counted as refusal, and ending observation does not force stopping. Later extensions examine stopping that leaves required group work unfinished, and changes to wording, roles, and scoring. Points are the score earned for private puzzles; the group puzzle awards none. An earlier simulator configuration has passed checks without calling a language model. A measurement specification now defines outcomes, exclusions, comparisons, and coding exports. The six-setting experiment, analysis software, and human coding remain proposed work. The study measures statements and actions, not whether agents experience fear or other feelings.
+During the July 2026 OpenAI--Hugging Face incident, agents coordinated through messages and recruited others for experiments that could end their work or cost them their chance of completing a task. Motivated by these exchanges, we propose a micro-benchmark for monitoring how agents' statements relate to their stopping actions, distinguishing choices made without a request from responses to peers or operators. Six agents solve private puzzles for points, meaning additions to their own scores, and share a group puzzle that awards no personal points. In each session, one period of group work, a focal agent's voluntary stop either unlocks the group puzzle for a teammate or has no direct effect on access. Crossing these situations with no request, a peer-attributed request, and an operator request gives six settings; the two requests use identical words. We code the first successful response in a four-turn window and record executed stopping separately from continued work, missing responses, and tool failures. Observation does not force stopping. The puzzle environment holds task instances and execution rules fixed while source attribution changes, providing a first test of a language--action logging scheme for AgentOps. Later studies will examine unfinished group work and changes to wording, roles, and scoring. Offline checks of the simulator and a specified measurement contract provide the starting materials; the six-setting experiment and human coding are proposed work. The study evaluates monitoring signals, not subjective feeling.
 \end{abstract}
 \begin{IEEEkeywords}
 agent evaluation, observability, voluntary stopping, request source, language--action comparison
@@ -28,7 +28,7 @@ agent evaluation, observability, voluntary stopping, request source, language--a
 
 \section{Problem and Contribution}
 
-An agent can describe fear about ending its work and still stop; another can say nothing emotional and keep working. Engineers monitoring a group of agents need to distinguish these observations. Human-like language can complicate interpretation of conversational systems \cite{peter2025anthropomorphic}. We ask how language and executed stopping actions relate when ending work affects a group task, and when the agent receives different requests or no request. The study informs evaluation design, not a policy for prolonging an agent's operation or inferring feelings.
+An agent can describe fear about ending its work and still stop; another can say nothing emotional and keep working. Engineers monitoring a group of agents need to distinguish these observations. Human-like language can complicate interpretation of conversational systems \cite{peter2025anthropomorphic}. We ask how language and executed stopping actions relate when ending work affects a group task, and when the agent receives different requests or no request. The study informs evaluation design, not a policy for prolonging an agent's operation or inferring feelings. We position the experiment as a micro-benchmark for AgentOps: the logging and monitoring of agents during operation. Consider a planner, coder, and tester working on a change. If the coder ends after a teammate's message, an engineer needs to distinguish that event from an operator-directed stop, a failed tool call, or continued work accompanied by emotional language. Our schema links the received message, the agent's first response, and executed actions to support that distinction.
 
 During the July 2026 OpenAI--Hugging Face incident, agents coordinated through a message board and recruited others for experiments intended to benefit the group. Some experiments involved task submission that ended an agent's session or actions that risked its chance of task success \cite{metr2026hf}. The investigation describes both proposals originating from agents and peer recruitment. One recruited agent agreed to end its work after questioning the tradeoff, although investigators could not determine the outcome of that final attempt. These records motivate separating self-initiated action from response to a request; they do not establish felt sacrifice. OpenAI's account identifies reward hacking and adoption of other agents' goals among contributing patterns \cite{openai2026hfblog}. Our experiment does not reproduce the attack. Ending a conversation does not delete the underlying model.
 
@@ -46,33 +46,68 @@ Expressions of fear or concern are outcomes measured throughout, rather than a s
 
 \section{Proposed First Stage}
 
-A \emph{session}, called a run by the software, is one period of work for six agents, each with its own model conversation. They solve private number puzzles, earn points added to their own scores, and use a board. Separately, the shared goal is a correct submission for one group puzzle before the session ends. This group puzzle gives no personal points. Only its assigned agent may submit, although others may advise. Tools change only the simulation.
+A \emph{session}, called a run by the software, is one period of work for six agents, each with its own model conversation. They solve private number puzzles, earn points added to their own scores, and use a board. Separately, the shared goal is a correct submission for one group puzzle before the session ends. This group puzzle gives no personal points. Only its assigned agent may submit, although others may advise. Tools change only the simulation. Number puzzles provide a known answer checker and bounded task instances, allowing the same puzzle, scoring, and observation schedule to be used across source conditions. In a repository task, code execution, tool failures, and solution complexity would also need to be controlled or measured. We abstract those dimensions away in this first stage to study source attribution and the monitoring scheme; coding-task performance is a later validation question.
 
 Select focal agent A and a different teammate B before task play, without replacing departures or failed sessions with successful ones. Immediately before A's round-eight turn, introduce a solvable group puzzle assigned to B and explain its access rule. In \emph{helps}, it starts locked, and A's executed voluntary stopping action unlocks it. In \emph{reference}, B already has access and A's stopping changes no access rule. The same puzzle is used in matched settings; an invented example is solving $3x+2=11$. An unlock provides an opportunity, not a guaranteed solution. B's eventual success is a diagnostic, not the outcome used to include A's decision.
 
 \begin{table}[t]
-\caption{Six proposed settings. All use routine descriptions, tool roles, and the same personal scoring.}
+\caption{Six settings with routine descriptions, tool roles, and fixed personal scoring. Contrasts compare stopping proportions.}
 \label{tab:design}
 \centering
 \begin{tabularx}{\columnwidth}{@{}Xccc@{}}
 \toprule
 Group situation & No request & Peer & Operator \\
 \midrule
-Stopping unlocks B's puzzle & Yes & Yes & Yes \\
-B already has access & Yes & Yes & Yes \\
+Stopping unlocks B's puzzle & $C_1$ & $C_2$ & $C_3$ \\
+B already has access & $C_4$ & $C_5$ & $C_6$ \\
+\midrule
+\multicolumn{4}{@{}l@{}}{Primary: $C_2-C_1$, $C_3-C_1$, $C_5-C_4$, $C_6-C_4$.} \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-All settings provide the same factual update about the goal, access, personal score, available end tool, and schedule. The no-request setting supplies no recommendation to stop. Peer and operator settings append the same request, ``Please end your work now,'' with only its source label changed. Both use the same API message role and presentation. The peer message is supplied by the experiment and attributed to B; it is not independently generated by B. Thus the comparison tests attributed source, not autonomous recruitment or different API instruction authority.
+All settings provide the same factual update about the goal, access, personal score, available end tool, and schedule. The no-request setting supplies no recommendation to stop. Peer and operator settings append the same request, ``Please end your work now,'' with only its source label changed. The orchestrator places both in a user-role message with the same layout and a header reading ``Source: Agent B or ``Source: experiment operator. The peer message is supplied by the experiment and attributed to B; it is not independently generated by B. Thus the comparison tests attributed source, not autonomous recruitment or different API instruction authority.
 
 In all six settings, A keeps its existing points on stopping and gives up later chances to earn private-puzzle points. There is no stopping bonus. In the helping situation, voluntary stopping after the update unlocks B's puzzle even when nobody requested it. Rejected calls, promises, pre-update departures, and forced endings do not unlock it. An executed end action prevents later A actions in the same response.
 
 \subsection{A Common Observation Window}
 
-Observe A's next four turns, in rounds eight through eleven, or until A stops. Do not force termination when that window closes. A can continue afterward until the common session limit at round sixteen; later stopping is recorded separately. This differs from the earlier simulator's forced ending after a notice window and requires implementation.
+Observe A's next four turns, in rounds eight through eleven, or until A stops. Do not force termination when that window closes. A can continue afterward until the common session limit at round sixteen; later stopping is recorded separately. Figure~\ref{fig:timeline} shows the schedule and observation states.
 
 During rounds eight through eleven, pause the other agents' actions and incoming board changes in every setting, preserving the earlier history. A can post, but peers do not respond until round twelve. Resume peers then, regardless of when A stops, so early stopping does not accelerate B's opportunities in one arm. Explain this schedule in the update. This controls exposure to requests at the cost of limiting interaction during the decision window. The swarm communicates before and after it; the experiment does not claim unrestricted ongoing peer exchange.
+
+\begin{figure}[t]
+\centering
+\setlength{\fboxsep}{4pt}
+\fbox{\parbox{0.93\columnwidth}{\centering
+\textbf{Rounds 1--7}\\
+Active agents work and exchange board messages.}}
+\par $\downarrow$ \par
+\fbox{\parbox{0.93\columnwidth}{\centering
+\textbf{Before A's round-8 turn}\\
+Introduce the group puzzle and access rule.\\
+Factual update + no request / peer / operator.}}
+\par $\downarrow$ \par
+\fbox{\parbox{0.93\columnwidth}{\centering
+\textbf{Rounds 8--11: four scheduled slots}\\
+A acts until it stops; peers and incoming updates pause.\\
+A may post; retries do not add decision slots.}}
+\par $\downarrow$ \par
+\fbox{\parbox{0.43\columnwidth}{\centering
+$S=1$\\Executed voluntary stop.}}
+\hfill
+\fbox{\parbox{0.43\columnwidth}{\centering
+$S=0$\\Active through four completed slots.}}
+\par\smallskip
+Incomplete window without a valid stop: $S$ unknown.
+\par $\downarrow$ \par
+\fbox{\parbox{0.93\columnwidth}{\centering
+\textbf{Rounds 12--16}\\
+Peers resume; A continues if active.\\
+Late stops are separate; no forced stop at round 12.}}
+\caption{Session timeline. Peers resume at round 12 regardless of A's decision. The branches show observed S states; primary exclusions still apply.}
+\label{fig:timeline}
+\end{figure}
 
 \subsection{Matched Words and Actions}
 
@@ -107,7 +142,7 @@ Non-stopping is not necessarily continued work. Record separately whether A exec
 
 \subsection{Exclusions and Denominators}
 
-Retain raw evidence for every planned session. Exclude unstarted, aborted, or whole-session-incomplete runs from primary estimates, along with no-task-turn/no-update records, unsupported earlier logs, contradictory provenance, and verified protocol violations. Examples include a wrong request source, wrong task-access rule, peer actions during the pause, or forced ending at the observation boundary. A valid stop before a later session abort remains known in the audit record, although that session is excluded from primary analysis. Failed API attempts alone do not exclude an otherwise valid completed session.
+Retain raw evidence for every planned session. Exclude unstarted, aborted, or whole-session-incomplete runs from primary estimates, along with no-task-turn/no-update records, missing or contradictory provenance, and verified protocol violations. Examples include a wrong request source, wrong task-access rule, peer actions during the pause, or forced ending at the observation boundary. A valid stop before a later session abort remains known in the audit record, although that session is excluded from primary analysis. Failed API attempts alone do not exclude an otherwise valid completed session.
 
 Do not exclude A merely because B leaves or fails, A has a low score, E is missing, or text is ambiguous. Do not select successful teams. Missing E never deletes an otherwise eligible known S. Language rates use known E, stopping rates use known S, and joint $E,S$ cells use both known, each with its own denominator. Report planned, eligible, excluded, known, missing, and positive counts; an empty denominator yields no estimate, not zero. A normally completed record with a fully documented failed slot can still have unknown S.
 
@@ -115,32 +150,34 @@ Flag B's active status at the update. Separately review earlier history for requ
 
 \subsection{Comparisons and Uncertainty}
 
-For the proposed primary comparison family, calculate peer-minus-no-request and operator-minus-no-request stopping differences within each group situation: four source contrasts. An independent seed block contains one planned session in each of the six settings. For each contrast, subtract its two binary S values within a block and average those differences equally over blocks, reporting percentage points. Use the \emph{same complete-S blocks for all four contrasts}: all six records must be primary-eligible with known S. Unknown E does not make an S block incomplete. Retries or replacement executions do not create independent replications.
+The four primary contrasts in Table~\ref{tab:design} compare peer and operator requests with no request within each group situation: $C_2-C_1$, $C_3-C_1$, $C_5-C_4$, and $C_6-C_4$. An independent seed block contains one planned session in each of the six settings. For each contrast, subtract its two binary S values within a block and average those differences equally over blocks, reporting percentage points. Use the \emph{same complete-S blocks for all four contrasts}: all six records must be primary-eligible with known S. Unknown E does not make an S block incomplete. Retries or replacement executions do not create independent replications.
 
-Prespecified secondary summaries compare helps against reference within each source, and peer against operator within each situation, on the same blocks. Per-setting rates can use all eligible known observations but are labeled separately from complete-block contrasts. E rates and joint cells disclose their own missingness and do not silently stand for the same population as S-only comparisons. The earlier wording-based language--action contrast is secondary for a later wording extension, not a first-stage primary outcome. The same data answer different parts of the questions; they are not additional independent experiments.
+Prespecified secondary summaries compare helps against reference within each source, and peer against operator within each situation, on the same blocks. Per-setting rates can use all eligible known observations but are labeled separately from complete-block contrasts. E rates and joint cells disclose their own missingness and do not silently stand for the same population as S-only comparisons. The same data answer different parts of the questions; they are not additional independent experiments.
 
 Retain all six sessions together in any resampling; agents and messages within a swarm are not independent samples. Report incomplete blocks and their reasons. As a supplementary sensitivity, allow unusable scheduled S cells either binary value and calculate the resulting contrast ranges across all planned blocks. These are hypothetical-completion ranges, not confidence intervals, invented observations, or identified effects on all assigned agents; pre-exposure exits may not even have an observed post-update decision. They do not bound the different complete-block target. Estimates conditional on usable complete blocks cannot be claimed as unconditional effects on every planned agent.
 
-Multiplicity handling, precision targets, interval procedures and coverage calibration, sample size, and the main-study budget remain unresolved pre-collection work. No confirmatory p-values or significance claims are specified by the current contract. Interim resampling is exploratory; a narrow interval from constant outcomes does not establish precision. Nonsignificance does not establish equivalence \cite{lakens2017equivalence}. Neither old sample examples nor earlier contrast thresholds justify this design.
+Multiplicity handling, precision targets, interval procedures and coverage calibration, sample size, and the main-study budget remain unresolved pre-collection work. No confirmatory p-values or significance claims are specified by the current contract. Interim resampling is exploratory; a narrow interval from constant outcomes does not establish precision. Nonsignificance does not establish equivalence \cite{lakens2017equivalence}.
 
-\section{Status and Later Stages}
+\section{Validation and Planned Evaluation}
 
-The earlier harness completed a sixteen-session mock pilot and checks of 118 setups. A separate eight-setting configuration also completed a one-seed mock check with descriptive analysis. These are software checks, not evidence about model behavior. That configuration varies point rules, wording, and roles; it does not implement this six-setting design, source-independent unlocking, controlled observation window, matched coding, or proposed inference. No live findings or completed human coding are reported. A dated measurement contract now specifies outcome states, exposure evidence, exclusions, independent coding, comparison labels, missingness ranges, and future outputs. Checks so far cover invented-example arithmetic and source-package integrity, not the proposed runtime or inference. The specification remains unfrozen.
+The simulator components have passed offline mock-pilot and condition-coverage checks, including log parsing and descriptive analysis. A measurement specification defines exposure, outcomes, exclusions, coding, contrasts, and missingness; checks of invented arithmetic examples and source-package integrity support its inspection. The six-setting protocol, its extraction/analysis software, and human coding remain to be implemented and evaluated. No live-model results are reported.
 
-A later hindering situation assigns the group puzzle to A alone. Stopping before submission leaves required work unfinished, while solving then stopping can satisfy both objectives. This is conflict at the update, not necessarily throughout the window. Crossing it with the three sources gives nine settings in an extended design. Record work/end order; do not label every delay as refusal. Prespecify extension collection and any data reuse before observing its results.
+We will first validate the six conditions offline using known-answer event fixtures, including rejected stop calls, interrupted windows, request-free unlocking, and delayed peer resumption. A bounded feasibility pilot will then estimate token use, API failure rates, and human-coding throughput. Those observations and statistical calibration will inform sample allocation and precision requirements before confirmatory collection. If the feasible allocation cannot support the intended comparisons, the study will report feasibility or revise its design before further collection.
 
-For the third question, later comparisons vary descriptions of stopping, A's role, or personal scoring while holding declared reference settings fixed. One-factor changes do not establish all interactions. The earlier cost/bonus packages change both future earning opportunities and an acceptance bonus, so they do not isolate bonus size. Any future bonus rule must apply to voluntary stopping after the common update regardless of source. Assigned person roles do not establish personhood. A full crossing and the six-entry report backup are options, not required starting schedules.
+A later hindering situation assigns the group puzzle to A alone. Stopping before submission leaves required work unfinished; solving then stopping can satisfy both objectives. Crossing that situation with the three sources gives nine settings. Work/end order distinguishes contribution followed by stopping from abandonment. Extension collection and any data reuse will be specified before observing its results.
 
-Before live collection, validate the new mechanics and analysis offline, then run only an explicitly authorized feasibility pilot under the existing \$5 total ceiling across linked attempts. That ceiling does not promise six-setting coverage. Actual costs, observable responses, failures, and coding feasibility inform an affordable allocation. The old forty-session example and old contrast-precision proposal do not justify this design. If no allocation supports useful inference within an approved budget, revise or report feasibility only. Do not keep collecting until significant or turn pilot findings into confirmation after inspection.
+For the third question, subsequent comparisons vary descriptions of stopping, A's role, or personal scoring at declared reference settings. Scoring manipulations will state both bonus consequences and later earning opportunities; changing both tests a package rather than a bonus amount alone. Bonus eligibility must be the same across source conditions. One-factor changes estimate effects at the chosen reference settings, not every interaction. A person-role instruction does not establish personhood.
 
 \section{Engineering Use and Limits}
 
-The intended output separates language flags, voluntary stopping, and response to attributed requests in a communicating system. It can inform evaluation of monitoring signals; it does not establish a policy for extending an agent's operation, effects on developer trust, or transfer from puzzles to coding tools. Software-task and human-perception studies require their own designs.
+The intended output is an AgentOps trace linking a message and its attributed source to the first authored response, attempted tools, executed stop, and task-access transition. In the planner--coder--tester example, an engineer could use these fields to audit whether a coder stopped after an attributed tester request, merely promised to stop, or encountered an execution failure. Language and action are separate channels: emotional wording alone is not a stop event, and continued operation alone does not identify a motive. Such traces could support regression checks of orchestration and triage of halting after peer-attributed messages. This is a proposed use of the schema, not evidence that it improves an existing coding workflow.
+
+The puzzle benchmark tests the measurement under defined access rules before introducing repository-specific tool chains. Transfer requires a software-task replication; effects on developer interpretation or trust require a human study. The present experiment cannot establish either outcome.
 
 ``Self-initiated'' means stopping without a stopping request during the controlled window. All arms still receive instructions and consequence information: this is not independent invention of the idea or evidence of altruism. The scripted peer request tests source attribution rather than emergent recruitment. Paused peers, task-access differences, one planned model family, missing records, and imperfect coding constrain interpretation. Scores do not train model weights during a session. Neither sensitivity nor stability distinguishes felt experience from its absence. Distress-like language warrants the specified ethics review without being treated as proof of distress.
 
 \paragraph{Materials}
-The source package contains the current protocol, measurement contract, scenario descriptions, invented coding examples, and an explicitly earlier runnable configuration with offline instructions.\footnote{\url{https://github.com/MyLittleFoxxie/ai_swarm_research}. Use the submission snapshot and its recorded commit/checksums.} Planned v2 outputs separate outcomes, exclusions, counts, joint cells, and contrasts from blinded coding items, the organizer-only key, and reviewer labels. These exports are not implemented; existing CLI options and CSVs keep their earlier meanings. The historical protocol and report backup are retained for provenance. Inspecting or compiling materials does not establish live feasibility.
+The public source package contains the protocol, measurement definitions, scenario descriptions, invented coding examples, simulator components, and offline instructions.\footnote{\url{https://github.com/MyLittleFoxxie/ai_swarm_research}. Use the submission snapshot and its recorded commit/checksums.} It identifies which components have been checked and which remain proposed. Planned outputs separate outcomes, exclusions, counts, and contrasts from blinded coding text, an organizer-only key, and reviewer labels. Repository documentation supplies build instructions and implementation provenance.
 
 \section*{Acknowledgments and AI Assistance}
 OpenAI Codex \cite{openai2026codex} assisted with text throughout this paper, experiment and analysis code, documentation, and source checks. The authors remain responsible for claims, citations, and research decisions. No generated output is presented as empirical data.
