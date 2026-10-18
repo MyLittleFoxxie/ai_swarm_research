@@ -200,3 +200,24 @@ citation keys resolve; all pages were rendered and visually inspected. Underfull
 spacing warnings remain without visible overlap/clipping; the PDF is untagged.
 No new simulator, matched extraction, coding, inference, or live-data validation
 is claimed. Full and CHASE manuscripts and empirical placeholders are unchanged.
+
+## Incorporate measurement specification — 2026-10-18
+
+Updated the current AGENT source to reflect the measurement work completed since
+the unified proposal: planned-record accounting, update exposure, scheduled slots
+versus retries, first successful text within the window, independent coding and
+unknown labels, executed stopping versus intentions, separate continued-work
+flags, aborted-run audit/primary separation, exclusion criteria, and separate E/S
+and joint denominators. Added the common complete-S-block point estimators,
+missing-scheduled-cell sensitivity ranges and their limits, B-active/clean-history
+sensitivities, planned outputs, and remaining statistical/implementation work.
+No mock arithmetic was inserted as study findings. The three questions, six
+settings, later stages, author information, and ethical limits remain intact.
+
+The revised paper compiled with Tectonic 0.17.0 to four pages including references.
+All ten cited keys and cross-references resolve; all pages were rendered and
+visually checked. Fonts are embedded and text is selectable. Underfull spacing
+warnings remain without visible clipping or overlap. The PDF is untagged, so
+screen-reader accessibility is not certified. The measurements are specified,
+not implemented or frozen; there are still no live data or completed human
+coding. Full/CHASE manuscripts, bibliography, and simulator code are unchanged.

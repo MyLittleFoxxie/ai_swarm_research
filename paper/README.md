@@ -22,11 +22,20 @@ record earlier revisions and must not be read as current v2 implementation claim
 
 ## Measurement contract — 2026-10-18
 
-[The v2 measurement draft](../experiment/agent_measurement.md) now details the
-paper's outcome definitions, exclusions, separate language/action denominators,
-point contrasts, missingness, and future exports. It does not add paper results,
-human coding, implemented analysis, or new PDF-build evidence. The current AGENT
-source/PDF remains the previously compiled four-page v2 proposal.
+[The v2 measurement draft](../experiment/agent_measurement.md) now informs the
+AGENT abstract, methods, exclusions, denominator accounting, contrasts, sensitivity
+ranges, output/status description, and limitations. The paper distinguishes
+known stopping from incomplete windows, work from non-stopping, and audit evidence
+from primary inclusion. Complete-S blocks retain missing-E records, and language
+coding is limited to the first successful response within the four slots.
+
+Tectonic 0.17.0 rebuilt four pages including references on 2026-10-18. All ten
+citation keys and cross-references resolve; every page was rendered and visually
+inspected. Text is selectable and fonts are embedded. Underfull spacing warnings
+remain without visible clipping or overlap; the PDF is untagged and screen-reader
+accessibility is not certified. No new runtime, human coding, empirical result,
+or inferential validation is claimed. Full/CHASE drafts and harness code are
+unchanged. Generated PDF and source archive remain outside Git.
 
 ## Review on 2026-10-15
 
