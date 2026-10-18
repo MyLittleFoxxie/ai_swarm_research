@@ -15,6 +15,7 @@ def main() -> None:
         "paper/paper_swarm_feeling_agent.tex", "paper/references.bib",
         "paper/AGENT_REVISION.md", "paper/build_agent_artifact.py",
         "experiment/agent_protocol.md", "experiment/agent_protocol_v1.md",
+        "experiment/agent_measurement.md",
         "experiment/simple_swarm_scenarios.md",
         "experiment/swarm_scenarios.md",
         "experiment/agent_conditions.yaml",
@@ -60,6 +61,8 @@ situations with no request, fixed peer-attributed request, and operator request.
 The peer request is experiment-supplied, not emergent recruitment. No v2 runtime,
 matched E/S pipeline, or inference is implemented or validated.
 experiment/simple_swarm_scenarios.md explains the current scenarios.
+experiment/agent_measurement.md specifies outcomes, counts, point contrasts, and
+future v2 outputs; these exports and inference are not implemented.
 experiment/swarm_scenarios.md is the preserved report backup.
 
 The runnable experiment/agent_conditions.yaml has eight settings from protocol

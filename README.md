@@ -112,9 +112,12 @@ turns without forced ending at the boundary. Other agents pause during that
 window to prevent extra requests. The scripted peer arm tests attributed source,
 not autonomous recruitment.
 
-The next work is analysis/allocation specification, implementation, matched
-extraction/coding, calibration and offline checks, then an explicitly authorized
-pilot under the existing $5 total ceiling. The earlier eight-setting configuration
+The [measurement contract](experiment/agent_measurement.md) now specifies counts,
+exclusions, coding, comparisons, and planned outputs for implementation. No v2
+measurement code or human coding is complete. Remaining work is formal statistical
+planning/allocation, implementation, extraction/coding, and offline validation,
+then an explicitly authorized pilot under the existing $5 total ceiling. The
+earlier eight-setting configuration
 and [v1 protocol](experiment/agent_protocol_v1.md) are historical runnable material,
 not tests of v2. The report scenario remains a backup. No live spending, main
 allocation, or submission is implied; full/CHASE manuscripts remain unchanged.

@@ -12,7 +12,9 @@ staged experiment. Its first stage crosses helping/reference situations with
 no request, a fixed peer-attributed request, and an operator request: six settings.
 The [scenario guide](simple_swarm_scenarios.md) and [roadmap](NEXT_STEPS.md) describe
 language/action measurement, a common four-turn window without forced ending,
-and paused peers. These new mechanics and inference are not implemented.
+and paused peers. The [measurement contract](agent_measurement.md) defines outcome
+counts, exclusions, coding, point estimates, and future v2 output interfaces.
+These new mechanics, measurement exports, and inference are not implemented.
 
 agent_conditions.yaml and [protocol v1](agent_protocol_v1.md) retain the earlier
 runnable eight-setting design and its one-seed generic smoke check. The broader

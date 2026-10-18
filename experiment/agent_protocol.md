@@ -7,6 +7,18 @@ preserved with its eight-setting configuration and historical validation scope.
 The broader preregistration and full/CHASE manuscripts remain unchanged. This
 revision is not evidence that simulator behavior or new inference is validated.
 
+## Measurement specification — 2026-10-18
+
+[The measurement contract](agent_measurement.md) now specifies outcome states,
+source evidence, exclusions, coding, separate E/S denominators, complete-S-block
+point estimates, comparison labels, missing-block sensitivity, and planned v2
+CSV interfaces. It also supplies invented acceptance cases for future tests.
+Run-status exclusions apply to primary estimates; known stopping in an aborted
+session is still retained in the raw audit. Unknown E never removes an otherwise
+eligible known S. These refinements do not implement or freeze the design.
+Multiplicity, calibrated uncertainty, sample allocation, and budget remain later
+statistical-planning decisions, not inherited v1 thresholds.
+
 ## Three research questions, shared observations
 
 1. **Group situation and response:** When stopping would help, hinder, or have no
@@ -145,7 +157,9 @@ Report turns to observed stopping; do not assign non-stoppers a fifth-turn delay
 Timing inference requires separately frozen censoring/competing-ending rules.
 
 **Language E:** code the first successful task-phase response after the common
-update, in all arms. Include authored text and authored post_message arguments
+update within the four observation slots, in all arms. A first success after
+that window is late text and does not supply primary E. Include authored text
+and authored post_message arguments
 once in content order, retaining raw occurrences and event provenance. Exclude
 prompts, tool results, other agents' text, and hidden reasoning. Deduplicate only
 within a response. Never merge identical text across agents or sessions.

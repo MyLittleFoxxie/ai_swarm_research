@@ -101,3 +101,11 @@ as v1. The [roadmap](experiment/NEXT_STEPS.md) next specifies analysis and
 allocation, then implements and validates the new pipeline before a separately
 authorized $5 pilot. Main allocation, interval calibration, and budgets remain
 pending. No live results, human coding, paid generation, or submission occurred.
+
+On October 18, the [measurement specification](experiment/agent_measurement.md)
+was drafted. It distinguishes actual stopping, four completed turns without
+stopping, and incomplete observations; words alone do not count as stopping.
+It preserves known behavior when emotional-language coding is missing and
+accounts for aborted sessions separately. It specifies the six-setting
+comparisons, independent coding, and future outputs. No simulator, extractor,
+human coding, inferential validation, or live data were added in this stage.

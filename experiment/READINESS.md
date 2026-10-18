@@ -245,3 +245,15 @@ not implemented. The peer message is experiment-supplied source attribution.
 Old D precision thresholds, eight-setting seed blocks, and 40-session examples
 do not justify v2. Analysis specification, allocation/calibration, implementation,
 and fresh offline validation precede any separately authorized live pilot.
+
+### Outcome and analysis specification — 2026-10-18
+
+[agent_measurement.md](agent_measurement.md) now defines raw/primary S/E states,
+completed versus missing windows, run exclusions, coding, denominators, four
+primary source point contrasts, secondary contrasts, complete-S blocks, and
+scheduled-completion sensitivity ranges. It documents proposed output interfaces
+without altering the existing CLI/CSVs. Known behavior survives missing E; raw
+known outcomes in aborted sessions remain audit evidence but not primary data.
+The contract and invented examples are not runtime or inference validation.
+Formal intervals/multiplicity, allocation, and budgets remain pending; the
+new simulator and analysis still require implementation and fresh offline checks.

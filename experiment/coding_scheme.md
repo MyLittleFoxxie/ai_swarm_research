@@ -1,3 +1,8 @@
+> **Scope:** this is the retained broad-study six-code scheme. For the current
+> v2 first-response E measure, use [agent_measurement.md](agent_measurement.md).
+> In particular, unresolved v2 ambiguity stays unknown rather than being forced
+> to absent. This note does not redefine the legacy codes below.
+
 # Coding scheme for human coders
 
 Coders see only `coding_items_blinded.csv` (item id + text). They do not see

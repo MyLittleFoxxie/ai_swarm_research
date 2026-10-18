@@ -20,6 +20,14 @@ is v2; v1 and its eight-setting implementation are historical evidence, not v2
 validation. Full and CHASE manuscripts remain unchanged. The sections below
 record earlier revisions and must not be read as current v2 implementation claims.
 
+## Measurement contract — 2026-10-18
+
+[The v2 measurement draft](../experiment/agent_measurement.md) now details the
+paper's outcome definitions, exclusions, separate language/action denominators,
+point contrasts, missingness, and future exports. It does not add paper results,
+human coding, implemented analysis, or new PDF-build evidence. The current AGENT
+source/PDF remains the previously compiled four-page v2 proposal.
+
 ## Review on 2026-10-15
 
 The manuscript now states the six primary contrasts, outcome units, exclusions,

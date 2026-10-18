@@ -54,6 +54,15 @@ The existence of this document is not proof that author review occurred.
 
 ## 2. Specify analysis, interfaces, and allocation before implementation
 
+**Update 2026-10-18: measurement/interface draft prepared.**
+[agent_measurement.md](agent_measurement.md) specifies S/E, timing, continued
+work, exposure, inclusion/exclusion rules, denominator counts, point estimators,
+comparison labels, missing-block ranges, and v2 outputs. It includes invented
+acceptance cases, not runtime tests or measured findings. Review, implementation,
+formal interval/multiplicity calibration, sample allocation, and budget remain
+pending. This completes the next-step outcome-definition deliverable, not the
+entire statistical-planning or simulator stage.
+
 Use the v2 question-to-comparison map. The proposed primary family has four
 stopping-rate contrasts: peer-minus-none and operator-minus-none within helps
 and reference. Secondary summaries compare situations within each source, peer
